@@ -1,0 +1,159 @@
+---
+title: 'GitHub Integration'
+description: 'Automatically run tests on deployments with GitHub App integration'
+---
+
+<Info>
+  <b>Recommended:</b> Install the Bugster GitHub App to enable automatic test runs on every Vercel preview for your pull requests. Go to the <b><a href="/integrations/github">GitHub Integration</a></b> section in the Overview page at <a href="https://gui.bugster.dev" target="_blank">gui.bugster.dev</a>, click <b>Manage Integrations</b>, and grant access to your repository.
+</Info>
+
+Bugster integrates with GitHub to automatically run tests when deployments are created, providing immediate feedback on your application's functionality.
+
+## How to Set Up GitHub Integration
+
+<Steps>
+  <Step title="Open the Bugster Dashboard">
+    Go to [https://gui.bugster.dev](https://gui.bugster.dev) and select your project.
+  </Step>
+  <Step title="Go to GitHub Integration">
+    In the Overview page, find the "GitHub Integration" section and click <b>Manage Integrations</b>.
+  </Step>
+  <Step title="Install the GitHub App">
+    Follow the prompts to install the Bugster GitHub App and grant access to the specific repository you want to connect.
+    <Warning>
+      You must grant access to specific repositories only. Granting access to all repositories won't work with Bugster.
+    </Warning>
+  </Step>
+  <Step title="Initialize Bugster (if not already)">
+    Your repository must have a `.bugster` folder in the root directory:
+    ```bash
+    bugster init
+    ```
+  </Step>
+  <Step title="Vercel Setup (if applicable)">
+    If using Vercel previews, disable preview protection to allow Bugster access.
+    <Note>
+      We're working on implementing bypass protection features to avoid this requirement.
+    </Note>
+  </Step>
+</Steps>
+
+<Info>
+  The base URL you provide during `bugster init` is used for running tests locally or in your dev environment. With GitHub integration, Bugster will automatically run tests on your Vercel preview deployments for each pull request and report results directly in your PRs.
+</Info>
+
+## How It Works
+
+Bugster automatically runs tests when GitHub receives a `deployment_status` event. This happens with:
+
+- **Vercel deployments** - Tests run when preview deployments are ready
+- **GitHub Actions with environments** - Tests run when using GitHub environments
+- **Any platform** that triggers GitHub deployment events
+
+<Warning>
+  Tests run on <b>any deployment</b>, not just pull requests. If there's an open PR for that deployment, results will be posted as comments.
+</Warning>
+
+## Vercel Integration
+
+When you push to any branch:
+
+1. Vercel creates a preview deployment
+2. GitHub receives the deployment event
+3. Bugster automatically runs tests against the preview URL
+4. If there's an open PR, results are posted as comments
+
+```bash
+# This will trigger tests automatically
+git push origin feature/new-dashboard
+```
+
+## GitHub Actions Integration
+
+Use GitHub environments in your deployment workflow:
+
+```yaml
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: https://your-app.com  # Tests run against this URL
+    steps:
+      - name: Deploy
+        run: echo "Deploying to Production"
+```
+
+**Key points:**
+- The `environment` section is required
+- Tests run against the `url` specified in the environment
+- If no URL is provided, tests use the `base_url` from `.bugster/config.yaml`
+
+## Configuration
+
+Ensure your `.bugster/config.yaml` has the correct base URL as fallback:
+
+```yaml
+base_url: "https://your-app.com"
+```
+
+## Supported Platforms
+
+Any deployment platform that triggers GitHub's `deployment_status` event:
+
+- ✅ Vercel
+- ✅ GitHub Actions with environments
+- ✅ Most major deployment platforms
+
+<Tip>
+  Most deployment platforms support GitHub deployment events, but we've specifically tested with Vercel and GitHub Actions.
+</Tip>
+
+## Test Results
+
+Results appear as:
+- Comments on pull requests (when applicable)
+- Status checks on commits
+- Detailed reports in your Bugster dashboard
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion icon="github" title="Tests not running">
+    **Check:**
+    - GitHub App is installed and has repository access
+    - `.bugster` folder exists in repository root
+    - Deployment actually completed (check GitHub deployments tab)
+  </Accordion>
+
+  <Accordion icon="lock" title="Vercel preview access issues">
+    **Solution:**
+    - Disable preview protection in Vercel settings
+    - Or wait for our bypass protection feature (coming soon)
+  </Accordion>
+
+  <Accordion icon="settings" title="Missing environment URL">
+    **Result:**
+    Tests will run against the `base_url` in your `.bugster/config.yaml` instead of the deployment URL.
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="CLI Commands" icon="terminal" href="/commands/project-setup">
+    Learn about Bugster CLI commands
+  </Card>
+  
+  <Card title="Configuration" icon="settings" href="/guides/configuration">
+    Configure your project settings
+  </Card>
+</CardGroup> 

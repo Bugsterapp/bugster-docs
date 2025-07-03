@@ -1,55 +1,46 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Bugster",
+  "logo": "/logo/LOGOTYPE-VIOLET-LIGHT.png",
+  "description": "Bugster is an AI tester that simulates a real user in a real browser, providing insights directly in your PR. It's designed for developers at VC-backed startups who want to ship with confidence without writing or maintaining flaky test suites.",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#5A5A5A",
+    "dark": "#5A5A5A",
+    "light": "#5A5A5A"
   },
-  "favicon": "/favicon.svg",
+  "appearance": {
+    "default": "dark",
+    "strict": true
+  },
+  "favicon": "/logo/logo2.jpeg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
             "group": "Get Started",
             "pages": [
-              "index",
+              "installation",
               "quickstart",
-              "development"
+              "authentication"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "CLI Commands",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
+              "commands/project-setup",
+              "commands/test-generation",
+              "commands/test-execution",
+              "commands/test-maintenance",
+              "commands/team-collaboration"
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Integrations",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "integrations/github"
             ]
           }
         ]
@@ -58,45 +49,34 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
           "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
+          "href": "https://discord.gg/fQtsfDmwNA",
+          "icon": "discord"
         },
         {
           "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "href": "https://www.bugster.dev/blog",
           "icon": "newspaper"
         }
       ]
     }
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "https://discord.gg/fQtsfDmwNA"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Start Testing",
+      "href": "https://www.bugster.dev/"
     }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/Bugsterapp/bugster-cli"
     }
   }
 }

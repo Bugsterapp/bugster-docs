@@ -1,0 +1,101 @@
+---
+title: 'Test Maintenance'
+description: 'Keep your tests synchronized with code changes using bugster update'
+---
+
+<Note>
+  Ensure you have [generated initial tests](/commands/test-generation) before using the update command.
+</Note>
+
+## Command Usage
+
+### `bugster update`
+
+Update your test specifications based on the latest changes in your codebase.
+
+```bash
+bugster update [OPTIONS]
+```
+
+**Options:**
+- `--update-only` - Only update existing test specifications, skip suggestions and deletions
+- `--suggest-only` - Only suggest new test specifications, skip updates and deletions
+- `--delete-only` - Only delete obsolete test specifications, skip updates and suggestions
+- `--show-logs` - Show detailed logs during the update process
+
+## Examples
+
+```bash
+# Full update: modify, suggest, and delete specs
+bugster update
+
+# Only update existing test specifications
+bugster update --update-only
+
+# Only suggest new tests with logging
+bugster update --suggest-only --show-logs
+
+# Only remove obsolete specifications
+bugster update --delete-only
+```
+
+## How It Works
+
+<Steps>
+  <Step title="Detect Changes">
+    Compares current code against the cached state from the last analysis.
+  </Step>
+  
+  <Step title="Analyze Impact">
+    Determines how code changes affect existing tests and identifies new functionality.
+  </Step>
+  
+  <Step title="Update Tests">
+    Modifies existing test specifications and suggests new ones as needed.
+  </Step>
+  
+  <Step title="Clean Up">
+    Removes test specifications that are no longer relevant.
+  </Step>
+</Steps>
+
+## Update Examples
+
+### Modified Test
+**Before:**
+```yaml
+- name: User Login
+  steps:
+    - Navigate to /login
+    - Click "Sign In" button
+```
+
+**After:**
+```yaml
+- name: User Login
+  steps:
+    - Navigate to /auth/login  # Updated route
+    - Click "Login" button     # Updated button text
+```
+
+### New Test Suggestion
+```yaml
+- name: Password Reset Flow
+  task: Verify users can reset their password via email
+  steps:
+    - Navigate to /forgot-password
+    - Enter email address
+    - Click "Send Reset Link"
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Run Updated Tests" icon="play" href="/commands/test-execution">
+    Execute your updated test suite
+  </Card>
+  
+  <Card title="Team Collaboration" icon="users" href="/commands/team-collaboration">
+    Share updated tests with your team
+  </Card>
+</CardGroup> 

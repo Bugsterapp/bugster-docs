@@ -1,71 +1,86 @@
 ---
-title: Introduction
-description: "Welcome to the home of your new documentation"
+title: 'Bugster CLI Documentation'
+description: 'The autonomous QA agent that tells you what is broken'
 ---
 
 <img
   className="block dark:hidden"
-  src="/images/hero-light.png"
+  src="/images/hero-light.svg"
   alt="Hero Light"
 />
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="Hero Dark"
-/>
 
-## Setting up
+Bugster CLI is an autonomous QA agent that opens your app in the browser, like a user would, and tells you what's broken. Instead of writing tests, Bugster analyzes your codebase and simulates real user interactions to catch bugs before your users do.
 
-The first step to world-class documentation is setting up your editing environments.
+## How Developers Ship with Confidence
 
 <CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
+  <Card title="Autonomous Bug Detection" icon="bug">
+    Bugster doesn't test your code — it tests your app. It opens your product in real browsers and uses it like an actual user to find what's broken.
   </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
+
+  <Card title="Real User Simulation" icon="user">
+    No test writing required. Bugster understands your app flows and simulates real user interactions to catch bugs you didn't think to test for.
+  </Card>
+
+  <Card title="Zero Maintenance QA" icon="shield">
+    Bugster adapts as your app evolves. When you ship new features, it automatically understands the changes and finds new ways things can break.
+  </Card>
+
+  <Card title="Built for PR Workflows" icon="git-branch">
+    Integrates directly into your development workflow. Get bug reports in your PRs, not from your users.
   </Card>
 </CardGroup>
 
-## Make it yours
+## What Bugster Actually Does
 
-Update your docs to your brand and add valuable content for the best user conversion.
+<AccordionGroup>
+  <Accordion icon="magnifying-glass" title="Analyzes Your App Like a User">
+    Bugster opens your application in real browsers and navigates through your user flows, just like your customers would.
+  </Accordion>
+  
+  <Accordion icon="bug" title="Finds What's Actually Broken">
+    Instead of checking if code works, Bugster checks if your users can actually accomplish their goals in your app.
+  </Accordion>
+  
+  <Accordion icon="comment" title="Reports Bugs in Context">
+    Get detailed bug reports with videos and suggested fixes — right in your PRs.
+  </Accordion>
+  
+  <Accordion icon="brain" title="Learns Your App Continuously">
+    As you build new features, Bugster automatically understands the changes and expands its bug-hunting coverage.
+  </Accordion>
+  
+  <Accordion icon="users" title="Works with Your Team">
+    Share bug detection across your team and keep everyone informed about what's working (and what isn't).
+  </Accordion>
+</AccordionGroup>
+
+## Getting Started
 
 <CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
+  <Card title="Installation" icon="download" href="/installation">
+    Install Bugster CLI on your system
   </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
+  
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Get your first bug report in under 5 minutes
   </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/content/components/accordions"
-  >
-    Build interactive features and designs to guide your users
+  
+  <Card title="CLI Reference" icon="book" href="/cli-usage-reference">
+    Explore all commands and options for bug detection
   </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
+  
+  <Card title="GitHub Integration" icon="github" href="/integrations/github">
+    Get bug reports automatically on every PR
   </Card>
-</CardGroup>
+</CardGroup> 
+
+<Info>
+  <b>Recommended:</b> Install the Bugster GitHub App to enable automatic test runs on every Vercel preview for your pull requests. Go to the <b>GitHub Integration</b> section in the Overview page at <a href="https://gui.bugster.dev" target="_blank">gui.bugster.dev</a>, click <b>Manage Integrations</b>, and grant access to your repository.
+</Info>
+
+---
+
+<Info>
+  **Ready to catch bugs before your users do?** Begin with [installation](/installation) and follow our [quickstart guide](/quickstart) to get your first bug report.
+</Info> 

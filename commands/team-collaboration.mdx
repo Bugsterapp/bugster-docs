@@ -1,0 +1,122 @@
+---
+title: 'Team Collaboration'
+description: 'Share and synchronize tests with your team using bugster sync'
+---
+
+<Note>
+  Team collaboration requires [authentication](/authentication) and generated tests to share.
+</Note>
+
+## Command Usage
+
+### `bugster sync`
+
+Synchronize your local test specifications with the remote Bugster platform for team collaboration.
+
+```bash
+bugster sync [OPTIONS]
+```
+
+**Options:**
+- `--pull` - Download test specifications from remote without uploading local changes
+- `--push` - Upload local test specifications to remote without downloading changes
+- `--branch BRANCH` - Synchronize with a specific branch instead of the default
+- `--clean-remote` - Delete remote test specifications that don't exist locally
+- `--dry-run` - Preview sync operations without making actual changes
+- `--prefer CHOICE` - Prefer 'local' or 'remote' when resolving conflicts
+
+## Examples
+
+```bash
+# Full bidirectional sync
+bugster sync
+
+# Sync with specific branch
+bugster sync --branch feature/new-ui
+
+# Only download specs from remote
+bugster sync --pull
+
+# Preview upload without making changes
+bugster sync --push --dry-run
+
+# Resolve conflicts preferring local versions
+bugster sync --prefer local
+
+# Clean up remote specs not present locally
+bugster sync --clean-remote
+```
+
+## Team Workflows
+
+### Getting Started on a Project
+```bash
+# 1. Authenticate with Bugster
+bugster auth
+
+# 2. Initialize project
+bugster init
+
+# 3. Pull existing team tests
+bugster sync --pull
+
+# 4. Run tests to verify setup
+bugster run
+```
+
+### Daily Development Workflow
+```bash
+# 1. Pull latest team changes
+bugster sync --pull
+
+# 2. Make code changes
+# [Your development work]
+
+# 3. Update tests for your changes
+bugster update
+
+# 4. Run tests locally
+bugster run
+
+# 5. Push updated tests
+bugster sync --push
+```
+
+### Feature Branch Workflow
+```bash
+# 1. Create feature branch locally
+git checkout -b feature/user-dashboard
+
+# 2. Pull base tests
+bugster sync --pull --branch main
+
+# 3. Work on feature and update tests
+bugster update
+bugster run
+
+# 4. Push feature-specific tests
+bugster sync --push --branch feature/user-dashboard
+```
+
+## Common Issues
+
+**Sync Failures:**
+- Check your internet connection
+- Verify authentication: `bugster auth`
+- Try again after a few minutes
+
+**Merge Conflicts:**
+- Pull latest changes first: `bugster sync --pull`
+- Use `--prefer local` or `--prefer remote` for automatic resolution
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Run Tests" icon="play" href="/commands/test-execution">
+    Execute your synchronized test suite
+  </Card>
+  
+  <Card title="Test Maintenance" icon="wrench" href="/commands/test-maintenance">
+    Keep shared tests updated with code changes
+  </Card>
+</CardGroup> 

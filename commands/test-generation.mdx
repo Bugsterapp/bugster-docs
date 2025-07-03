@@ -1,0 +1,94 @@
+---
+title: 'Test Generation'
+description: 'Generate AI-powered tests from your codebase with bugster generate'
+---
+
+<Note>
+  Ensure you have [set up your project](/commands/project-setup) before generating tests.
+</Note>
+
+## Command Usage
+
+### `bugster generate`
+
+Analyze your codebase to automatically create comprehensive test specifications using AI.
+
+```bash
+bugster generate [OPTIONS]
+```
+
+**Options:**
+- `--show-logs` - Show detailed logs during the analysis process
+- `--force, -f` - Force analysis even if codebase has already been analyzed (overrides cache)
+
+## Examples
+
+```bash
+# Basic test generation
+bugster generate
+
+# Generate with detailed logging
+bugster generate --show-logs
+
+# Force re-analysis of already analyzed codebase
+bugster generate --force
+```
+
+## How It Works
+
+<Steps>
+  <Step title="Codebase Scanning">
+    Bugster scans your project files to understand the application structure.
+  </Step>
+  
+  <Step title="AI Analysis">
+    AI models analyze the code patterns to identify testable user flows and functionality.
+  </Step>
+  
+  <Step title="Test Creation">
+    Generates comprehensive test specifications in YAML format.
+  </Step>
+  
+  <Step title="File Organization">
+    Saves the generated tests in the `.bugster/tests` directory.
+  </Step>
+</Steps>
+
+## Generated Test Example
+
+```yaml
+- name: User Registration Flow
+  task: Verify that new users can successfully create an account
+  expected_result: User should be registered and logged in
+  steps:
+    - Navigate to /signup page
+    - Fill in email field with "test@example.com"
+    - Fill in password field with "securePassword123"
+    - Click "Create Account" button
+    - Verify welcome message is displayed
+    - Verify user is redirected to dashboard
+```
+
+## Test Organization
+
+Generated tests are organized in the `.bugster/tests` directory:
+
+```
+.bugster/tests/
+├── smoke_tests/          # Critical path tests
+├── integration/          # Feature integration tests
+├── e2e/                 # End-to-end scenarios
+└── edge_cases/          # Error and boundary tests
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Run Tests" icon="play" href="/commands/test-execution">
+    Execute your generated test suite
+  </Card>
+  
+  <Card title="Update Tests" icon="refresh" href="/commands/test-maintenance">
+    Keep tests synchronized with code changes
+  </Card>
+</CardGroup> 
