@@ -23,8 +23,7 @@
             "group": "Getting Started",
             "pages": [
               "installation",
-              "quickstart",
-              "authentication"
+              "quickstart"
             ]
           },
           {
@@ -33,8 +32,8 @@
               "commands/init",
               "commands/generate",
               "commands/run",
-              "commands/test-maintenance",
-              "commands/team-collaboration"
+              "commands/update",
+              "commands/advanced_configuration"
             ]
           },
           {
