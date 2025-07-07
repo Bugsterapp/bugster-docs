@@ -20,7 +20,7 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Getting Started",
             "pages": [
               "installation",
               "quickstart",
@@ -30,9 +30,9 @@
           {
             "group": "CLI Commands",
             "pages": [
-              "commands/project-setup",
-              "commands/test-generation",
-              "commands/test-execution",
+              "commands/init",
+              "commands/generate",
+              "commands/run",
               "commands/test-maintenance",
               "commands/team-collaboration"
             ]
@@ -40,7 +40,9 @@
           {
             "group": "Integrations",
             "pages": [
-              "integrations/github"
+              "integrations/github",
+              "howto/vercel",
+              "howto/railway"
             ]
           }
         ]
