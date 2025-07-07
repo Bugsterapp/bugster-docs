@@ -1,84 +1,194 @@
 ---
-title: 'bugster init'
-description: 'Initialize Bugster in your project with bugster init'
-icon: "fingerprint"
+title: 'Initialize project'
+description: 'Set up Bugster CLI in your project and authenticate with your account'
+icon: 'fingerprint'
 ---
 
+The `bugster init` command initializes Bugster CLI in your project, handles authentication, and configures your project settings.
+
 <Note>
-  Make sure you have [authenticated](/authentication) with Bugster before setting up a project.
+  The `init` command is the **first step** you must complete before using any other Bugster CLI features. It sets up authentication and creates your project configuration.
 </Note>
 
-## Command Usage
-
-### `bugster init`
-
-Set up the necessary configuration files and directory structure for using Bugster in your project.
+## Basic Usage
 
 ```bash
 bugster init
 ```
 
-**What it does:**
-- Creates `.bugster` directory in your project root
-- Sets up configuration files (`config.yaml`)
-- Prepares your project for test generation and execution
+This command will guide you through:
+1. **Authentication** (if first time)
+2. **Project configuration**
+3. **Credential setup** (for authenticated apps)
 
-## Setup Steps
+
+## Step-by-Step Process
 
 <Steps>
   <Step title="Navigate to your project">
+    Open your terminal and navigate to your Next.js project's root directory:
     ```bash
-    cd your-project-directory
+    cd your-nextjs-project
     ```
   </Step>
   
-  <Step title="Run init command">
+  <Step title="Run the init command">
+    Execute the initialization command:
     ```bash
     bugster init
     ```
   </Step>
   
-  <Step title="Configure base URL">
-    Enter your application's URL (e.g., `http://localhost:3000`) when prompted.
+  <Step title="API Key Authentication (First Time Only)">
+    If it's your first time using Bugster CLI, you'll be prompted for your API key:
+    
+    ```bash
+    🔑 Paste your API key here: bugster_your_api_key_here
+    ```
+    
+    <Card title="Get Your API Key" icon="key" href="https://gui.bugster.dev">
+      Find your API key in the Bugster Dashboard under Account Settings
+    </Card>
+  </Step>
+  
+  <Step title="Configure Project Settings">
+    You'll be prompted to configure your project:
+    
+    **Project Name**
+    ```bash
+    🏷️  Project name: my-awesome-app
+    ```
+    <Tip>Use your GitHub repository name for consistency</Tip>
+    
+    **Base URL**
+    ```bash
+    🌐 Application URL: http://localhost:3000
+    ```
+    
+    **Authentication Credentials** (if your app requires login)
+    ```bash
+    ➕ Would you like to add custom login credentials? (y/n): y
+    👤 Credential name: admin
+    📧 Username/Email: test@example.com
+    🔒 Password: ********
+    ```
   </Step>
 </Steps>
 
-## Generated Structure
+## What Gets Created
 
-After running `bugster init`, you'll see:
+After running `bugster init`, the following structure is created in your project:
 
 ```
 your-project/
-└── .bugster/
-    ├── config.yaml          # Project configuration
-    ├── tests/              # Generated test specifications (created later)
-    └── cache/              # Analysis cache files (created later)
+├── .bugster/
+   ├── config.yaml          # Project configuration
+   └── tests/               # Generated test directory (created later)
+└── .gitignore               # Updated with Bugster entries
 ```
 
-## Configuration
+### Configuration File
 
 The `config.yaml` file contains your project settings:
 
-```json
-{
-  "base_url": "http://localhost:3000",
-  "credentials": {
-    "username": "admin",
-    "password": "password"
-  }
-}
+```yaml
+project_name: "My App"
+project_id: "my-app-123456"
+base_url: "http://localhost:3000"
+credentials:
+  - id: "admin"
+    username: "admin@example.com"
+    password: "admin123"
 ```
 
-You can edit this file directly or run `bugster init` again to update settings.
+## Configuration Options
+
+<AccordionGroup>
+  <Accordion title="Project Name" icon="tag">
+    **Purpose**: Identifies your project in the Bugster dashboard
+    
+    **Recommendation**: Use your GitHub repository name for consistency
+    
+    **Example**: `my-nextjs-app`
+  </Accordion>
+  
+  <Accordion title="Base URL" icon="globe">
+    **Purpose**: The URL where your application runs during testing
+    
+    **Common values**:
+    - `http://localhost:3000` (Next.js default)
+    - `http://localhost:3001` (custom port)
+    - `https://staging.myapp.com` (staging environment)
+  </Accordion>
+  
+  <Accordion title="Authentication Credentials" icon="key">
+    **Purpose**: Test user credentials for authenticated areas of your app
+    
+    **When needed**: If your app has login/authentication gates
+    
+    **Multiple credentials**: You can add multiple test users for different scenarios
+    
+    **Security**: Credentials are stored locally and used only for testing
+  </Accordion>
+</AccordionGroup>
+
+## Advanced Configuration
+
+For advanced use cases, you can customize additional settings in your `config.yaml` file:
+
+<Card title="Advanced Configuration" icon="gear" href="/configuration/advanced">
+  Learn about advanced configuration options including Vercel protection bypass, always-run tests, and more
+</Card>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Invalid API Key">
+    **Error**: Authentication failed
+    
+    **Solutions**:
+    - Double-check your API key in the Bugster dashboard
+    - Ensure you're copying the entire key without extra spaces
+    - Verify you have an active internet connection
+  </Accordion>
+  
+  <Accordion title="Existing Project Warning">
+    **Error**: Existing Bugster project detected
+    
+    **Solutions**:
+    - Choose to reinitialize if you want to update settings
+    - Cancel if you want to keep existing configuration
+  </Accordion>
+  
+  <Accordion title="Nested Project Error">
+    **Error**: Cannot initialize nested Bugster project
+    
+    **Solution**: Move to a directory outside of any existing Bugster project
+  </Accordion>
+  
+  <Accordion title="Permission Denied">
+    **Error**: Cannot create .bugster directory
+    
+    **Solutions**:
+    - Ensure you have write permissions in the current directory
+    - Run as administrator/sudo if necessary
+  </Accordion>
+</AccordionGroup>
 
 ## Next Steps
 
+After successful initialization, you're ready to:
+
 <CardGroup cols={2}>
-  <Card title="Generate Tests" icon="magic" href="/commands/test-generation">
-    Create your first automated test suite
+  <Card title="Generate Tests" icon="wand-magic-sparkles" href="/commands/generate">
+    Create AI-powered test specifications from your codebase
   </Card>
   
-  <Card title="Follow Quickstart" icon="rocket" href="/quickstart">
-    Complete the full getting started workflow
+  <Card title="GitHub Integration" icon="github" href="/integrations/github">
+    Connect your repository for automated testing on pull requests
   </Card>
-</CardGroup> 
+  <Card title="Advanced Configuration" icon="gear" href="/configuration/advanced">
+  Learn about advanced configuration options including Vercel protection bypass, always-run tests, and more
+  </Card>
+</CardGroup>
+
