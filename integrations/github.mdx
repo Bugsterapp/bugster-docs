@@ -4,157 +4,197 @@ description: 'Automatically run tests on deployments with GitHub App integration
 icon: "github"
 ---
 
-<Info>
-  <b>Recommended:</b> Install the Bugster GitHub App to enable automatic test runs on every Vercel preview for your pull requests. Go to the <b><a href="/integrations/github">GitHub Integration</a></b> section in the Overview page at <a href="https://gui.bugster.dev" target="_blank">gui.bugster.dev</a>, click <b>Manage Integrations</b>, and grant access to your repository.
-</Info>
 
-Bugster integrates with GitHub to automatically run tests when deployments are created, providing immediate feedback on your application's functionality.
+Connect Bugster to your GitHub repository to automatically run tests on pull requests and preview deployments.
 
-## How to Set Up GitHub Integration
+## What It Enables
+
+<CardGroup cols={2}>
+  <Card title="Automated Testing" icon="robot">
+    Tests run automatically on every pull request
+  </Card>
+  <Card title="Preview Testing" icon="eye">
+    Tests against Vercel/Railway preview deployments
+  </Card>
+  <Card title="PR Status Checks" icon="code-pull-request">
+    Pass/fail status reported directly in GitHub
+  </Card>
+  <Card title="Team Visibility" icon="users">
+    Results visible to all team members
+  </Card>
+</CardGroup>
+
+## Installation
 
 <Steps>
-  <Step title="Open the Bugster Dashboard">
-    Go to [https://gui.bugster.dev](https://gui.bugster.dev) and select your project.
+  <Step title="Access GitHub Integration">
+    Visit [Bugster Dashboard](https://gui.bugster.dev) → Your Project → GitHub Integration
   </Step>
-  <Step title="Go to GitHub Integration">
-    In the Overview page, find the "GitHub Integration" section and click <b>Manage Integrations</b>.
+  
+  <Step title="Install GitHub App">
+    Click **"Connect Organization"** and authorize the Bugster GitHub App
   </Step>
-  <Step title="Install the GitHub App">
-    Follow the prompts to install the Bugster GitHub App and grant access to the specific repository you want to connect.
-    <Warning>
-      You must grant access to specific repositories only. Granting access to all repositories won't work with Bugster.
-    </Warning>
+  
+  <Step title="Select Repository">
+    Choose the repository you want to integrate with Bugster
   </Step>
-  <Step title="Initialize Bugster (if not already)">
-    Your repository must have a `.bugster` folder in the root directory:
+  
+  <Step title="Commit Configuration">
+    Add your `.bugster/` folder to the repository:
     ```bash
-    bugster init
+    git add .bugster/
+    git commit -m "Add Bugster CLI configuration"
+    git push origin main
     ```
-  </Step>
-  <Step title="Vercel Setup (if applicable)">
-    If using Vercel previews, disable preview protection to allow Bugster access.
-    <Note>
-      We're working on implementing bypass protection features to avoid this requirement.
-    </Note>
   </Step>
 </Steps>
 
-<Info>
-  The base URL you provide during `bugster init` is used for running tests locally or in your dev environment. With GitHub integration, Bugster will automatically run tests on your Vercel preview deployments for each pull request and report results directly in your PRs.
-</Info>
+## Platform Setup
+
+### Vercel Integration
+
+<Steps>
+  <Step title="Enable Preview Access">
+    In your Vercel project settings, add the Vercel protection bypass key to your Bugster configuration
+  </Step>
+  
+  <Step title="Configure Environment Variables">
+    Ensure your preview deployments have the necessary environment variables for testing
+  </Step>
+</Steps>
+
+<Card title="Vercel Setup Guide" icon="triangle" href="/howto/vercel">
+  Detailed Vercel configuration and protection bypass setup
+</Card>
+
+### Railway Integration
+
+<Steps>
+  <Step title="Configure Preview Deployments">
+    Ensure Railway preview deployments are enabled for your project
+  </Step>
+  
+  <Step title="Set Environment Variables">
+    Configure necessary environment variables for your Railway previews
+  </Step>
+</Steps>
+
+<Card title="Railway Setup Guide" icon="train" href="/howto/railway">
+  Complete Railway integration and deployment configuration
+</Card>
 
 ## How It Works
 
-Bugster automatically runs tests when GitHub receives a `deployment_status` event. This happens with:
+### Pull Request Workflow
 
-- **Vercel deployments** - Tests run when preview deployments are ready
-- **GitHub Actions with environments** - Tests run when using GitHub environments
-- **Any platform** that triggers GitHub deployment events
+1. **PR Created** → GitHub notifies Bugster
+2. **Preview Deployed** → Vercel/Railway creates preview URL  
+3. **Tests Execute** → Bugster runs tests against preview
+4. **Results Reported** → Status check appears in GitHub PR
 
-<Warning>
-  Tests run on <b>any deployment</b>, not just pull requests. If there's an open PR for that deployment, results will be posted as comments.
-</Warning>
+### Test Execution
 
-## Vercel Integration
+<AccordionGroup>
+  <Accordion title="Automatic Triggers" icon="zap">
+    **New Pull Request**: Full test suite execution
+    
+    **Push to PR Branch**: Affected tests only (smart detection)
+    
+    **Preview URL Ready**: Tests run against latest deployment
+  </Accordion>
+  
+  <Accordion title="Test Selection" icon="filter">
+    **Affected Tests**: Only tests related to changed files
+    
+    **Always-Run Tests**: Critical tests that always execute
+    
+    **Smart Limits**: Respects configured test limits
+  </Accordion>
+</AccordionGroup>
 
-When you push to any branch:
+## GitHub Status Checks
 
-1. Vercel creates a preview deployment
-2. GitHub receives the deployment event
-3. Bugster automatically runs tests against the preview URL
-4. If there's an open PR, results are posted as comments
+Results appear as status checks in your pull requests:
 
-```bash
-# This will trigger tests automatically
-git push origin feature/new-dashboard
-```
+### Status Types
 
-## GitHub Actions Integration
+<CardGroup cols={3}>
+  <Card title="Passed" icon="check" color="#green">
+    All tests passed successfully
+  </Card>
+  <Card title="Failed" icon="x" color="#red">
+    One or more tests failed
+  </Card>
+  <Card title="Pending" icon="clock" color="#yellow">
+    Tests are currently running
+  </Card>
+</CardGroup>
 
-Use GitHub environments in your deployment workflow:
+### Detailed Results
 
-```yaml
-name: Deploy to Production
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment:
-      name: Production
-      url: https://your-app.com  # Tests run against this URL
-    steps:
-      - name: Deploy
-        run: echo "Deploying to Production"
-```
-
-**Key points:**
-- The `environment` section is required
-- Tests run against the `url` specified in the environment
-- If no URL is provided, tests use the `base_url` from `.bugster/config.yaml`
-
-## Configuration
-
-Ensure your `.bugster/config.yaml` has the correct base URL as fallback:
-
-```yaml
-base_url: "https://your-app.com"
-```
-
-## Supported Platforms
-
-Any deployment platform that triggers GitHub's `deployment_status` event:
-
-- ✅ Vercel
-- ✅ GitHub Actions with environments
-- ✅ Most major deployment platforms
-
-<Tip>
-  Most deployment platforms support GitHub deployment events, but we've specifically tested with Vercel and GitHub Actions.
-</Tip>
-
-## Test Results
-
-Results appear as:
-- Comments on pull requests (when applicable)
-- Status checks on commits
-- Detailed reports in your Bugster dashboard
+Click the status check to view:
+- Individual test results
+- Failure reasons and screenshots
+- Execution videos for debugging
+- Performance metrics and timing
 
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion icon="github" title="Tests not running">
-    **Check:**
-    - GitHub App is installed and has repository access
-    - `.bugster` folder exists in repository root
-    - Deployment actually completed (check GitHub deployments tab)
+  <Accordion title="GitHub App not installed">
+    **Issue**: No status checks appearing on PRs
+    
+    **Solution**: Reinstall the GitHub App with proper repository permissions
   </Accordion>
-
-  <Accordion icon="lock" title="Vercel preview access issues">
-    **Solution:**
-    - Disable preview protection in Vercel settings
-    - Or wait for our bypass protection feature (coming soon)
+  
+  <Accordion title="Tests not running on PRs">
+    **Issue**: No test execution triggered
+    
+    **Solutions**:
+    - Ensure `.bugster/` folder is committed to repository
+    - Verify GitHub App has access to the correct repository
+    - Check that preview deployments are working
   </Accordion>
-
-  <Accordion icon="settings" title="Missing environment URL">
-    **Result:**
-    Tests will run against the `base_url` in your `.bugster/config.yaml` instead of the deployment URL.
+  
+  <Accordion title="Preview URL not accessible">
+    **Issue**: Tests fail to connect to preview deployment
+    
+    **Solutions**:
+    - Configure Vercel protection bypass correctly
+    - Verify Railway deployment settings
+    - Check environment variables in preview
   </Accordion>
 </AccordionGroup>
+
+## Best Practices
+
+<CardGroup cols={1}>
+  <Card title="Repository Setup" icon="folder-open">
+    **Commit configuration**: Always commit `.bugster/config.yaml` and test files
+    
+    **Branch protection**: Require Bugster status checks before merging
+    
+    **Environment consistency**: Match preview and production configurations
+  </Card>
+  
+  <Card title="Team Workflow" icon="people-group">
+    **PR testing**: Let tests complete before code review
+    
+    **Failure handling**: Investigate and fix test failures promptly
+    
+    **Test maintenance**: Keep tests updated with code changes
+  </Card>
+</CardGroup>
 
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="CLI Commands" icon="terminal" href="/commands/project-setup">
-    Learn about Bugster CLI commands
-  </Card>
-  
-  <Card title="Configuration" icon="settings" href="/guides/configuration">
-    Configure your project settings
-  </Card>
-</CardGroup> 
+  <Card title="Vercel Setup Guide" icon="triangle" href="/howto/vercel">
+  Complete Vercel integration and deployment configuration
+</Card>
+
+  <Card title="Railway Setup Guide" icon="train" href="/howto/railway">
+  Complete Railway integration and deployment configuration
+</Card>
+ 
+</CardGroup>

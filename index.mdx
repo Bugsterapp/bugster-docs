@@ -1,86 +1,129 @@
 ---
 title: 'Bugster CLI Documentation'
 description: 'The autonomous QA agent that tells you what is broken'
+icon: "book"
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.svg"
-  alt="Hero Light"
-/>
+Bugster CLI generates and runs AI-powered end-to-end tests for your web applications. It analyzes your codebase, creates realistic test scenarios, and executes them automatically.
 
-Bugster CLI is an autonomous QA agent that opens your app in the browser, like a user would, and tells you what's broken. Instead of writing tests, Bugster analyzes your codebase and simulates real user interactions to catch bugs before your users do.
+## What is Bugster?
 
-## How Developers Ship with Confidence
+Bugster transforms manual testing into automated test cases by understanding your application structure and generating intelligent test specifications that validate user workflows.
 
 <CardGroup cols={2}>
-  <Card title="Autonomous Bug Detection" icon="bug">
-    Bugster doesn't test your code — it tests your app. It opens your product in real browsers and uses it like an actual user to find what's broken.
+  <Card title="AI-Powered Analysis" icon="brain">
+    Automatically analyzes your codebase to understand pages, components, and user flows
   </Card>
-
-  <Card title="Real User Simulation" icon="user">
-    No test writing required. Bugster understands your app flows and simulates real user interactions to catch bugs you didn't think to test for.
+  <Card title="Browser Automation" icon="window-restore">
+    Executes tests using real browsers with Playwright automation
   </Card>
-
-  <Card title="Zero Maintenance QA" icon="shield">
-    Bugster adapts as your app evolves. When you ship new features, it automatically understands the changes and finds new ways things can break.
+  <Card title="Team Collaboration" icon="users">
+    Share tests across your team with built-in synchronization
   </Card>
-
-  <Card title="Built for PR Workflows" icon="git-branch">
-    Integrates directly into your development workflow. Get bug reports in your PRs, not from your users.
+  <Card title="CI/CD Integration" icon="workflow">
+    Runs automatically on pull requests and deployments
   </Card>
 </CardGroup>
 
-## What Bugster Actually Does
+## How It Works
+
+<Steps>
+  <Step title="Initialize">
+    Run `bugster init` to configure your project and authenticate
+  </Step>
+  <Step title="Generate">
+    Run `bugster generate` to create AI-powered test specifications
+  </Step>
+  <Step title="Execute">
+    Run `bugster run` to execute tests with browser automation
+  </Step>
+</Steps>
+
+## Supported Frameworks
+
+<Card title="Next.js" icon="check" color="#green">
+  **Full Support** - Pages Router and App Router
+</Card>
+
+<Card title="React" icon="clock" color="#yellow">
+  **Coming Soon** - Standalone React applications
+</Card>
+
+## Key Features
+
+- **🤖 AI Test Generation**: Creates realistic test scenarios automatically
+- **🎯 Smart Updates**: Keeps tests synchronized with code changes  
+- **🚀 Fast Execution**: Parallel test execution with intelligent limits
+- **📊 Real-time Results**: Stream results to dashboard and GitHub
+- **🔄 Team Sync**: Share and collaborate on test specifications
+- **⚡ CI/CD Ready**: Integrates with Vercel, Railway, and GitHub
+
+## Quick Start
+
+Ready to get started? Follow our quickstart guide to set up your first project:
+
+<Card title="Get Started" icon="rocket" href="/quickstart">
+  Complete setup guide - from installation to your first test
+</Card>
+
+## Popular Use Cases
 
 <AccordionGroup>
-  <Accordion icon="magnifying-glass" title="Analyzes Your App Like a User">
-    Bugster opens your application in real browsers and navigates through your user flows, just like your customers would.
+  <Accordion title="Development Workflow" icon="code">
+    **Generate tests** for new features as you develop
+    
+    **Run affected tests** when making changes
+    
+    **Catch regressions** before they reach production
   </Accordion>
   
-  <Accordion icon="bug" title="Finds What's Actually Broken">
-    Instead of checking if code works, Bugster checks if your users can actually accomplish their goals in your app.
+  <Accordion title="Pull Request Testing" icon="git-pull-request">
+    **Automatic execution** on every pull request
+    
+    **Preview deployment testing** with Vercel/Railway
+    
+    **Block merges** when tests fail
   </Accordion>
   
-  <Accordion icon="comment" title="Reports Bugs in Context">
-    Get detailed bug reports with videos and suggested fixes — right in your PRs.
-  </Accordion>
-  
-  <Accordion icon="brain" title="Learns Your App Continuously">
-    As you build new features, Bugster automatically understands the changes and expands its bug-hunting coverage.
-  </Accordion>
-  
-  <Accordion icon="users" title="Works with Your Team">
-    Share bug detection across your team and keep everyone informed about what's working (and what isn't).
+  <Accordion title="Release Validation" icon="rocket">
+    **Comprehensive testing** before production deployments
+    
+    **Cross-environment validation** (staging, production)
+    
+    **Critical path verification** with always-run tests
   </Accordion>
 </AccordionGroup>
 
-## Getting Started
+## Why Choose Bugster?
+
+<CardGroup cols={3}>
+  <Card title="Zero Setup" icon="zap">
+    No test writing required - AI generates comprehensive tests automatically
+  </Card>
+  <Card title="Intelligent Updates" icon="brain">
+    Tests evolve with your code using smart change detection
+  </Card>
+  <Card title="Production Ready" icon="shield-check">
+    Built for teams with collaboration, limits, and enterprise features
+  </Card>
+</CardGroup>
+
+## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Installation" icon="download" href="/installation">
-    Install Bugster CLI on your system
+  <Card title="Install Bugster CLI" icon="download" href="/installation">
+    Set up Bugster CLI on your system
   </Card>
   
-  <Card title="Quick Start" icon="rocket" href="/quickstart">
-    Get your first bug report in under 5 minutes
+  <Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+    Complete walkthrough from setup to first test
   </Card>
   
-  <Card title="CLI Reference" icon="book" href="/cli-usage-reference">
-    Explore all commands and options for bug detection
+  <Card title="Browse Commands" icon="terminal" href="/commands/init">
+    Explore all available CLI commands
   </Card>
   
   <Card title="GitHub Integration" icon="github" href="/integrations/github">
-    Get bug reports automatically on every PR
+    Set up automated testing on pull requests
   </Card>
-</CardGroup> 
-
-<Info>
-  <b>Recommended:</b> Install the Bugster GitHub App to enable automatic test runs on every Vercel preview for your pull requests. Go to the <b>GitHub Integration</b> section in the Overview page at <a href="https://gui.bugster.dev" target="_blank">gui.bugster.dev</a>, click <b>Manage Integrations</b>, and grant access to your repository.
-</Info>
-
----
-
-<Info>
-  **Ready to catch bugs before your users do?** Begin with [installation](/installation) and follow our [quickstart guide](/quickstart) to get your first bug report.
-</Info> 
+</CardGroup>
