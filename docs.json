@@ -76,6 +76,13 @@
       "href": "https://www.bugster.dev/"
     }
   },
+    "contextual": {
+      "options": [
+        "copy",
+        "view",
+        "chatgpt"
+      ]
+    },
   "footer": {
     "socials": {
       "github": "https://github.com/Bugsterapp/bugster-cli"
