@@ -1,0 +1,168 @@
+---
+title: 'Destructive Agent'
+description: 'Run AI-powered destructive agents to find potential bugs in your changed pages'
+icon: "bomb"
+---
+
+The `bugster destructive` command runs specialized AI agents that actively explore your application to find potential bugs, edge cases, and unexpected behaviors in pages that have been modified.
+
+<Note>
+  Run `bugster init` first if you haven't already set up your project.
+</Note>
+
+## Basic Usage
+
+```bash
+bugster destructive
+```
+
+This command will:
+1. **Analyze git changes** to identify modified pages
+2. **Assign specialized agents** to each changed page
+3. **Run agents concurrently** to explore and test your application
+4. **Record interactions** with video capture for debugging
+5. **Report discovered bugs** with detailed descriptions
+
+## How It Works
+
+<Steps>
+  <Step title="Change Detection">
+    Analyzes git changes against origin/main to identify modified Next.js pages and their dependencies.
+  </Step>
+  
+  <Step title="Agent Assignment">
+    AI determines which specialized agents should test each page based on detected changes.
+  </Step>
+  
+  <Step title="Destructive Exploration">
+    Agents autonomously explore pages, testing edge cases and recording all interactions.
+  </Step>
+  
+  <Step title="Bug Detection">
+    Reports JavaScript errors, UI issues, failed requests, and performance problems.
+  </Step>
+</Steps>
+
+## Command Options
+
+### Basic Options
+
+```bash
+bugster destructive --headless --max-concurrent 5 --verbose
+```
+
+<AccordionGroup>
+  <Accordion title="--headless" icon="eye-slash">
+    Run agents without browser UI (ideal for CI/CD).
+    
+    ```bash
+    bugster destructive --headless
+    ```
+  </Accordion>
+  
+  <Accordion title="--max-concurrent" icon="users">
+    Control concurrent agents (default: 3).
+    
+    ```bash
+    # Conservative
+    bugster destructive --max-concurrent 1
+    
+    # Aggressive
+    bugster destructive --max-concurrent 10
+    ```
+  </Accordion>
+  
+  <Accordion title="--silent" icon="volume-mute">
+    Suppress verbose output.
+    
+    ```bash
+    bugster destructive --silent
+    ```
+  </Accordion>
+  
+  <Accordion title="--verbose" icon="message-lines">
+    Show detailed agent execution logs.
+    
+    ```bash
+    bugster destructive --verbose
+    ```
+  </Accordion>
+  
+  <Accordion title="--base-url" icon="globe">
+    Override the base URL from configuration.
+    
+    ```bash
+    bugster destructive --base-url https://staging.myapp.com
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Results
+
+### Output Table
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Destructive Agent Results                 │
+├─────────────────────┬─────────────────┬─────────────┬────────┤
+│ Page                │ Agent           │ Bugs Found  │ Time   │
+├─────────────────────┼─────────────────┼─────────────┼────────┤
+│ pages/auth/login    │ Agent_1         │ 2           │ 45.2s  │
+│ pages/dashboard     │ Agent_2         │ 0           │ 32.1s  │
+└─────────────────────┴─────────────────┴─────────────┴────────┘
+```
+
+### Video Recordings
+
+Agent interactions are recorded and saved to:
+```
+.bugster/videos/destructive/{run-id}/{agent}_{page}/
+```
+
+### Exit Codes
+
+- **Exit Code 0**: No bugs found
+- **Exit Code 1**: Bugs discovered - review report and videos
+
+## Best Practices
+
+- **Start with low concurrency** (`--max-concurrent 1-3`) for shared environments
+- **Use dedicated test environments** - avoid production
+- **Review video recordings** to understand agent behavior
+- **Validate reported bugs** - some may be environment-specific
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="No agents assigned">
+    **Message**: "No changes detected - no pages need destructive testing"
+    
+    **Solution**: Make changes to `.ts`, `.tsx`, `.js`, or `.jsx` files and ensure you're on a branch with modifications.
+  </Accordion>
+  
+  <Accordion title="Agent timeout">
+    **Error**: "Timeout: No response from Bugster Agent"
+    
+    **Solutions**: Check network connectivity, reduce `--max-concurrent`, or try with `--verbose`.
+  </Accordion>
+  
+  <Accordion title="High resource usage">
+    **Solutions**: Use `--headless`, lower `--max-concurrent`, or close other applications.
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Regular Testing" icon="compass" href="/commands/run">
+    Run your regular test suite to validate bug fixes
+  </Card>
+  
+  <Card title="Update Tests" icon="wand-magic-sparkles" href="/commands/update">
+    Update test specs based on destructive findings
+  </Card>
+  
+  <Card title="Generate More Tests" icon="sparkles" href="/commands/generate">
+    Create additional test cases for discovered edge cases
+  </Card>
+</CardGroup>

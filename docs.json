@@ -2,15 +2,37 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Bugster",
-  "logo": "/logo/LOGOTYPE-VIOLET-LIGHT.png",
+  "logo": "logo/LOGOTYPE-BLACK.png",
   "description": "Bugster is an AI tester that simulates a real user in a real browser, providing insights directly in your PR. It's designed for developers at VC-backed startups who want to ship with confidence without writing or maintaining flaky test suites.",
   "colors": {
-    "primary": "#5A5A5A",
-    "dark": "#5A5A5A",
-    "light": "#5A5A5A"
+    "primary": "#058BFF",
+    "light": "#058BFF",
+    "dark": "#058BFF"
   },
+  "fonts": {
+    "family": "Geist Mono Variable",
+      "source": "https://cdn.jsdelivr.net/fontsource/fonts/geist-mono:vf@latest/latin-wght-normal.woff2",
+      "format": "woff2",
+    "heading":{
+      "family": "Geist Mono Variable",
+      "weight": 600,
+      "source": "https://cdn.jsdelivr.net/fontsource/fonts/geist-mono:vf@latest/latin-wght-normal.woff2",
+      "format": "woff2"
+    },
+    "body":{
+      "family": "figtree",
+      "source": "https://cdn.jsdelivr.net/fontsource/fonts/figtree:vf@latest/latin-wght-normal.woff2",
+      "format": "woff2"
+    }
+  },
+  "background":{
+      "color": {
+        "light": "#FAFAFA",
+        "dark": "#383838"
+      }
+    },
   "appearance": {
-    "default": "dark",
+    "default": "light",
     "strict": true
   },
   "favicon": "/logo/logo2.jpeg",
@@ -30,9 +52,11 @@
           {
             "group": "CLI Commands",
             "pages": [
+              "commands/auth",
               "commands/init",
               "commands/generate",
               "commands/run",
+              "commands/destructive-agent",
               "commands/update",
               "commands/advanced_configuration"
             ]
@@ -47,6 +71,7 @@
           }
         ]
       }
+
     ],
     "global": {
       "anchors": [

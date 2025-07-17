@@ -4,76 +4,136 @@ description: "Get started with Bugster CLI in minutes"
 icon: "rocket"
 ---
 
-This quickstart guide shows you how to set up Bugster CLI, create and run your first AI-powered tests in minutes.
-
-After you complete this guide, you will have automated tests running against your web application.
-
+This quickstart guide shows you how to set up Bugster CLI and create your first AI-powered tests in minutes.
+After you complete this guide, you will have automated tests running against your web application and integrated with your GitHub workflow.
 <Info>
-  **Prerequisites**: Before you begin, [create a Bugster account](https://gui.bugster.dev/sign-up) and ensure you have a Next.js project ready.
+  **Prerequisites**: Before you begin, ensure you have a Next.js project ready. You'll create your Bugster account during the setup process.
 </Info>
 
-## Getting Started
+## Choose Your Setup Method
+Bugster offers two ways to get started. Choose the method that best fits your workflow:
+<CardGroup cols={2}>
 
-You can get started with Bugster CLI in three simple steps:
+<Card title="Automatic Integration" icon="bolt"  href="/quickstart#automatic-integration">
+<Tip>Recommended for most users</Tip>
 
-1. Initialize `bugster init` - Configure your project with authentication and settings
-2. Generate `bugster generate` - AI analyzes your code and creates test specifications
-3. Run `bugster run` - Execute tests with browser automation against your application
+Bugster creates a pull request with everything configured.
+</Card>
+<Card title="Manual Integration" icon="wrench"  href="/quickstart#manual-integration">
+<Note>For advanced users who want more control</Note>
+Use the Bugster CLI for complete control over the setup process and configuration.
 
-Let's walk through each step:
-### 0. Install Bugster CLI
+</Card>
+</CardGroup>
 
-First, install the Bugster CLI on your system.
+## Automatic Integration
+The automatic integration is the fastest way to get started. It begins after account creation and guides you through a seamless setup process.
+### How It Works
+After signing up at Bugster, you'll be taken through an automated onboarding flow that:
 
+<Steps>
+  <Step title="Create Account & Connect GitHub">
+    Sign up at [Bugster](https://gui.bugster.dev/sign-up) and you'll be automatically directed to the GitHub integration screen.
+Click **"Connect GitHub Organization"** to link your GitHub account.
+  </Step>
+  <Step title="Select Your Repository">
+    Choose the Next.js repository you want to integrate with Bugster from your available repositories.
+<Warning>
+  **Repository Requirements**: Your repository must be a Next.js project for automatic integration.
+</Warning>
+  </Step>
+  <Step title="Configure Project Settings">
+    Fill in your project information:
+<AccordionGroup>
+  <Accordion title="Platform Selection" icon="cloud">
+    Choose your deployment platform:
+    - **Vercel** - For Vercel deployments
+    - **Railway** - For Railway deployments
+  </Accordion>
+  
+  <Accordion title="Bypass Protection (Vercel)" icon="shield">
+    If using Vercel, configure bypass protection for preview deployments.
+    
+    <Card title="Vercel Bypass Setup" icon="shield" href="/howto/vercel#protection-bypass-for-automation">
+      Learn how to configure bypass protection for Vercel deployments
+    </Card>
+  </Accordion>
+  
+  <Accordion title="Testing Credentials" icon="key">
+    If your application requires authentication, provide testing credentials.
+    
+    <Card title="Authentication Configuration" icon="key" href="/commands/advanced_configuration#multiple-testing-credentials">
+      Learn about configuring authentication for testing
+    </Card>
+  </Accordion>
+</AccordionGroup>
+  </Step>
+  <Step title="Receive Configuration Pull Request">
+    After completing the setup (usually within a few minutes), you'll receive a pull request with:
+- Complete Bugster CLI configuration
+- Generated test specifications
+- GitHub Actions workflow
+- All necessary project files
+
+**Simply review and merge the pull request to activate Bugster testing!**
+  </Step>
+</Steps>
+
+
+## Manual Integration
+For users who prefer CLI control or need custom configurations, follow this manual setup process.
+<Steps>
+  <Step title="Install Bugster CLI">
+  First, install the Bugster CLI on your system.
 <Card title="Install Bugster CLI" icon="download" href="/installation">
   Visit our installation guide for detailed setup instructions
 </Card>
+  </Step>
 
-### 1. Initialize Bugster in your project
-
+<Step title="Initialize Bugster in Your Project">
 Navigate to your project's root directory and initialize Bugster:
-
 ```bash
 cd your-nextjs-project
 bugster init
 ```
-This command **sets up Bugster configuration for your specific project**, creating the necessary files and folders to store your tests and settings.
+This command sets up Bugster configuration for your specific project, creating the necessary files and folders to store your tests and settings.
 
-#### Configuration Setup
+**Configuration Setup** 
 
 During initialization, you'll be prompted for:
-
 <AccordionGroup>
-<Accordion title="Bugster API KEY" icon="fingerprint">
-    **Get your API KEY** in the dashboard.
-
-    **This is a one-time configuration**
+  <Accordion title="Bugster API KEY" icon="fingerprint">
+    Get your API KEY from the [Bugster Dashboard](https://gui.bugster.dev).
+**This is a one-time configuration per project**
   </Accordion>
   <Accordion title="Project Name" icon="tag">
     **Recommendation**: Use your GitHub repository name for consistency
-    
-    ```
-    Project name: my-awesome-app
-    ```
+```
+Project name: my-awesome-app
+```
   </Accordion>
-  
   <Accordion title="Base URL" icon="globe">
     The localhost URL where your frontend application runs
-    
-    ```
-    Application URL: http://localhost:3000
-    ```
+```
+Application URL: http://localhost:3000
+```
   </Accordion>
-  
+  <Accordion title="Bypass Protection" icon="shield">
+    Configure bypass protection for preview deployments (required for Vercel/Railway).
+<Card title="Vercel Bypass Setup" icon="shield" href="/howto/vercel">
+  Learn how to configure bypass protection for Vercel deployments
+</Card>
+  </Accordion>
   <Accordion title="Authentication Credentials" icon="key">
     **Required if your app has authentication**
-    
-    Add testing credentials for Bugster to log in and test your protected pages:
-    
-    - **Username/Email**: test user credentials
-    - **Password**: test user password
-    
-    These credentials allow Bugster to test authenticated areas of your application.
+Add testing credentials for Bugster to log in and test your protected pages:
+
+- **Username/Email**: test user credentials
+- **Password**: test user password
+
+<Card title="Authentication Configuration" icon="key" href="/commands/advanced_configuration#multiple-testing-credentials">
+  Learn more about configuring authentication for testing
+</Card>
   </Accordion>
 </AccordionGroup>
 
@@ -81,8 +141,9 @@ During initialization, you'll be prompted for:
   Visit our `init` guide for advanced options and customization
 </Card>
 
-### 2. Generate Your First Tests
+</Step>
 
+<Step title="Generate Your First Tests">
 Create test specifications for your application using:
 
 ```bash
@@ -93,9 +154,8 @@ This command **analyzes your codebase and automatically creates test specificati
 <Card title="Learn More About Test Generation" icon="sparkles" href="/commands/generate">
   Visit our generate guide for advanced options and customization
 </Card>
-
-### 3. Run Your Tests
-
+</Step>
+<Step title="Generate Your First Tests">
 Execute the generated tests against your application:
 
 ```bash
@@ -111,93 +171,38 @@ This command executes your test specifications in a browser, validating the inst
   Learn about test execution options and configurations
 </Card>
 
+</Step>
+<Step title="Commit Configuration to Repository">
+Add the Bugster configuration to your repository:
 
-## GitHub Integration
+```bash
+git add .bugster/
+git commit -m "Add Bugster CLI configuration"
+git push origin main
+```
 
-### Install the GitHub App
-
+</Step>
+<Step title="Integrate GitHub App">
 Connect Bugster to your GitHub repository for automated testing on pull requests.
-
-The GitHub integration enables Bugster to automatically run tests on pull requests, providing immediate feedback on code changes and preventing regressions.
-
-<Steps>
-  <Step title="Access GitHub Integration">
-    Visit the [Bugster Dashboard](https://gui.bugster.dev) and navigate to GitHub integration settings and click `"Connect Organization"` .
-  </Step>
-  
-  <Step title="Install the App">
-    Select your organization or user account, then choose the repository you want to integrate with Bugster.
-    <Card title="GitHub App" icon="github" href="/integrations/github">
-    Visit `github` integration for details and guidance on GitHub App Installation.
-    </Card>
-
-  </Step>
-
-  
-  <Step title="Enable Preview Access">
-    If using Vercel or Railway you must grant Bugster permissions for previews
-    <CardGroup cols={2}>
-      <Card title="Vercel" href="/howto/vercel" icon={<svg viewBox="0 -17 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" fill="#ffffff" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <polygon fill="#ffffff" points="128 0 256 221.705007 0 221.705007"> </polygon> </g> </g></svg>}>
-        Vercel deployments compatible.
-
-      </Card>
-      <Card title="Railway" href="/howto/railway" icon={<svg data-v-423bf9ae="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" class="Logo___StyledSvg-sc-teruw2-0 dFgCbS Sidebar___StyledLogo-sc-1w9v62x-5 dOCLSL"><g data-v-423bf9ae="" id="6f639fe5-02e1-4640-a1fb-f4b22b64e5ef" transform="matrix(0.5999641134746578,0,0,0.5999641134746578,-437.5538206497148,-266.68705118956507)" stroke="none"><path d="M729.872 487.327a50.86 50.86 0 0 0-.464 5.033h75.879c-.265-.518-.621-.985-.98-1.442-12.972-16.769-19.95-15.315-29.932-15.741-3.328-.137-5.585-.192-18.832-.192-7.09 0-14.798.018-22.304.038.737-1.746 1.6-3.419 2.525-5.061-2.885 5.106-4.865 10.771-5.805 16.789l.891-4.397c.007-.031.018-.063.024-.094h38.883v5.067h-39.885zM805.885 497.432h-76.438c.08 1.352.206 2.686.388 4.002h70.571c3.146 0 4.907-1.786 5.479-4.002zM733.851 515.257a52.226 52.226 0 0 1-1.98-4.997c6.608 19.89 25.328 34.251 47.433 34.251 20.205 0 37.566-12.007 45.452-29.254h-90.905zM729.38 492.915c-.018.531-.08 1.055-.08 1.589 0 .538.063 1.059.08 1.59v-3.179zM824.77 515.229z"></path><path d="M779.303 444.505c-18.682 0-34.939 10.265-43.524 25.439 6.709-.014 19.775-.022 19.775-.022h.003v-.005c15.444 0 16.018.069 19.035.195l1.868.069c6.507.217 14.505.916 20.798 5.68 3.416 2.584 8.348 8.287 11.288 12.35 2.718 3.758 3.5 8.078 1.652 12.217-1.701 3.804-5.361 6.073-9.793 6.073H730.85l-.884-4.201c.426 2.707 1.037 5.344 1.879 7.886h94.914a49.863 49.863 0 0 0 2.546-15.682c.001-27.611-22.386-49.999-50.002-49.999z"></path></g></svg>}>
-        Railway deployments compatible.
-      </Card>
-    </CardGroup>
-  </Step>
-  
-  <Step title="Commit Bugster Configuration with your changes">
-    Add the `.bugster` folder to your repository:
-    
-    ```bash
-    git add .bugster/
-    git commit -m "Add Bugster CLI configuration"
-    git push origin main
-    ```
-  </Step>
-  
-  <Step title="Create a Pull Request">
-    Create a pull request to see Bugster in action. The GitHub app will automatically run your tests and report results.
-  </Step>
+<Card title="GitHub App Integration" icon="github" href="/integrations/github">
+  Visit our GitHub integration guide for detailed setup instructions
+</Card>
+</Step>
 </Steps>
 
-
 ## Next Steps
-
-Congratulations! You now have Bugster CLI set up and running. Here's what to explore next:
-
+Congratulations! You now have Bugster set up and running. Here's what to explore next:
 <CardGroup cols={2}>
-  <Card title="Test Generation" icon="sparkles" href="/commands/generate">
-  Visit our generate guide for advanced options and customization
+  <Card title="Generate More Tests" icon="sparkles" href="/commands/generate">
+    Want to create more tests for your app? Learn advanced test generation options and customization.
   </Card>
-  
-  <Card title="Test Execution" icon="compass" href="/commands/run">
-  Learn about test execution options and configurations
-</Card>
-  
-   <Card title="GitHub App" icon="github" href="/integrations/github">
-    Visit `github` integration for details and guidance on GitHub App Installation.
-    </Card>
-
+  <Card title="Adapt Bugster to your workflow" icon="code-pull-request" href="/config-ui">
+    Want to customize when to execute tests and destructive testing? Configure your testing workflow.
+  </Card>
+  <Card title="Find & Fix Bugs" icon="bomb" href="/commands/destructive-agent">
+    Want to find bugs and resolve them in your current version? Use our destructive testing agent.
+  </Card>
+  <Card title="Automate Test Updates" icon="wand-magic-sparkles" href="/commands/update">
+    Want to automatically update your tests? Set up automated test maintenance in GitHub.
+  </Card>
 </CardGroup>
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="Tests not generating">
-    Ensure you're in a Next.js project directory and that Bugster CLI is properly installed. Check the [installation guide](/installation) for requirements.
-  </Accordion>
-  
-  <Accordion title="Tests failing to run">
-    Verify your application is running on the configured base URL and that any required authentication credentials are correct.
-  </Accordion>
-  
-  <Accordion title="GitHub integration not working">
-    Make sure you've committed the `.bugster` folder to your repository and that the GitHub app has proper permissions for your repository.
-  </Accordion>
-</AccordionGroup>
-
-<Info>
-  **Need help?** Visit our [documentation](https://docs.bugster.dev) or reach out to our support team through the [Bugster Dashboard](https://gui.bugster.dev).
-</Info>

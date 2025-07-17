@@ -1,5 +1,156 @@
 ---
 title: 'Vercel Integration'
-description: 'Run your automated tests with bugster run'
+description: 'Automated testing on Vercel preview deployments with Bugster'
 icon: "triangle"
 ---
+
+## Overview
+
+Bugster's Vercel integration provides automated testing on every preview deployment, helping you catch bugs before they reach production. Here's how it works:
+
+1. **Deploy Trigger**: When you push changes to a branch or create a pull request, Vercel automatically creates a preview deployment
+2. **Bugster Activation**: Once the Vercel deployment is complete, Bugster detects the new preview URL
+3. **Automated Testing**: Bugster runs your test suite and destructive agents against the preview deployment
+4. **Results & Feedback**: Test results are reported back, allowing you to identify and fix issues before merging
+
+This integration ensures that every code change is thoroughly tested in a real deployment environment, preventing bugs from reaching your main branch and production.
+
+### Key Benefits
+
+- **Early Bug Detection**: Catch issues in preview deployments before they affect users
+- **Automated Workflow**: No manual intervention needed - tests run automatically on every deployment
+- **Real Environment Testing**: Tests run against actual deployed code, not just local development
+- **Pull Request Integration**: Get test results directly in your PR workflow
+- **Destructive Testing**: Advanced AI agents explore your app to find edge cases and potential issues
+
+## Protection Bypass for Automation
+
+Bugster requires access to your Vercel preview deployments to run automated tests. To enable this, you need to create a "Protection Bypass for Automation" secret in Vercel and add it to your Bugster configuration.
+
+### Creating a Protection Bypass Secret
+
+<Steps>
+  <Step title="Navigate to Project Settings">
+    1. Go to your Vercel dashboard
+    2. Select your project
+    3. Navigate to **Settings** → **Deployment Protection**
+  </Step>
+  
+  <Step title="Generate Protection Bypass for Automation Secret">
+    1. Scroll down to **Protection Bypass for Automation**
+    2. Click **Create Secret** or **Regenerate** if one exists
+    3. Copy the generated secret (it looks like: `vercel_bypass_1a2b3c4d5e6f...`)
+    
+    <Warning>
+      Store this secret securely - it allows automated tools to access your preview deployments
+    </Warning>
+  </Step>
+  
+  <Step title="Configure Bugster">
+    Add the bypass secret to your Bugster configuration:
+    
+    **During initialization:**
+    ```bash
+    bugster init --bypass-protection "vercel_bypass_1a2b3c4d5e6f..." --platform vercel
+    ```
+    
+    **Or manually in `.bugster/config.yaml`:**
+    ```yaml
+    project_name: "My App"
+    project_id: "my-app-123456" 
+    base_url: "http://localhost:3000"
+    x-vercel-protection-bypass: "vercel_bypass_1a2b3c4d5e6f..."
+    credentials:
+      - id: "admin"
+        username: "test@example.com"
+        password: "testpass"
+    ```
+  </Step>
+</Steps>
+
+### How the Bypass Works
+
+When Bugster runs tests on your Vercel preview deployments:
+
+1. **Header Injection**: Bugster automatically includes the `x-vercel-protection-bypass` header with your secret
+2. **Access Granted**: Vercel recognizes the valid bypass secret and allows automated access to preview deployments
+3. **Test Execution**: Bugster can now run tests normally on the preview deployment
+4. **Automation Enabled**: This enables seamless CI/CD integration without manual intervention
+
+### Security Best Practices
+
+<AccordionGroup>
+  <Accordion title="Secret Management" icon="key">
+    - **Never commit** the bypass secret to your repository
+    - **Regenerate periodically** for enhanced security
+    - **Limit access** to team members who need it
+    - **Monitor usage** in Vercel's deployment logs
+  </Accordion>
+  
+  <Accordion title="Environment Separation" icon="shield">
+    - Use different secrets for different environments (staging, preview)
+    - Consider separate Vercel projects for sensitive applications
+    - Review team access permissions regularly
+  </Accordion>
+  
+  <Accordion title="Secret Rotation" icon="refresh">
+    - Regenerate secrets when team members leave
+    - Update Bugster configuration after regeneration
+    - Test the new secret with a sample deployment
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Bypass Secret Not Working">
+    **Symptoms**: Tests fail to access preview URLs
+    
+    **Solutions**:
+    - Verify the secret is correctly copied (no extra spaces)
+    - Ensure the secret is properly configured in `.bugster/config.yaml`
+    - Check that password protection is **disabled** in Vercel
+    - Try regenerating the Protection Bypass for Automation secret in Vercel dashboard
+    - Verify the secret is for "Protection Bypass for Automation" (not password protection)
+  </Accordion>
+  
+  <Accordion title="Tests Not Running on Preview">
+    **Symptoms**: Bugster doesn't detect new deployments
+    
+    **Solutions**:
+    - Verify Vercel integration is properly configured
+    - Check webhook settings in Vercel project
+    - Ensure your branch triggers preview deployments
+    - Review Bugster project configuration
+  </Accordion>
+  
+  <Accordion title="Authentication Issues">
+    **Symptoms**: Tests fail on app login despite valid credentials
+    
+    **Solutions**:
+    - Verify credentials work on the preview URL manually
+    - Check if preview environment uses different authentication
+    - Ensure database/auth services are accessible from preview
+    - Review environment variables in Vercel deployment
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="GitHub Integration" icon="github" href="/integrations/github">
+    Connect GitHub for complete CI/CD workflow with pull request comments
+  </Card>
+  
+  <Card title="Test Configuration" icon="gear" href="/configuration/advanced">
+    Configure advanced testing options and environment-specific settings
+  </Card>
+  
+  <Card title="Destructive Testing" icon="bomb" href="/commands/destructive">
+    Learn about AI-powered destructive agents for comprehensive bug detection
+  </Card>
+  
+  <Card title="Results Analysis" icon="chart-bar" href="/analysis/results">
+    Understand and analyze your test results and reports
+  </Card>
+</CardGroup>

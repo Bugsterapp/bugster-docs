@@ -21,6 +21,31 @@ This command will guide you through:
 2. **Project configuration**
 3. **Credential setup** (for authenticated apps)
 
+## Command Options
+
+The `init` command supports several flags for automation and customization:
+
+```bash
+bugster init [OPTIONS]
+```
+
+### Authentication Options
+- `--api-key TEXT`: Bugster API key (starts with 'bugster_')
+- `--no-auth`: Skip authentication if API key is already configured
+
+### Project Configuration
+- `--project-name TEXT`: Name for your project
+- `--url TEXT`: Base URL of your application (e.g., http://localhost:3000)
+
+### Credential Management
+- `--user TEXT`: Username/email for login credentials
+- `--password TEXT`: Password for login credentials  
+- `--credential-name TEXT`: Name for the credential entry (default: admin)
+- `--no-credentials`: Skip credential setup entirely
+
+### Platform Protection
+- `--bypass-protection TEXT`: Protection bypass secret for the specified platform
+- `--platform TEXT`: Platform type (vercel or railway, default: vercel)
 
 ## Step-by-Step Process
 
@@ -37,10 +62,15 @@ This command will guide you through:
     ```bash
     bugster init
     ```
+    
+    Or use flags for automation:
+    ```bash
+    bugster init --project-name "my-app" --url "http://localhost:3000" --user "test@example.com" --password "testpass"
+    ```
   </Step>
   
   <Step title="API Key Authentication (First Time Only)">
-    If it's your first time using Bugster CLI, you'll be prompted for your API key:
+    If it's your first time using Bugster CLI and no `--api-key` flag is provided, you'll be prompted:
     
     ```bash
     🔑 Paste your API key here: bugster_your_api_key_here
@@ -49,10 +79,12 @@ This command will guide you through:
     <Card title="Get Your API Key" icon="key" href="https://gui.bugster.dev">
       Find your API key in the Bugster Dashboard under Account Settings
     </Card>
+    
+    <Tip>Use `--api-key` flag to provide the key directly or `--no-auth` to skip if already configured</Tip>
   </Step>
   
   <Step title="Configure Project Settings">
-    You'll be prompted to configure your project:
+    You'll be prompted to configure your project (unless flags are provided):
     
     **Project Name**
     ```bash
@@ -65,7 +97,7 @@ This command will guide you through:
     🌐 Application URL: http://localhost:3000
     ```
     
-    **Authentication Credentials** (if your app requires login)
+    **Authentication Credentials** (unless `--no-credentials` is used)
     ```bash
     ➕ Would you like to add custom login credentials? (y/n): y
     👤 Credential name: admin
@@ -99,6 +131,45 @@ credentials:
   - id: "admin"
     username: "admin@example.com"
     password: "admin123"
+x-vercel-protection-bypass: ""  # or x-railway-protection-bypass
+```
+
+## Automated Setup Examples
+
+### Complete Non-Interactive Setup
+```bash
+bugster init \
+  --api-key "bugster_your_key_here" \
+  --project-name "my-nextjs-app" \
+  --url "http://localhost:3000" \
+  --user "test@example.com" \
+  --password "testpass123" \
+  --credential-name "testuser"
+```
+
+### Setup Without Credentials
+```bash
+bugster init \
+  --project-name "my-app" \
+  --url "http://localhost:3000" \
+  --no-credentials
+```
+
+### Setup with Platform Protection
+```bash
+bugster init \
+  --project-name "my-app" \
+  --url "https://my-app.vercel.app" \
+  --platform vercel \
+  --bypass-protection "your-bypass-secret"
+```
+
+### Skip Authentication (if already configured)
+```bash
+bugster init \
+  --no-auth \
+  --project-name "my-app" \
+  --url "http://localhost:3000"
 ```
 
 ## Configuration Options
@@ -107,6 +178,8 @@ credentials:
   <Accordion title="Project Name" icon="tag">
     **Purpose**: Identifies your project in the Bugster dashboard
     
+    **Flag**: `--project-name`
+    
     **Recommendation**: Use your GitHub repository name for consistency
     
     **Example**: `my-nextjs-app`
@@ -114,6 +187,8 @@ credentials:
   
   <Accordion title="Base URL" icon="globe">
     **Purpose**: The URL where your application runs during testing
+    
+    **Flag**: `--url`
     
     **Common values**:
     - `http://localhost:3000` (Next.js default)
@@ -124,11 +199,27 @@ credentials:
   <Accordion title="Authentication Credentials" icon="key">
     **Purpose**: Test user credentials for authenticated areas of your app
     
+    **Flags**: `--user`, `--password`, `--credential-name`
+    
     **When needed**: If your app has login/authentication gates
+    
+    **Skip option**: Use `--no-credentials` to skip entirely
     
     **Multiple credentials**: You can add multiple test users for different scenarios
     
     **Security**: Credentials are stored locally and used only for testing
+  </Accordion>
+  
+  <Accordion title="Platform Protection" icon="shield">
+    **Purpose**: Bypass platform-specific protection (Vercel, Railway)
+    
+    **Flags**: `--platform`, `--bypass-protection`
+    
+    **Supported platforms**: `vercel` (default), `railway`
+    
+    **When needed**: For applications deployed with password protection
+    
+    **Security**: Protection bypass secrets are stored securely in config
   </Accordion>
 </AccordionGroup>
 
@@ -137,7 +228,7 @@ credentials:
 For advanced use cases, you can customize additional settings in your `config.yaml` file:
 
 <Card title="Advanced Configuration" icon="gear" href="/configuration/advanced">
-  Learn about advanced configuration options including Vercel protection bypass, always-run tests, and more
+  Learn about advanced configuration options including additional protection bypasses, always-run tests, and more
 </Card>
 
 ## Troubleshooting
@@ -150,6 +241,25 @@ For advanced use cases, you can customize additional settings in your `config.ya
     - Double-check your API key in the Bugster dashboard
     - Ensure you're copying the entire key without extra spaces
     - Verify you have an active internet connection
+    - Use `--api-key` flag to provide key directly
+  </Accordion>
+  
+  <Accordion title="Missing Credentials Error">
+    **Error**: Both --user and --password must be provided together
+    
+    **Solution**: When using flags, provide both `--user` and `--password` together, or omit both for interactive mode
+  </Accordion>
+  
+  <Accordion title="No Auth with No Key">
+    **Error**: No API key configured and --no-auth flag provided
+    
+    **Solution**: Either provide `--api-key` flag or remove `--no-auth` to authenticate interactively
+  </Accordion>
+  
+  <Accordion title="Invalid Platform">
+    **Error**: --platform must be either 'vercel' or 'railway'
+    
+    **Solution**: Use only supported platform values: `vercel` or `railway`
   </Accordion>
   
   <Accordion title="Existing Project Warning">
@@ -187,8 +297,12 @@ After successful initialization, you're ready to:
   <Card title="GitHub Integration" icon="github" href="/integrations/github">
     Connect your repository for automated testing on pull requests
   </Card>
+  
   <Card title="Advanced Configuration" icon="gear" href="/configuration/advanced">
-  Learn about advanced configuration options including Vercel protection bypass, always-run tests, and more
+    Learn about advanced configuration options including platform protection bypass and more
+  </Card>
+  
+  <Card title="Run Tests" icon="play" href="/commands/test">
+    Execute your generated tests and view results
   </Card>
 </CardGroup>
-
