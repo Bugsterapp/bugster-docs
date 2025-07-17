@@ -10,8 +10,8 @@
     "dark": "#058BFF"
   },
   "fonts": {
-    "family": "Geist Mono Variable",
-      "source": "https://cdn.jsdelivr.net/fontsource/fonts/geist-mono:vf@latest/latin-wght-normal.woff2",
+    "family": "figtree",
+      "source": "https://cdn.jsdelivr.net/fontsource/fonts/figtree:vf@latest/latin-wght-normal.woff2",
       "format": "woff2",
     "heading":{
       "family": "Geist Mono Variable",
