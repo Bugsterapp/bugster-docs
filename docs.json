@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Bugster",
-  "logo": "logo/LOGOTYPE-BLACK.png",
+  "logo": "logo/Bugster-Logo.png",
   "description": "Bugster is an AI tester that simulates a real user in a real browser, providing insights directly in your PR. It's designed for developers at VC-backed startups who want to ship with confidence without writing or maintaining flaky test suites.",
   "colors": {
     "primary": "#058BFF",
@@ -27,7 +27,7 @@
   },
   "background":{
       "color": {
-        "light": "#FAFAFA",
+        "light": "#FFFFFF",
         "dark": "#383838"
       }
     },
@@ -70,8 +70,18 @@
             ]
           }
         ]
+      },
+      {
+      "tab": "Changelog", 
+        "groups": [
+          {
+            "group": "Changelog",
+            "pages": [
+                "changelog"
+            ]
+          }
+        ]
       }
-
     ],
     "global": {
       "anchors": [
@@ -82,7 +92,7 @@
         },
         {
           "anchor": "Blog",
-          "href": "https://www.bugster.dev/blog",
+          "href": "https://newsletter.bugster.dev",
           "icon": "newspaper"
         }
       ]
