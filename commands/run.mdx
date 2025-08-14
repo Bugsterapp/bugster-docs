@@ -4,472 +4,73 @@ description: 'Execute your test specifications with browser automation'
 icon: "compass"
 ---
 
-The `bugster run` command executes your generated test specifications using browser automation, validating that your application works as expected. It runs tests against your configured application URL and reports results.
-
-<Note>
-  You must run `bugster init` and `bugster generate` before using the run command. Ensure your application is running on the configured base URL.
-</Note>
-
-## Basic Usage
-
-```bash
-bugster run
-```
-
-This command will:
-1. **Load test specifications** from `.bugster/tests/` directory
-2. **Launch browser automation** using Playwright
-3. **Execute test steps** against your application
-4. **Report results** with pass/fail status and detailed feedback
-
-## How It Works
-
-<Steps>
-  <Step title="Test Discovery">
-    Bugster scans for test files:
-    - Loads all `.yaml` files from `.bugster/tests/`
-    - Applies test limits and filtering (if configured)
-    - Processes always-run tests first
-    - Organizes execution order
-  </Step>
-  
-  <Step title="Browser Automation">
-    For each test specification:
-    - Launches a browser instance (Chrome by default)
-    - Navigates to your application
-    - Authenticates using configured credentials
-    - Executes each test step in sequence
-  </Step>
-  
-  <Step title="Results Collection">
-    After execution:
-    - Records pass/fail status for each test
-    - Captures failure reasons and screenshots
-    - Optionally records video of test execution
-    - Streams results to dashboard (if enabled)
-  </Step>
-</Steps>
-
-## Command Flags and Options
-
-### Path Targeting
-
-```bash
-bugster run [path]
-```
-
-<AccordionGroup>
-  <Accordion title="path argument" icon="folder">
-    **Purpose**: Run tests from specific file or directory
-    
-    **Formats**:
-    - **File**: `bugster run auth/1_login.yaml`
-    - **Directory**: `bugster run auth/`
-    - **Relative paths**: Relative to `.bugster/tests/`
-    
-    **Examples**:
-    ```bash
-    # Run all tests in auth folder
-    bugster run auth/
-    
-    # Run specific test file
-    bugster run auth/1_login.yaml
-    
-    # Run all tests (same as no argument)
-    bugster run
-    ```
-  </Accordion>
-</AccordionGroup>
-
-### Browser Configuration
-
-```bash
-bugster run --headless
-```
-
-<AccordionGroup>
-  <Accordion title="--headless" icon="eye-slash">
-    **Purpose**: Run tests without visible browser window
-    
-    **When to use**:
-    - CI/CD pipelines
-    - Server environments without GUI
-    - Faster execution when debugging isn't needed
-    
-    **Default**: Browser window is visible for local debugging
-    
-    **Example**:
-    ```bash
-    bugster run --headless
-    ```
-  </Accordion>
-</AccordionGroup>
-
-### Output Control
-
-```bash
-bugster run --silent
-```
-
-<AccordionGroup>
-  <Accordion title="--silent, -s" icon="volume-xmark">
-    **Purpose**: Minimize console output during execution
-    
-    **What's hidden**:
-    - Individual test step details
-    - Browser automation logs
-    - Progress indicators
-    
-    **What's shown**:
-    - Final test results
-    - Error messages
-    - Summary statistics
-    
-    **Example**:
-    ```bash
-    bugster run --silent
-    ```
-  </Accordion>
-</AccordionGroup>
-
-```bash
-bugster run --verbose
-```
-
-<AccordionGroup>
-  <Accordion title="--verbose" icon="comment">
-    **Purpose**: Show detailed execution logs and debugging information
-    
-    **Additional output**:
-    - Individual test step execution
-    - Browser automation details
-    - Network requests and responses
-    - Detailed error information
-    
-    **When to use**: Debugging test failures or understanding execution flow
-    
-    **Example**:
-    ```bash
-    bugster run --verbose
-    ```
-  </Accordion>
-</AccordionGroup>
-
-### Environment Configuration
-
-```bash
-bugster run --base-url https://staging.myapp.com
-```
-
-<AccordionGroup>
-  <Accordion title="--base-url" icon="globe">
-    **Purpose**: Override the base URL from configuration
-    
-    **Use cases**:
-    - Testing against different environments
-    - CI/CD with dynamic URLs
-    - Vercel preview deployments
-    - Staging environment testing
-    
-    **Examples**:
-    ```bash
-    # Test against staging
-    bugster run --base-url https://staging.myapp.com
-    
-    # Test against Vercel preview
-    bugster run --base-url https://my-app-git-feature-user.vercel.app
-    
-    # Test against different local port
-    bugster run --base-url http://localhost:3001
-    ```
-  </Accordion>
-</AccordionGroup>
-
-
-### Test Selection and Filtering
-
-```bash
-bugster run --only-affected
-```
-
-<AccordionGroup>
-  <Accordion title="--only-affected" icon="filter">
-    **Purpose**: Run only tests affected by recent code changes
-    
-    **How it works**:
-    - Analyzes git changes since last commit
-    - Identifies modified pages and components
-    - Maps changes to relevant test files
-    - Includes always-run tests regardless
-    
-    **Benefits**:
-    - Faster feedback in development
-    - Focus on potentially broken functionality
-    - Efficient CI/CD testing
-    
-    **Example**:
-    ```bash
-    bugster run --only-affected
-    ```
-  </Accordion>
-</AccordionGroup>
-
-### Concurrency Control
-
-```bash
-bugster run --max-concurrent 3
-```
-
-<AccordionGroup>
-  <Accordion title="--max-concurrent" icon="layer-group">
-    **Purpose**: Control maximum number of parallel test executions
-    
-    **Range**: 1 to 5 concurrent tests
-    
-    **Default**: 5 concurrent tests for optimal performance
-    
-    **Considerations**:
-    - **Higher values**: Faster execution, more resource usage
-    - **Lower values**: More stable, better for debugging
-    - **Value 1**: Sequential execution, easiest debugging
-    
-    **Examples**:
-    ```bash
-    # Maximum parallelism
-    bugster run --max-concurrent 5
-    
-    # Conservative approach
-    bugster run --max-concurrent 2
-    
-    # Sequential execution for debugging
-    bugster run --max-concurrent 1
-    ```
-  </Accordion>
-</AccordionGroup>
-
-## Combined Usage Examples
-
-### Development Workflow
-
-```bash
-# Quick test run with debugging
-bugster run auth/ --verbose --max-concurrent 1
-
-# Silent production-like run
-bugster run --headless --silent 
-
-# Test specific feature after changes
-bugster run --only-affected 
-```
-
-## Test Execution Flow
-
-### Test Discovery and Limits
-
-```bash
-🧪 Loading tests...
-📊 Test limit applied: Running 5 out of 12 tests (limit: 5)
-
-Distribution by folder:
-📁 auth: 2 tests
-📁 dashboard: 2 tests  
-📁 checkout: 1 test
-
-🎯 Always-run tests: 2 (additional to limit)
-📊 Total tests to run: 7 (regular: 5 + always-run: 2)
-```
-
-### Parallel Execution
-
-When running multiple tests concurrently, you'll see compact status updates:
-
-```bash
-⚡ Executing tests...
-[Login Flow             ] Starting test
-[User Registration      ] Starting test  
-[Dashboard Overview     ] Starting test
-[Login Flow             ] Finished: pass (Time: 12.3s)
-[User Registration      ] Finished: pass (Time: 15.7s)
-[Dashboard Overview     ] Finished: fail (Time: 8.9s)
-```
-
-### Results Summary
-
-```bash
-Test Results
-┌─────────────────────┬────────┬─────────────────────────┬──────────┐
-│ Name                │ Result │ Reason                  │ Time (s) │
-├─────────────────────┼────────┼─────────────────────────┼──────────┤
-│ Login Flow          │ pass   │ All steps completed     │ 12.30    │
-│ User Registration   │ pass   │ All steps completed     │ 15.70    │
-│ Dashboard Overview  │ fail   │ Element not found       │ 8.90     │
-└─────────────────────┴────────┴─────────────────────────┴──────────┘
-
-Test Summary
-✅ Passed: 2
-❌ Failed: 1  
-📊 Success Rate: 66.7%
-
-Total execution time: 45.2 seconds
-```
-
-## Test Limits and Selection
-
-### Default Test Limits
-
-- **Free tier**: Maximum 5 tests per execution
-- **Distribution**: Tests spread across feature folders
-- **Always-run tests**: Execute in addition to the limit
-- **Selection algorithm**: Representative tests chosen intelligently
-
-### Test Selection Logic
-
-<CardGroup cols={2}>
-  <Card title="Folder Distribution" icon="folder-tree">
-    **Algorithm**: Tests distributed evenly across folders
-    
-    **Example**: 15 total tests, 5 limit
-    - `auth/`: 2 tests selected
-    - `dashboard/`: 2 tests selected  
-    - `checkout/`: 1 test selected
-  </Card>
-  
-  <Card title="Always-Run Priority" icon="star">
-    **Execution**: Always-run tests execute first
-    
-    **Additional**: Count separately from regular limits
-    
-    **Maximum**: Up to 3 always-run tests per execution
-  </Card>
-</CardGroup>
-
-## Video Recording 
-
-Tests automatically record execution for debugging:
-
-### Video Recording
-
-- **Location**: `.bugster/videos/{run-id}/{test-id}/`
-- **Format**: WebM video files
-- **Content**: Complete test execution from start to finish
-- **Accessibility**: Videos uploaded to dashboard when streaming enabled
-
-## Authentication Handling
-
-### Credential Usage
-
-Tests automatically handle authentication using configured credentials:
-
-```yaml
-# In your test file
-credentials:
-  - id: "admin"
-    username: "admin@example.com"
-    password: "admin123"
-```
-
-### Authentication Flow
-
-1. **Credential selection**: Test uses appropriate credential set
-2. **Login execution**: Automated login using provided credentials
-3. **Session management**: Maintains authentication throughout test
-4. **Logout handling**: Cleans up sessions between tests
-
-## Best Practices
-
-<CardGroup cols={1}>
-  <Card title="Performance Optimization" icon="gauge-high">
-    **Use appropriate concurrency**: Higher for fast feedback, lower for stability
-    
-    **Run targeted tests**: Use `--only-affected` during development
-    
-    **Environment-specific runs**: Use `--base-url` for different environments
-    
-    **Headless in CI/CD**: Always use `--headless` in automated pipelines
-  </Card>
-  
-  <Card title="Debugging and Development" icon="bug">
-    **Sequential execution**: Use `--max-concurrent 1` when debugging
-    
-    **Verbose output**: Add `--verbose` to understand test execution
-    
-    **Local URLs**: Test against `localhost` during development
-    
-    **Save results**: Use `--output` to analyze test patterns
-  </Card>
-  
-</CardGroup>
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="Application not accessible">
-    **Error**: Failed to navigate to application URL
-    
-    **Solutions**:
-    - Verify your application is running on configured base URL
-    - Check network connectivity and firewall settings
-    - Use `--base-url` to override configuration if needed
-    - Ensure URL includes correct protocol (http/https)
-  </Accordion>
-  
-  <Accordion title="Authentication failures">
-    **Error**: Login failed or authentication required
-    
-    **Solutions**:
-    - Verify credentials in `.bugster/config.yaml` are correct
-    - Test credentials manually in your application
-    - Check if authentication flow has changed
-    - Ensure test user accounts exist and are active
-  </Accordion>
-  
-  <Accordion title="Test timeouts">
-    **Error**: Test execution timeout or unresponsive browser
-    
-    **Solutions**:
-    - Reduce `--max-concurrent` value for better stability
-    - Check application performance and response times
-    - Use `--verbose` to identify slow steps
-    - Verify adequate system resources (CPU, memory)
-  </Accordion>
-  
-  <Accordion title="Element not found errors">
-    **Error**: UI elements not found during test execution
-    
-    **Solutions**:
-    - Verify application UI hasn't changed significantly
-    - Run `bugster update` to refresh test specifications
-    - Use `--verbose` to see exact element selectors
-    - Check if elements have dynamic IDs or classes
-  </Accordion>
-  
-  <Accordion title="Network or streaming issues">
-    **Error**: Failed to stream results or connect to Bugster services
-    
-    **Solutions**:
-    - Check internet connectivity
-    - Try with `--no-stream-results` to run locally only
-    - Verify API key is valid and not expired
-    - Check if corporate firewall blocks connections
-  </Accordion>
-</AccordionGroup>
-
-## Exit Codes
-
-The `bugster run` command uses standard exit codes:
-
-- **Exit 0**: All tests passed successfully
-- **Exit 1**: One or more tests failed or execution error occurred
-
-This enables proper CI/CD integration where failed tests fail the build.
-
-## Next Steps
-
-After running tests, you can:
-
-<CardGroup cols={2}>
-  <Card title="Update Tests" icon="arrows-rotate" href="/commands/update">
-    Keep tests synchronized with code changes
-  </Card>
-  
-</CardGroup>
+## Overview
+
+**Purpose**: Executes your test specifications using an AI agent in an automated browser.
+
+**When to use**:
+- **Before deploying** to validate functionality
+- In CI/CD pipelines for automated testing
+- During development to catch regressions
+- To verify fixes after bug reports
+
+**Important notes**:
+- **Requires your app to be running** on the configured URL
+- Opens real browser instances (unless `--headless`)
+- Can run individual tests or entire test suites
+- Supports parallel execution for faster results
+- Streams results to dashboard when enabled
+
+## CLI Reference
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `bugster run` | Run all available tests | `bugster run` |
+| `bugster run auth/` | Run tests in specific directory | `bugster run auth/` |
+| `bugster run --headless` | Run without browser UI | `bugster run --headless` |
+| `bugster run --parallel 5` | Run up to 5 tests concurrently | `bugster run --parallel 5` |
+| `bugster run --only-affected` | Run only tests for changed files | `bugster run --only-affected` |
+
+### Execution Flags
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--headless` | Run tests in headless mode (no browser UI) | `--headless` |
+| `--silent` | Run in silent mode (less verbose output) | `--silent` |
+| `--verbose` | Enable verbose output for debugging | `--verbose` |
+| `--parallel` | Maximum number of concurrent tests (default: 3) | `--parallel 8` |
+| `--max-concurrent` | Alias for --parallel | `--max-concurrent 5` |
+| `--limit` | Maximum number of tests to run | `--limit 10` |
+| `--browser` | Browser to use for tests | `--browser chromium` |
+
+### Filtering Flags
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--only-affected` | Only run tests for affected files/directories | `--only-affected` |
+| `--base-url` | Override base URL from config | `--base-url https://staging.myapp.com` |
+
+### Output Flags
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--output` | Save test results to JSON file | `--output results.json` |
+| `--stream-results` | Stream results to dashboard (default: true) | `--stream-results` |
+| `--no-stream-results` | Disable streaming to dashboard | `--no-stream-results` |
+
+### Common Usage Patterns
+
+| Use Case | Command | Description |
+|----------|---------|-------------|
+| Local development | `bugster run` | Run all tests with browser visible |
+| CI/CD pipeline | `bugster run --headless --stream-results` | Automated testing in CI |
+| Quick validation | `bugster run --limit 5 --parallel 3` | Run subset of tests quickly |
+| Staging testing | `bugster run --base-url https://staging.app.com` | Test against staging environment |
+| Debugging | `bugster run auth/ --verbose` | Debug specific test category |
+| Performance testing | `bugster run --parallel 10 --headless` | Maximum speed execution |
+
+**Pro Tips**:
+- Use `--only-affected` in PR workflows to test only changed functionality
+- `--parallel` significantly speeds up execution but uses more resources
+- `--output` is useful for generating test reports in CI/CD
+- Browser videos are automatically recorded for failed tests
