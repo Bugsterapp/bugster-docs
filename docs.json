@@ -35,7 +35,7 @@
     "default": "light",
     "strict": true
   },
-  "favicon": "/logo/logo2.jpeg",
+  "favicon": "/logo/Bugster-Logoicon-blue.svg",
   "navigation": {
     "tabs": [
       {
