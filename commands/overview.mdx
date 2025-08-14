@@ -1,0 +1,39 @@
+---
+title: 'CLI Overview'
+description: 'Complete overview of Bugster CLI commands and capabilities'
+icon: 'terminal'
+---
+
+# Bugster CLI Overview
+
+Bugster CLI is an AI-powered command-line tool that generates, executes, and maintains end-to-end tests for web applications. Use it to interact with Bugster directly from your IDE.
+
+## 🚀 Initial Setup Commands
+
+These commands are used during initial project configuration.
+
+| Command               | Description | When to use |
+|---------              |-------------|-------------|
+| `bugster auth`        | Configure your Bugster API key | When switching organizations or updating credentials |
+| `bugster init`        | Initialize Bugster in your repository | Once per repository |
+| `bugster quickstart`  | Initialize project and generate 3 tests automatically | Perfect for first-time setup |
+
+## 🧪 Core Testing Commands
+
+Commands you'll use regularly in your development workflow.
+
+| Command             | Description | Use cases |
+|---------            |-------------|-----------|
+| `bugster generate`  | Analyzes code and generates  test specs | Generate tests for new features, use `--page` for specific pages |
+| `bugster run`       | Executes test specs in automated browser | Validate before deployment, run in CI/CD, use `--parallel` |
+| `bugster update`      | Updates existing tests based on code changes | Keep tests synchronized, automate in PRs |
+
+## 🔥 Advanced Testing
+
+| Command | Description | Use cases |
+|---------|-------------|-----------|
+| `bugster destructive` | Runs destructive agents to find bugs through edge cases | Discover vulnerabilities, stress testing, simulate unexpected behaviors |
+
+<Tip>
+Start with `bugster quickstart` if you're new to Bugster - it sets up everything and generates your first tests automatically.
+</Tip>

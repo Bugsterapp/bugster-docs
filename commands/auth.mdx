@@ -4,224 +4,34 @@ description: 'Configure and manage your Bugster API key for CLI authentication'
 icon: 'key'
 ---
 
-The `bugster auth` command manages authentication for Bugster CLI by configuring your API key. This command handles setting, updating, and clearing your API key credentials.
+## Overview
 
-<Note>
-  Authentication is **required** for all Bugster CLI operations. Your API key connects the CLI to your Bugster account and enables access to testing features.
-</Note>
+**Purpose**: Configure or update your Bugster API key for authentication.
 
-## Basic Usage
+**When to use**:
+- When switching between organizations/teams
+- Setting up Bugster for the first time
+- If your API key expires or gets rotated
+- When API key authentication fails
 
-```bash
-bugster auth
-```
+**Important notes**:
+- API keys start with `bugster_` prefix
+- Stored securely in `~/.bugsterrc` 
+- Can also use `BUGSTER_CLI_API_KEY` environment variable
+- Required for all Bugster operations
 
-This command will guide you through the interactive authentication process, including opening the dashboard to retrieve your API key.
+## CLI Reference
 
-## Command Options
+| Command | Description | Example |
+|---------|-------------|---------|
+| `bugster auth` | Interactive API key setup | `bugster auth` |
+| `bugster auth --api-key <key>` | Set API key directly | `bugster auth --api-key bugster_org_abc123...` |
+| `bugster auth --clear` | Remove existing API key | `bugster auth --clear` |
 
-### Set API Key Directly
+### Flags
 
-```bash
-bugster auth --api-key "bugster_your_api_key_here"
-```
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--api-key` | Bugster API key to set (starts with 'bugster_') | `--api-key bugster_org_abc123...` |
+| `--clear` | Clear the existing API key | `--clear` |
 
-Authenticate with a specific API key without interactive prompts.
-
-### Clear Existing API Key
-
-```bash
-bugster auth --clear
-```
-
-Remove the currently stored API key from your configuration.
-
-## Step-by-Step Process
-
-<Steps>
-  <Step title="Start Authentication">
-    Run the auth command in your terminal:
-    ```bash
-    bugster auth
-    ```
-  </Step>
-  
-  <Step title="Open Dashboard (Optional)">
-    The CLI will ask if you want to open the Bugster Dashboard:
-    
-    ```bash
-    🌐 Would you like to open the Bugster Dashboard to get your API key? (y/n): y
-    ```
-    
-    Selecting "y" will automatically open your browser to the dashboard.
-  </Step>
-  
-  <Step title="Retrieve API Key">
-    <Card title="Get Your API Key" icon="key" href="https://app.bugster.dev">
-      Find your API key in the Bugster Dashboard under Account Settings
-    </Card>
-    
-    Your API key will look like: `bugster_abc123xyz789...`
-  </Step>
-  
-  <Step title="Enter API Key">
-    Paste your API key when prompted:
-    
-    ```bash
-    🔑 Paste your API key here: bugster_your_api_key_here
-    ```
-  </Step>
-  
-  <Step title="Validation & Storage">
-    The CLI will:
-    - Validate your API key format
-    - Test the key with Bugster servers
-    - Save it securely for future use
-    
-    ```bash
-    🔄 Validating API key...
-    ✅ API key saved successfully!
-    ```
-  </Step>
-</Steps>
-
-## Configuration Storage
-
-Your API key is stored securely in your user configuration:
-
-**macOS/Linux**: `~/.config/bugster/config.yaml`
-
-The configuration file structure:
-```yaml
-apiKey: "bugster_your_api_key_here"
-```
-
-## Advanced Usage
-
-### Non-Interactive Authentication
-
-For CI/CD environments or automated scripts:
-
-```bash
-# Set API key from environment variable
-bugster auth --api-key "$BUGSTER_API_KEY"
-
-# Set API key directly
-bugster auth --api-key "bugster_your_api_key_here"
-```
-
-### Managing Multiple Accounts
-
-To switch between different Bugster accounts:
-
-```bash
-# Clear current key
-bugster auth --clear
-
-# Set new API key
-bugster auth --api-key "bugster_different_account_key"
-```
-
-### Environment Variable Support
-
-You can also use environment variables instead of storing the API key:
-
-```bash
-export BUGSTER_API_KEY="bugster_your_api_key_here"
-```
-
-<Note>
-  Environment variables take precedence over stored configuration files.
-</Note>
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="Invalid API Key Format">
-    **Error**: API keys typically start with 'bugster_'
-    
-    **Solutions**:
-    - Verify you copied the complete API key from the dashboard
-    - Ensure no extra spaces or characters were included
-    - Check that the key starts with `bugster_`
-  </Accordion>
-  
-  <Accordion title="API Key Validation Failed">
-    **Error**: Invalid API key. Please check and try again.
-    
-    **Solutions**:
-    - Verify the API key is active in your dashboard
-    - Check your internet connection
-    - Ensure the API key hasn't been revoked or expired
-    - Try generating a new API key from the dashboard
-  </Accordion>
-  
-  <Accordion title="Permission Denied">
-    **Error**: Cannot save configuration file
-    
-    **Solutions**:
-    - Ensure you have write permissions to your home directory
-    - Check available disk space
-    - On Windows, try running as administrator
-    - On macOS/Linux, check file permissions for `~/.config/bugster/`
-  </Accordion>
-  
-  <Accordion title="Configuration File Issues">
-    **Error**: Cannot read/write config file
-    
-    **Solutions**:
-    - Delete the existing config file and re-authenticate
-    - Check file permissions on the configuration directory
-    - Ensure the directory structure exists
-  </Accordion>
-</AccordionGroup>
-
-## Security Best Practices
-
-<AccordionGroup>
-  <Accordion title="API Key Security" icon="shield">
-    - **Never share** your API key publicly or commit it to version control
-    - **Regenerate keys** if you suspect they've been compromised
-    - **Use environment variables** in CI/CD environments
-    - **Clear keys** from shared machines after use
-  </Accordion>
-  
-  <Accordion title="Team Environments" icon="users">
-    - Each team member should use their own API key
-    - Use service accounts for shared CI/CD environments
-    - Regularly audit and rotate API keys
-    - Monitor API key usage in the dashboard
-  </Accordion>
-</AccordionGroup>
-
-## Related Commands
-
-After authentication, you can proceed with:
-
-<CardGroup cols={2}>
-  <Card title="Initialize Project" icon="fingerprint" href="/commands/init">
-    Set up Bugster configuration in your project
-  </Card>
-  
-  <Card title="Generate Tests" icon="wand-magic-sparkles" href="/commands/generate">
-    Create AI-powered test specifications from your codebase
-  </Card>
-  
-  <Card title="Run Tests" icon="play" href="/commands/run">
-    Execute your Bugster tests
-  </Card>
-  
-  <Card title="GitHub Integration" icon="github" href="/integrations/github">
-    Connect your repository for automated testing
-  </Card>
-</CardGroup>
-
-## API Key Management
-
-<Info>
-  **Need a new API key?** Visit the [Bugster Dashboard](https://app.bugster.dev) to generate or manage your API keys.
-</Info>
-
-<Warning>
-  **Lost access?** If you can't access your dashboard or need to reset your account, contact support through the [Bugster Dashboard](https://app.bugster.dev).
-</Warning>

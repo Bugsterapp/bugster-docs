@@ -52,6 +52,7 @@
           {
             "group": "CLI Commands",
             "pages": [
+              "commands/overview",
               "commands/auth",
               "commands/init",
               "commands/generate",
