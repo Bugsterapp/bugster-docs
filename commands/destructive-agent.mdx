@@ -4,165 +4,77 @@ description: 'Run AI-powered destructive agents to find potential bugs in your c
 icon: "bomb"
 ---
 
-The `bugster destructive` command runs specialized AI agents that actively explore your application to find potential bugs, edge cases, and unexpected behaviors in pages that have been modified.
+## Overview
 
-<Note>
-  Run `bugster init` first if you haven't already set up your project.
-</Note>
+**Purpose**: Runs AI-powered destructive agents to find potential bugs by simulating edge cases and unexpected user behavior.
 
-## Basic Usage
+**When to use**:
+- **Before major releases** to catch edge case bugs
+- On staging environments to stress-test changes
+- After significant code modifications
+- When you want to find vulnerabilities proactively
 
-```bash
-bugster destructive
-```
+**Important notes**:
+- **Only targets pages with recent code changes** (git diff)
+- Agents like "UI Crashers" and "Form Destroyer" attempt to break your app
+- **Can cause data corruption** - use on test/staging environments only
+- Records videos of destructive attempts for debugging
+- More aggressive than regular testing
 
-This command will:
-1. **Analyze git changes** to identify modified pages
-2. **Assign specialized agents** to each changed page
-3. **Run agents concurrently** to explore and test your application
-4. **Record interactions** with video capture for debugging
-5. **Report discovered bugs** with detailed descriptions
+## CLI Reference
 
-## How It Works
+| Command | Description | Example |
+|---------|-------------|---------|
+| `bugster destructive` | Run destructive agents on all changed pages | `bugster destructive` |
+| `bugster destructive --headless` | Run without browser UI | `bugster destructive --headless` |
+| `bugster destructive --parallel 5` | Run up to 5 agents concurrently | `bugster destructive --parallel 5` |
+| `bugster destructive --limit 8` | Limit number of agents to run | `bugster destructive --limit 8` |
 
-<Steps>
-  <Step title="Change Detection">
-    Analyzes git changes against origin/main to identify modified Next.js pages and their dependencies.
-  </Step>
-  
-  <Step title="Agent Assignment">
-    AI determines which specialized agents should test each page based on detected changes.
-  </Step>
-  
-  <Step title="Destructive Exploration">
-    Agents autonomously explore pages, testing edge cases and recording all interactions.
-  </Step>
-  
-  <Step title="Bug Detection">
-    Reports JavaScript errors, UI issues, failed requests, and performance problems.
-  </Step>
-</Steps>
+### Execution Flags
 
-## Command Options
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--headless` | Run agents in headless mode (no browser UI) | `--headless` |
+| `--silent` | Run agents silently (minimal output) | `--silent` |
+| `--verbose` | Show detailed agent execution logs | `--verbose` |
+| `--max-concurrent` | Maximum number of concurrent agents (default: 3) | `--max-concurrent 6` |
+| `--limit` | Maximum number of destructive agents to run (default: 5, min: 1) | `--limit 10` |
+| `--browser` | Browser to use for destructive testing | `--browser firefox` |
 
-### Basic Options
+### Output Flags
 
-```bash
-bugster destructive --headless --max-concurrent 5 --verbose
-```
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--stream-results` | Stream destructive results as they complete (default: true) | `--stream-results` |
+| `--no-stream-results` | Disable streaming to dashboard | `--no-stream-results` |
+| `--base-url` | Override base URL from config | `--base-url https://staging.myapp.com` |
 
-<AccordionGroup>
-  <Accordion title="--headless" icon="eye-slash">
-    Run agents without browser UI (ideal for CI/CD).
-    
-    ```bash
-    bugster destructive --headless
-    ```
-  </Accordion>
-  
-  <Accordion title="--max-concurrent" icon="users">
-    Control concurrent agents (default: 3).
-    
-    ```bash
-    # Conservative
-    bugster destructive --max-concurrent 1
-    
-    # Aggressive
-    bugster destructive --max-concurrent 10
-    ```
-  </Accordion>
-  
-  <Accordion title="--silent" icon="volume-mute">
-    Suppress verbose output.
-    
-    ```bash
-    bugster destructive --silent
-    ```
-  </Accordion>
-  
-  <Accordion title="--verbose" icon="message-lines">
-    Show detailed agent execution logs.
-    
-    ```bash
-    bugster destructive --verbose
-    ```
-  </Accordion>
-  
-  <Accordion title="--base-url" icon="globe">
-    Override the base URL from configuration.
-    
-    ```bash
-    bugster destructive --base-url https://staging.myapp.com
-    ```
-  </Accordion>
-</AccordionGroup>
+### Agent Types & Priority
 
-## Results
+| Agent Type | Priority | Description | Example Behaviors |
+|------------|----------|-------------|-------------------|
+| **UI Crashers** | Highest | Attempts to crash UI components | Rapid clicking, invalid inputs, boundary testing |
+| **Form Destroyer** | High | Targets forms with malicious inputs | SQL injection attempts, XSS payloads, buffer overflows |
+| **Navigation Chaos** | Medium | Tests navigation edge cases | Back/forward spam, deep linking, invalid routes |
 
-### Output Table
+### Common Usage Patterns
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    Destructive Agent Results                 │
-├─────────────────────┬─────────────────┬─────────────┬────────┤
-│ Page                │ Agent           │ Bugs Found  │ Time   │
-├─────────────────────┼─────────────────┼─────────────┼────────┤
-│ pages/auth/login    │ Agent_1         │ 2           │ 45.2s  │
-│ pages/dashboard     │ Agent_2         │ 0           │ 32.1s  │
-└─────────────────────┴─────────────────┴─────────────┴────────┘
-```
+| Use Case | Command | Description |
+|----------|---------|-------------|
+| Pre-release testing | `bugster destructive --limit 15` | Comprehensive destructive testing |
+| Quick vulnerability scan | `bugster destructive --limit 3 --headless` | Fast security check |
+| CI/CD integration | `bugster destructive --headless --stream-results` | Automated destructive testing |
+| Staging validation | `bugster destructive --base-url https://staging.app.com` | Test staging environment |
+| Performance testing | `bugster destructive --parallel 8` | Maximum concurrent destruction |
 
-### Video Recordings
+**Safety Notes**:
+- **Never run against production** - destructive agents may cause real damage
+- Use test databases and isolated environments
+- Agents may submit forms, delete data, or trigger irreversible actions
+- Review video recordings to understand what caused any detected issues
 
-Agent interactions are recorded and saved to:
-```
-.bugster/videos/destructive/{run-id}/{agent}_{page}/
-```
-
-### Exit Codes
-
-- **Exit Code 0**: No bugs found
-- **Exit Code 1**: Bugs discovered - review report and videos
-
-## Best Practices
-
-- **Start with low concurrency** (`--max-concurrent 1-3`) for shared environments
-- **Use dedicated test environments** - avoid production
-- **Review video recordings** to understand agent behavior
-- **Validate reported bugs** - some may be environment-specific
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="No agents assigned">
-    **Message**: "No changes detected - no pages need destructive testing"
-    
-    **Solution**: Make changes to `.ts`, `.tsx`, `.js`, or `.jsx` files and ensure you're on a branch with modifications.
-  </Accordion>
-  
-  <Accordion title="Agent timeout">
-    **Error**: "Timeout: No response from Bugster Agent"
-    
-    **Solutions**: Check network connectivity, reduce `--max-concurrent`, or try with `--verbose`.
-  </Accordion>
-  
-  <Accordion title="High resource usage">
-    **Solutions**: Use `--headless`, lower `--max-concurrent`, or close other applications.
-  </Accordion>
-</AccordionGroup>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Regular Testing" icon="compass" href="/commands/run">
-    Run your regular test suite to validate bug fixes
-  </Card>
-  
-  <Card title="Update Tests" icon="wand-magic-sparkles" href="/commands/update">
-    Update test specs based on destructive findings
-  </Card>
-  
-  <Card title="Generate More Tests" icon="sparkles" href="/commands/generate">
-    Create additional test cases for discovered edge cases
-  </Card>
-</CardGroup>
+**Pro Tips**:
+- Run after `bugster update` to test newly modified pages
+- Higher `--limit` values increase chance of finding edge case bugs
+- Videos are automatically saved for any bugs found
+- Best used as final validation step before releases
