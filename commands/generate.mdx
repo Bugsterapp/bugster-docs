@@ -4,357 +4,50 @@ description: 'Generate AI-powered tests from your codebase with bugster generate
 icon: "sparkles"
 ---
 
-The `bugster generate` command analyzes your codebase and automatically creates comprehensive test specifications. It understands your application structure and generates relevant test cases for your pages and components.
+## Overview
 
-<Note>
-  You must run `bugster init` before using the generate command. The command requires your project to be properly configured and authenticated.
-</Note>
+**Purpose**: Analyzes your codebase with AI and generates intelligent test specifications.
 
-## Basic Usage
+**When to use**:
+- After adding new features or pages to your application
+- When you want comprehensive test coverage for specific components
+- To create initial test suite for existing projects
+- Before major releases to ensure thorough testing
 
-```bash
-bugster generate
-```
+**Important notes**:
+- **Can take several minutes** for large codebases
+- Generates test specs in `.bugster/tests/` directory
+- Uses AI to understand your app structure and user flows
+- Can be run multiple times - won't duplicate existing tests
+- Supports filtering by specific pages/components
 
-This command will:
-1. **Analyze your codebase** structure and components
-2. **Generate test specifications** for all detected pages
-3. **Save test files** to `.bugster/tests/` directory
-4. **Organize tests** by feature/page folders
+## CLI Reference
 
-## How It Works
+| Command | Description | Example |
+|---------|-------------|---------|
+| `bugster generate` | Analyze entire codebase and generate tests | `bugster generate` |
+| `bugster generate --count 10` | Generate specific number of tests per page | `bugster generate --count 10` |
+| `bugster generate --page <paths>` | Generate tests for specific pages only | `bugster generate --page "pages/auth.tsx,pages/settings.tsx"` |
 
-<Steps>
-  <Step title="Codebase Analysis">
-    Bugster scans your Next.js project to understand:
-    - Page structure (App Router or Pages Router)
-    - Component dependencies and imports
-    - Authentication requirements
-    - Form elements and user interactions
-  </Step>
-  
-  <Step title="AI Test Generation">
-    Using the codebase analysis, AI creates:
-    - Realistic user scenarios and workflows
-    - Test steps that match your UI components
-    - Expected outcomes for each interaction
-    - Context-aware test cases based on page functionality
-  </Step>
-  
-  <Step title="Test Organization">
-    Generated tests are saved as:
-    - YAML files with clear, readable test specifications
-    - Organized in folders matching your page structure
-    - Numbered for execution order (1_login.yaml, 2_signup.yaml)
-  </Step>
-</Steps>
+### Flags
 
-## Command Flags and Options
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--count` | Number of test specs to generate per page (min: 1, max: 30, default: varies) | `--count 15` |
+| `--page` | Generate specs only for specific page files (comma-separated relative paths) | `--page "pages/login.tsx,components/auth/signup.tsx"` |
+| `--show-logs` | Show detailed logs during analysis (deprecated, use --debug) | `--show-logs` |
 
-### Specific Page Generation
+### Page Filtering Examples
 
-Generate tests only for the selected pages in your application.
+| Use Case | Command | Description |
+|----------|---------|-------------|
+| Single page | `--page "pages/dashboard.tsx"` | Generate tests for one specific page |
+| Multiple pages | `--page "pages/auth.tsx,pages/settings.tsx"` | Generate tests for multiple pages |
+| Component focus | `--page "components/forms/login.tsx"` | Generate tests for specific components |
+| Directory pattern | `--page "pages/admin/"` | Target all pages in a directory |
 
-```bash
-bugster generate --page "pages/auth.tsx","pages/dashboard.tsx"
-```
-
-<AccordionGroup>
-  <Accordion title="--page" icon="file">
-    **Purpose**: Generate tests only for specific page files
-    
-    **Format**: Comma-separated list of relative file paths
-    
-    **Path types**:
-    - Relative paths: `pages/auth.tsx`
-    - Absolute paths: `/full/path/to/pages/auth.tsx` (converted to relative)
-    
-    **Validation**: 
-    - Files must exist
-    - Must be JavaScript/TypeScript files (.js, .jsx, .ts, .tsx)
-    - Must be actual files, not directories
-    
-    **Examples**:
-    ```bash
-    # Single page
-    bugster generate --page "pages/login.tsx"
-    
-    # Multiple pages
-    bugster generate --page "pages/auth.tsx","app/dashboard/page.tsx"
-    
-    # Pages Router example
-    bugster generate --page "pages/settings.tsx","pages/profile.tsx"
-    
-    # App Router example  
-    bugster generate --page "app/auth/page.tsx","app/dashboard/page.tsx"
-    ```
-  </Accordion>
-</AccordionGroup>
-
-### Test Count Generation
-
-Generate a certain amount of tests.
-
-```bash
-bugster generate --count 5
-```
-
-<AccordionGroup>
-  <Accordion title="--count" icon="hash">
-    **Purpose**: Control the number of test specs generated per page
-    
-    **Range**: 1 to 30 tests per page
-    
-    **Default**: Automatically determined based on page complexity
-    
-    **Use cases**:
-    - `--count 1`: Quick smoke tests for each page
-    - `--count 5`: Comprehensive testing for critical pages
-    - `--count 10+`: Extensive testing for complex workflows
-    
-    **Examples**:
-    ```bash
-    # Generate 3 tests per page
-    bugster generate --count 3
-    
-    # Maximum test coverage
-    bugster generate --count 30
-    
-    # Minimal test coverage
-    bugster generate --count 1
-    ```
-  </Accordion>
-</AccordionGroup>
-
-## Combined Usage Examples
-
-### Development Workflow
-
-```bash
-# Quick generation for specific feature
-bugster generate --page "app/auth/page.tsx" --count 3
-
-# Comprehensive testing for critical pages
-bugster generate --page "pages/checkout.tsx","pages/payment.tsx" --count 10
-```
-
-
-
-## Generated Test Structure
-
-After running `bugster generate`, your project structure will include:
-
-```
-your-project/
-├── .bugster/
-   ├── config.yaml
-   └── tests/
-       ├── auth/
-          ├── 1_login.yaml
-          └── 2_signup.yaml
-       ├── dashboard/
-          ├── 1_overview.yaml
-          └── 2_settings.yaml
-       └── checkout/
-           ├── 1_cart.yaml
-           ├── 2_payment.yaml
-           └── 3_confirmation.yaml
-```
-
-### Test File Format
-
-Each generated test file contains:
-
-```yaml
-# @META:{"id":"unique-test-id","last_modified":"2024-01-15T10:30:00Z"}
-# This comment contains machine-readable metadata that should not be modified
-
-name: "User Login Flow"
-page: "Login"
-page_path: "/auth/login"
-task: "Test user authentication with valid credentials"
-steps:
-  - "Navigate to login page"
-  - "Enter username 'admin@example.com'"
-  - "Enter password 'admin123'"
-  - "Click login button"
-  - "Verify successful login and dashboard redirection"
-expected_result: "User successfully logs in and is redirected to dashboard"
-```
-
-## Understanding Test Generation
-
-### Page Detection
-
-Bugster automatically detects pages based on:
-
-<CardGroup cols={2}>
-  <Card title="Pages Router" icon="folder">
-    **Detection**: Files in `pages/` directory
-    
-    **Examples**:
-    - `pages/index.tsx` → `/`
-    - `pages/about.tsx` → `/about`
-    - `pages/user/[id].tsx` → `/user/:id`
-    
-    **Excludes**: API routes, `_app.tsx`, `_document.tsx`
-  </Card>
-  
-  <Card title="App Router" icon="folder-tree">
-    **Detection**: `page.tsx` files in `app/` directory
-    
-    **Examples**:
-    - `app/page.tsx` → `/`
-    - `app/about/page.tsx` → `/about`
-    - `app/user/[id]/page.tsx` → `/user/:id`
-    
-    **Excludes**: `layout.tsx`, `loading.tsx`, API routes
-  </Card>
-</CardGroup>
-
-### Test Context Generation
-
-AI considers multiple factors when generating tests:
-
-<AccordionGroup>
-  <Accordion title="Component Analysis" icon="puzzle">
-    **Form elements**: Login forms, contact forms, checkout flows
-    
-    **Interactive elements**: Buttons, links, modals, dropdowns
-    
-    **Navigation**: Menu items, breadcrumbs, pagination
-    
-    **Data display**: Tables, lists, cards, charts
-  </Accordion>
-  
-  <Accordion title="User Workflows" icon="route">
-    **Authentication flows**: Login, signup, logout, password reset
-    
-    **CRUD operations**: Create, read, update, delete actions
-    
-    **E-commerce flows**: Add to cart, checkout, payment
-    
-    **Search and filtering**: Search bars, filters, sorting
-  </Accordion>
-  
-  <Accordion title="Existing Tests Context" icon="brain">
-    **Duplicate prevention**: Avoids creating similar tests
-    
-    **Coverage gaps**: Identifies untested scenarios
-    
-    **Test relationships**: Understands dependencies between tests
-    
-    **Consistency**: Maintains similar testing patterns
-  </Accordion>
-</AccordionGroup>
-
-## Generation Status and Progress
-
-During generation, you'll see progress updates:
-
-```bash
-🔍 Starting analysis...
-✅ Analysis completed!
-🧪 Generating test cases...
-   Job submitted (ID: abc123)
-⏳ Processing...
-   Status: processing • Elapsed: 15s
-   Status: processing • Elapsed: 30s  
-   Status: completed • Elapsed: 45s
-✅ Test generation complete
-📁 Test specs saved to: .bugster/tests
-```
-
-### Generation Time
-
-- **Small projects** (5-10 pages): 30-60 seconds
-- **Medium projects** (10-25 pages): 1-3 minutes  
-- **Large projects** (25+ pages): 3-5 minutes
-
-## Best Practices
-
-<CardGroup cols={1}>
-  
-  <Card title="Selective Generation" icon="bullseye">
-    **Use --page flag** for specific feature testing
-    
-    **Focus on critical paths** when time is limited
-    
-    **Generate incrementally** for new features
-    
-    **Combine with existing tests** rather than full regeneration
-  </Card>
-  
-  <Card title="Test Quality" icon="shield-check">
-    **Review generated tests** before committing
-    
-    **Customize for your workflows** if needed
-    
-    **Ensure credential alignment** with your test users
-    
-    **Validate test coverage** matches your requirements
-  </Card>
-</CardGroup>
-
-## Troubleshooting
-
-<AccordionGroup>
-  <Accordion title="No tests generated">
-    **Possible causes**:
-    - Not in a Next.js project directory
-    - No detectable pages in your project
-    - Network connectivity issues
-    
-    **Solutions**:
-    - Verify you're in the correct project directory
-    - Check that you have pages in `pages/` or `app/` directories
-    - Use `--show-logs` to see detailed analysis output
-  </Accordion>
-  
-  <Accordion title="Generation timeout">
-    **Error**: Test generation timeout after 3 minutes
-    
-    **Solutions**:
-    - Try again (temporary service issue)
-    - Use `--page` flag to generate for specific pages
-    - Contact support if issue persists
-  </Accordion>
-  
-  <Accordion title="Invalid page paths">
-    **Error**: File not found or invalid file type
-    
-    **Solutions**:
-    - Verify file paths are correct and relative to project root
-    - Ensure files have .js, .jsx, .ts, or .tsx extensions
-    - Check that files exist and are readable
-  </Accordion>
-  
-  <Accordion title="Generation failed">
-    **Error**: Test generation failed during processing
-    
-    **Solutions**:
-    - Check network connectivity
-    - Verify API key is valid
-    - Try with `--force` flag
-    - Use `--show-logs` for detailed error information
-  </Accordion>
-</AccordionGroup>
-
-## Next Steps
-
-After generating tests, you can:
-
-<CardGroup cols={2}>
-  <Card title="Test Execution" icon="compass" href="/commands/run">
-  Learn about test execution options and configurations
-</Card>
-  
-  <Card title="Update Tests" icon="arrows-rotate" href="/commands/update">
-    Keep tests synchronized with code changes
-  </Card>
-  
-  <Card title="GitHub App" icon="github" href="/integrations/github">
-    Visit `github` integration for details and guidance on GitHub App Installation.
-    </Card>
-
-</CardGroup>
+**Pro Tips**:
+- Use `--page` to focus on recently modified files
+- Higher `--count` values generate more comprehensive test scenarios
+- First run analyzes your entire app structure (caching for faster subsequent runs)
+- Generated tests are saved as YAML files with human-readable test steps

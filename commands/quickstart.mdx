@@ -1,0 +1,51 @@
+---
+title: 'Quickstart Command'
+description: 'Complete overview of Bugster CLI commands and capabilities'
+icon: 'bolt'
+---
+
+## Overview
+
+**Purpose**: One-command setup that initializes your project and generates your first test specs.
+
+**When to use**:
+- **Perfect for first-time Bugster users** - fastest way to get started
+- When you want to see Bugster in action immediately
+- Setting up demo projects or proof-of-concepts
+
+**Important notes**:
+- Combines `bugster init` + `bugster generate` in one command
+- Generates 5 test specs by default (configurable with `--count`)
+- Will prompt for all required configuration if not provided
+- Ideal for onboarding and demonstrations
+
+## CLI Reference
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `bugster quickstart` | Initialize project and generate 5 tests | `bugster quickstart` |
+| `bugster quickstart --count 10` | Generate specific number of tests | `bugster quickstart --count 10` |
+| `bugster quickstart --api-key <key>` | Use specific API key | `bugster quickstart --api-key bugster_org_abc123...` |
+| `bugster quickstart --page <paths>` | Generate tests for specific pages only | `bugster quickstart --page "src/auth,src/dashboard"` |
+| `bugster quickstart --no-credentials` | Skip credential setup | `bugster quickstart --no-credentials` |
+
+### Init Flags (inherited from `bugster init`)
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--api-key` | Bugster API key (starts with 'bugster_') | `--api-key bugster_org_abc123...` |
+| `--project-name` | Name for your project | `--project-name "Quick Demo"` |
+| `--url` | Base URL of your application | `--url http://localhost:3000` |
+| `--user` | Username for login credentials | `--user demo@example.com` |
+| `--password` | Password for login credentials | `--password demo123` |
+| `--no-auth` | Skip authentication if API key already set | `--no-auth` |
+| `--no-credentials` | Skip credential setup entirely | `--no-credentials` |
+| `--platform` | Platform type (vercel or railway) | `--platform vercel` |
+
+### Generate Flags (inherited from `bugster generate`)
+
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--count` | Number of test specs to generate per page (default: 5, max: 30) | `--count 8` |
+| `--page` | Generate specs only for specific page files (comma-separated) | `--page "pages/auth.tsx,pages/dashboard.tsx"` |
+| `--force` | Force analysis even if codebase already analyzed | `--force` |

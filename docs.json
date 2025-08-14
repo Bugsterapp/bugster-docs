@@ -53,8 +53,8 @@
             "group": "CLI Commands",
             "pages": [
               "commands/overview",
-              "commands/auth",
               "commands/init",
+              "commands/auth",
               "commands/generate",
               "commands/run",
               "commands/destructive-agent",
