@@ -21,7 +21,7 @@ Bugster CLI generates and runs AI-powered end-to-end tests for web applications.
 **Operating Systems**: 
 - macOS (compatible)
 - Linux: Ubuntu 22+, Ubuntu 24+, Debian 12+, and any distribution with GLIBC ≥ 2.35
-- Windows: Coming soon
+- Windows (compatible)
 </Accordion>
 </AccordionGroup>
 
@@ -51,28 +51,59 @@ Bugster CLI generates and runs AI-powered end-to-end tests for web applications.
 
 ## Installation
 
-### Automated Installation
+<Tabs>
+  <Tab title="macOS / Linux">
+    ### Automated Installation
+    <CodeGroup>
+    ```bash
+    curl -sSL https://github.com/Bugsterapp/bugster-cli/releases/latest/download/install.sh | bash -s -- -y
+    ```
+    </CodeGroup>
 
-<CodeGroup>
+    ### Reset your terminal session
 
-```bash macOS/Linux
-curl -sSL https://github.com/Bugsterapp/bugster-cli/releases/latest/download/install.sh | bash -s -- -y
-```
+    After installation, make sure to reset your terminal so PATH changes take effect. You can either close and reopen your terminal, or run:
 
-```powershell Windows
-# Coming soon
-```
+    ```bash
+    source ~/.zshrc   # zsh
+    source ~/.bashrc  # bash
+    ```
+  </Tab>
+  <Tab title="Windows">
+    ### Recommended Method (PowerShell)
+    The recommended way to install Bugster CLI on Windows is by using the PowerShell installer. Open a PowerShell terminal and run the following command:
+    ```powershell
+    iwr https://raw.githubusercontent.com/Bugsterapp/bugster-cli/main/scripts/install.ps1 -useb | iex
+    ```
+    This command downloads and executes the official installer script, which will:
+    1.  Determine the correct version for your system.
+    2.  Download the binary from the latest GitHub Release.
+    3.  Unzip and place it in a standard user directory (`%LOCALAPPDATA%\Programs\bugster`).
+    4.  Add the installation directory to your user's `PATH` environment variable.
 
-</CodeGroup>
+    <Info>
+    After installation, you must **open a new terminal window** for the `bugster` command to be available.
+    </Info>
 
-### Reset your terminal session
+    ### Manual Installation
 
-After installation, make sure to reset your terminal so PATH changes take effect. You can either close and reopen your terminal, or run:
-
-```bash
-source ~/.zshrc   # zsh
-source ~/.bashrc  # bash
-```
+    If you prefer not to run the script, you can install the CLI manually:
+    <Steps>
+    <Step title="Go to GitHub Releases">
+      Go to the [latest GitHub Release](https://github.com/Bugsterapp/bugster-cli/releases/latest).
+    </Step>
+    <Step title="Download the archive">
+      Download the `bugster-windows.zip` file.
+    </Step>
+    <Step title="Extract the executable">
+      Extract the `bugster.exe` file to a directory of your choice (e.g., `C:\Program Files\bugster`).
+    </Step>
+    <Step title="Add to PATH">
+      Manually add that directory to your system's or user's `PATH` environment variable.
+    </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
 ### Verify Installation
 
@@ -100,6 +131,33 @@ bugster --version
   </Accordion>
   <Accordion title="Unsupported Linux distribution">
     If you encounter compatibility issues on Linux, ensure your distribution has GLIBC 2.35 or higher. Supported distributions include Ubuntu 22+, Ubuntu 24+, Debian 12+, and other modern distributions.
+  </Accordion>
+  <Accordion title="Antivirus flags the executable on Windows">
+    **Symptom:** After running the installer, `bugster.exe` is not found in the installation directory (`%LOCALAPPDATA%\Programs\bugster`), or it disappears shortly after installation.
+
+    **Cause:** Because the executable is downloaded from the internet and is not digitally signed by a major publisher, Windows Defender or other antivirus software may automatically quarantine or delete it as a security precaution.
+
+    **Solution:**
+    <Steps>
+    <Step title="Check Protection History">
+      1.  Open **Windows Security** > **Virus & threat protection**.
+      2.  Go to **Protection history** to see if `bugster.exe` was quarantined. If so, you can restore it and allow it on your device.
+    </Step>
+    <Step title="Add an Exclusion">
+      To prevent this from happening in the future, add an exclusion:
+        - Under **Virus & threat protection settings**, click **Manage settings**.
+        - Scroll down to **Exclusions** and click **Add or remove exclusions**.
+        - Click **Add an exclusion**, select **Folder**, and paste the following path: `%LOCALAPPDATA%\Programs\bugster`
+    </Step>
+    </Steps>
+  </Accordion>
+  <Accordion title="`bugster` command not found on Windows">
+    **Symptom:** After a successful installation, you type `bugster --help` and get an error like `'bugster' is not recognized...`.
+
+    **Cause:** The terminal session where you ran the installer has an old copy of the `PATH` variable. The changes made by the installer will only be loaded by new terminal sessions.
+
+    **Solution:**
+    Close your current terminal window and **open a new one**. The command should now work correctly.
   </Accordion>
 </AccordionGroup>
 <Info>
