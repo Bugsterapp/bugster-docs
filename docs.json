@@ -53,7 +53,8 @@
           {
             "group": "How-to Guides",
             "pages": [
-              "guides/test-management/test-crud"
+              "guides/test-management/test-crud",
+              "guides/test-management/update-test-suite"
             ]
           },
           {
