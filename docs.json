@@ -56,7 +56,8 @@
           {
             "group": "How-to Guides",
             "pages": [
-              "guides/test-management/test-crud"
+              "guides/test-management/test-crud",
+              "guides/customize-config-yaml"
             ]
           },
           {
