@@ -1,0 +1,191 @@
+---
+title: "How to update your tests"
+description: "Keep your test suite current as features evolve by creating, modifying, and removing tests with a single command."
+---
+
+<Tip>
+In this guide you will learn:
+- How to keep your test suite synchronized with your codebase using `bugster update`.
+- How to use different update modes for local development and CI workflows.
+- How to compare changes against different baselines like the default branch or the last update.
+</Tip>
+
+<Info>
+**Goal:** Keep your test suite current as features evolve—create, modify, and remove tests with a single command.
+</Info>
+
+## TL;DR
+
+Run the following command to automatically update your test suite:
+
+```bash
+bugster update
+```
+
+This command will:
+- **Create** tests for new functionality.
+- **Modify** tests impacted by code changes.
+- **Delete** tests for removed features.
+
+You can use it locally on demand or automatically on every pull request via the GitHub App.
+
+## Usage Modes
+
+### Local (manual)
+
+Run `bugster update` when you're confident about local changes and ready to sync them.
+
+<CodeGroup>
+```bash Full update
+# Full update (create/modify/delete as needed)
+bugster update
+```
+```bash Scope behavior
+# Only modify existing tests
+bugster update --update-only
+
+# Only create new tests
+bugster update --suggest-only
+
+# Only remove obsolete tests
+bugster update --delete-only
+```
+</CodeGroup>
+
+### Automatic on Pull Requests
+
+When you open a Pull Request, Bugster's E2E agent runs `bugster update` first.
+
+<Steps>
+<Step title="Bugster creates an Update PR">
+Bugster opens a secondary PR targeting your feature branch with the suggested test suite changes.
+</Step>
+<Step title="Review the results">
+The original PR gets a comment with the test results and a link to the "Bugster Update PR".
+</Step>
+<Step title="Approve and merge">
+You approve and merge the "Bugster Update PR".
+</Step>
+<Step title="Merge your feature">
+Once the test updates are in, you can merge your feature branch.
+</Step>
+</Steps>
+
+<Warning>
+Remember to review the Bugster Update PR **before** merging your feature.
+</Warning>
+
+Here is a summary of the flow:
+```text
+dev creates PR  →  bugster update runs  →  Bugster opens "Update PR" → 
+Bugster comments results in original PR → you review/merge Update PR → merge feature PR
+```
+
+## Comparison Baselines
+
+Choose the comparison model that fits your development stage.
+
+<AccordionGroup>
+<Accordion title="Default: Compare against last commit">
+```bash
+bugster update
+```
+Compares your local changes against the last commit. It only sees files you've changed, added, or deleted since your last commit.
+</Accordion>
+<Accordion title="Against default branch">
+```bash
+bugster update --against-default
+```
+Compares your current branch against the default branch (e.g., `main`). It sees all changes in your feature branch.
+</Accordion>
+<Accordion title="Incremental since last update">
+```bash
+bugster update --against-last-update
+```
+Compares changes from the last time you ran `bugster update` to now. It only sees new changes since the previous update.
+</Accordion>
+</AccordionGroup>
+
+## Recommended Workflow
+
+<CardGroup cols={3}>
+<Card title="During active development">
+Use `--against-last-update` for a tight feedback loop.
+```bash
+bugster update --against-last-update
+```
+</Card>
+<Card title="Before opening a PR">
+Use `--against-default` for a final, comprehensive sweep.
+```bash
+bugster update --against-default
+```
+</Card>
+<Card title="For small, isolated edits">
+The default mode is usually sufficient.
+```bash
+bugster update
+```
+</Card>
+</CardGroup>
+
+
+## Examples
+
+Here are common scenarios and the commands to use.
+
+<AccordionGroup>
+<Accordion title="Default update for recently touched files">
+```bash
+# Create/modify/delete as needed for just-touched files
+bugster update
+```
+</Accordion>
+<Accordion title="Full branch comparison before creating a PR">
+```bash
+# Full branch comparison before PR
+bugster update --against-default
+```
+</Accordion>
+<Accordion title="Tight inner loop without reprocessing old changes">
+```bash
+# Tight inner loop; don’t reprocess old changes
+bugster update --against-last-update
+```
+</Accordion>
+<Accordion title="Limit to modifications only (no new/deleted tests)">
+```bash
+# Limit to modifications only (no new/deleted tests)
+bugster update --update-only
+```
+</Accordion>
+<Accordion title="Generate suggestions for new areas only">
+```bash
+# Generate suggestions for new areas only
+bugster update --suggest-only
+```
+</Accordion>
+<Accordion title="Purge tests tied to removed features">
+```bash
+# Purge tests tied to removed features
+bugster update --delete-only
+```
+</Accordion>
+<Accordion title="Combine scope and baseline">
+```bash
+# Combine scope + baseline
+bugster update --against-default --update-only
+```
+</Accordion>
+</AccordionGroup>
+
+
+## Review Tips
+
+<Tip>
+- Always review the Update PR diff before merging.
+- Keep descriptive commit messages (e.g., `bugster: update tests for billing portal flow`).
+- If a change looks incorrect, adjust the code or the test, rerun `bugster update`, and re-review.
+</Tip>
+
+That’s it: one standardized command keeps your suite aligned with real product changes—locally or automatically on every PR.
