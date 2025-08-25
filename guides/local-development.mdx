@@ -1,0 +1,143 @@
+---
+title: "Local Development Workflow"
+description: "Best practices for running Bugster during development to validate features and catch issues early"
+---
+
+Learn how to integrate Bugster into your daily development workflow for faster feedback, better UX validation, and confident feature delivery.
+
+Discover the most effective ways to use Bugster locally while developing, from quick smoke tests to comprehensive UX validation with AI feedback.
+
+## Development Workflow Overview
+
+<Steps>
+<Step title="Develop your feature">
+  You just finished implementing a new checkout flow with improved validation.
+  
+  ```javascript
+  // Added new validation logic
+  const validatePayment = (paymentData) => {
+    // Your new feature code
+  }
+  ```
+</Step>
+
+<Step title="Quick validation">
+  Test your new checkout flow immediately to catch obvious issues:
+  
+  ```bash
+  # Test only what changed
+  bugster run --only-affected
+  
+  # Or test specific checkout flows
+  bugster run --quick "Test the new checkout validation"
+  ```
+</Step>
+
+<Step title="Break testing">
+  The destructive agent tries to break your new checkout functionality, giving you issues if found:
+  
+  ```bash
+  # Agent attempts to break your checkout flow
+  bugster destructive
+  ```
+</Step>
+
+<Step title="Regression testing">
+  Make sure your checkout changes didn't break other flows:
+  
+  ```bash
+  # Test only what might be affected by your changes
+  bugster run --only-affected
+  ```
+</Step>
+</Steps>
+
+## Common Local Testing Scenarios
+
+### 1. Quick Feature Validation
+
+After implementing a new feature, quickly test it to ensure it works:
+
+```bash
+# Test only affected areas (based on git changes)
+bugster run --only-affected
+
+# Quick smoke test with limited tests
+bugster run --limit 5 --headless
+```
+
+<Tip>
+Use `--only-affected` to run only tests related to your recent changes, saving time and credits during development.
+</Tip>
+
+### 2. Comprehensive Regression Testing
+
+Before committing major changes, run a broader test suite:
+
+```bash
+# Full regression in background (headless)
+bugster run --headless --parallel 8 --limit 20
+
+# All tests with detailed logging for debugging
+bugster run --verbose --limit 15
+
+# Silent run for clean output
+bugster run --silent --parallel 6
+```
+
+### 3. Interactive Development Testing
+
+When you want to watch tests run and debug issues:
+
+```bash
+# Watch tests in real browser with detailed logs
+bugster run --headless false --verbose --limit 10
+
+# Debug specific test scenarios
+bugster run --headless false --parallel 1 --verbose
+```
+
+<Tip>
+You might want to use `--headless false` when first learning, but prefer headless mode for better concentration during development.
+</Tip>
+
+## Additional Testing Options
+
+### Destructive Agent
+
+The agent tries to break your interface and reports issues:
+
+```bash
+# Run destructive testing
+bugster destructive
+```
+
+### Natural Language Testing
+
+Ask Bugster to test something specific using natural language:
+
+```bash
+# Test a component you just built
+bugster run --quick/prompt "Test this component I just built"
+
+# Test specific functionality
+bugster run --quick/prompt "Check if the search works with empty results"
+```
+
+
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Advanced Configuration" icon="gear" href="/guides/customize-config-yaml">
+  Customize your config.yaml for optimal local development settings
+</Card>
+
+<Card title="Cursor Integration" icon="cursor" href="/guides/cursor-integration">
+  Learn how to integrate Bugster with Cursor for AI-powered development
+</Card>
+</CardGroup>
+
+<Note>
+This workflow optimizes for fast feedback during development. For production testing strategies, see our [CI/CD Integration Guide](/integrations/github).
+</Note>
