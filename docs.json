@@ -36,6 +36,9 @@
     "strict": true
   },
   "favicon": "/logo/Bugster-Logoicon-blue.svg",
+  "thumbnails": {
+    "background": "/images/thumbnail.png"
+  },
   "navigation": {
     "tabs": [
       {
