@@ -1,45 +1,44 @@
 ---
 title: "Generate, edit and delete tests"
 description: "How to create, modify, and remove tests in Bugster."
+keywords: [bugster, tests, generate, yaml, cli]
 ---
 
-<Tip>
+Generating tests in Bugster is simple and flexible. You can auto-generate tests across your entire app for quick coverage, manually craft precise test scenarios, or use AI assistance to write and refine tests. Once created, tests are easy to edit and delete as your application evolves.
+
 In this guide you will learn: 
-- How to generate tests
-- The required test morphology.
-- How to edit any test field and validate changes.
-- How to delete tests.
-</Tip>
-<Info>
-1. [How to generate tests](#how-to-generate-tests)
-2. [Test morphology in Bugster](#test-morphology-in-bugster)
-3. [Editing an existing test](#editing-an-existing-test)
-4. [Deleting tests](#deleting-tests)
-5. [File location and naming conventions](#file-location-and-naming-conventions)
-</Info>
-## 1. How to generate tests
+
+1. [How to generate tests](#1-generate-tests-3-ways)
+2. [The required test morphology](#2-test-morphology-in-bugster)
+3. [How to edit any test field and validate changes](#3-editing-an-existing-test)
+4. [How to delete tests](#4-deleting-tests)
+
+<Card title="Prerequisites">
+- Bugster CLI installed and authenticated.
+- Run commands from your repo root (same folder containing `/.bugster/`).
+- Your app runs locally (if you plan to validate with `bugster run`).
+</Card>
+
+## 1. Generate tests (3 ways)
 
 Bugster supports **three** creation modes:
 
-1.  **Automatic bulk generation** → `bugster generate`
-2.  **Manual** → write a **YAML test** using the template and place it in the tests folder
-3.  **Assisted** → author/edit YAML with Claude Code or Cursor *(“View guide”)*
-
-<Note>
-Note: Replace example paths with ones from your repo.
-</Note>
+| If you want to… | Use | Why |
+| :--- | :--- | :--- |
+| Seed broad coverage fast | Automatic `bugster generate` | Highest coverage per minute |
+| Capture a very specific scenario | Manual YAML | Full control over task/steps/expected_result |
+| Write/refine with an AI editor | Assisted (Claude Code/Cursor) | Faster authoring, inline edits |
 
 ### 1.1 Automatic (bulk) — `bugster generate`
 
 Bugster can **propose and create** many tests across your app or for specific pages.
 
 **Commands:**
-
 ```bash
 # Bulk auto-generation (across some pages)
 bugster generate
 
-# Generate for specific pages
+# Generate for specific pages (using source file paths)
 bugster generate --page path/to/page.tsx path/to/another/page.tsx
 
 # Generate N tests distributed across pages
@@ -61,8 +60,12 @@ For **precise** scenarios, create your own test explicitly.
 1.  **Content:** follow the **YAML morphology** (see next section).
 2.  **File:** place it under the Bugster tests folder, mirroring your app’s **filesystem hierarchy**.
 
-**Suggested template (copy/paste):**
+<Info>
+`page` = route (e.g., `/dashboard/users`)  
+`page_path` = source file path (e.g., `app/dashboard/users/page.tsx`)
+</Info>
 
+**Suggested template (copy/paste):**
 ```yaml
 name: User details page navigation
 page: /dashboard/users
@@ -77,14 +80,13 @@ expected_result: User should be redirected to the specific user's details page
 ```
 
 **Run your manual test to validate it:**
-
 ```bash
 bugster run relative_path_to_my_test.yaml
 ```
 
 ### 1.3 Assisted (Claude Code / Cursor)
 
-Use  Claude Code or  Cursor to **draft** and **refine** the YAML with prompts and inline edits. *(“View guide”)*
+Use Claude Code or Cursor to **draft** and **refine** the YAML with prompts and inline edits. *("View guide")*
 
 ## 2. Test morphology in Bugster
 
@@ -102,8 +104,24 @@ steps:
 expected_result: What the agent should verify to confirm the goal was achieved
 ```
 
-**Example:**
+<Check>
+**Test quality checklist:**
+- **One clear task** per test (avoid multi-goals).
+- **Steps are actionable** (verbs first) and ordered.
+- **`expected_result` is observable** (URL change, element visible, text equals).
+</Check>
 
+Here's an example of a good vs. a bad `expected_result`:
+<CodeGroup>
+```yaml ❌ Vague
+expected_result: The page works
+```
+```yaml ✅ Observable
+expected_result: The URL includes "/users/123" and an element with text "User details" is visible
+```
+</CodeGroup>
+
+**Example:**
 ```yaml
 name: User details page navigation
 page: /dashboard/users
@@ -194,6 +212,8 @@ If your test declares `page_path: app/dashboard/users/page.tsx`, the recommended
 - use **snake_case**, lowercase, descriptive.
 - If `name: Navigation back to home from about page`, the recommended file name is:
     
+    ```
+    navigation_back_to_home_from_about_page.yaml
     ```
     navigation_back_to_home_from_about_page.yaml
     ```
