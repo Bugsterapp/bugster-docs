@@ -50,6 +50,12 @@
             ]
           },
           {
+            "group": "How-to Guides",
+            "pages": [
+              "guides/test-management/test-crud"
+            ]
+          },
+          {
             "group": "CLI Commands",
             "pages": [
               "commands/overview",
@@ -108,7 +114,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Start Testing",
+      "label": "START TESTING",
       "href": "https://www.bugster.dev/"
     }
   },
