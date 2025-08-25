@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "maple",
   "name": "Bugster",
   "logo": "logo/Bugster-Logo.png",
   "description": "Bugster is an AI tester that simulates a real user in a real browser, providing insights directly in your PR. It's designed for developers at VC-backed startups who want to ship with confidence without writing or maintaining flaky test suites.",
@@ -40,6 +40,7 @@
     "tabs": [
       {
         "tab": "Documentation",
+        "icon": "book",
         "groups": [
           {
             "group": "Getting Started",
@@ -80,6 +81,7 @@
       },
       {
       "tab": "Changelog", 
+      "icon": "newspaper",
         "groups": [
           {
             "group": "Changelog",
