@@ -1,39 +1,26 @@
 ---
 title: "How to update your tests"
-description: "Keep your test suite current as features evolve by creating, modifying, and removing tests with a single command."
+description: "Sync your suite with product changes by creating, modifying, and removing tests via `bugster update`."
 ---
 
-<Tip>
+Run `bugster update` to automatically create tests for new functionality, modify tests impacted by code changes, and delete tests for removed features. Use it locally on demand or automatically on every pull request via the GitHub App.
+
 In this guide you will learn:
 - How to keep your test suite synchronized with your codebase using `bugster update`.
 - How to use different update modes for local development and CI workflows.
 - How to compare changes against different baselines like the default branch or the last update.
-</Tip>
 
-<Info>
-**Goal:** Keep your test suite current as features evolve—create, modify, and remove tests with a single command.
-</Info>
-
-## TL;DR
-
-Run the following command to automatically update your test suite:
-
-```bash
-bugster update
-```
-
-This command will:
-- **Create** tests for new functionality.
-- **Modify** tests impacted by code changes.
-- **Delete** tests for removed features.
-
-You can use it locally on demand or automatically on every pull request via the GitHub App.
+<Card title="Prerequisites">
+- Bugster CLI installed and authenticated.
+- Run commands from your repo root (the directory containing `/.bugster/`).
+- For PR automation: the Bugster GitHub App is installed on the repo (document required permissions) and PR previews are available if your flow depends on them.
+</Card>
 
 ## Usage Modes
 
 ### Local (manual)
 
-Run `bugster update` when you're confident about local changes and ready to sync them.
+Run `bugster update` when you're confident about local changes and ready to sync them. The command analyzes **committed changes only** - both staged and unstaged files are ignored. Only differences between commits are considered for test updates.
 
 <CodeGroup>
 ```bash Full update
@@ -52,9 +39,13 @@ bugster update --delete-only
 ```
 </CodeGroup>
 
+<Info>
+**Scope flag precedence:** If multiple scope flags are provided, the command will error and ask you to specify only one scope option.
+</Info>
+
 ### Automatic on Pull Requests
 
-When you open a Pull Request, Bugster's E2E agent runs `bugster update` first.
+When you open a Pull Request, Bugster's E2E agent runs `bugster update` first. New commits or force-pushes will **amend the existing Update PR** rather than creating a new one.
 
 <Steps>
 <Step title="Bugster creates an Update PR">
@@ -77,58 +68,51 @@ Remember to review the Bugster Update PR **before** merging your feature.
 
 Here is a summary of the flow:
 ```text
-dev creates PR  →  bugster update runs  →  Bugster opens "Update PR" → 
+You create a PR  →  bugster update runs  →  Bugster opens "Update PR" → 
 Bugster comments results in original PR → you review/merge Update PR → merge feature PR
 ```
 
 ## Comparison Baselines
 
-Choose the comparison model that fits your development stage.
+Choose the comparison model that fits your development stage:
 
-<AccordionGroup>
-<Accordion title="Default: Compare against last commit">
+| Baseline | Use When | Command |
+| :--- | :--- | :--- |
+| Last commit (default) | Small, isolated edits | `bugster update` |
+| Default branch | Before PR / comprehensive sweep | `bugster update --against-default` |
+| Since last update | Tight inner loop without reprocessing | `bugster update --against-last-update` |
+
+### Last commit (default)
+*When to use: Small, isolated edits*
+
 ```bash
 bugster update
 ```
-Compares your local changes against the last commit. It only sees files you've changed, added, or deleted since your last commit.
-</Accordion>
-<Accordion title="Against default branch">
+**Scope:** Compares your latest commit against the previous commit. Only sees files changed in your most recent commit.
+
+### Against default branch  
+*When to use: Before PR / comprehensive sweep*
+
 ```bash
 bugster update --against-default
 ```
-Compares your current branch against the default branch (e.g., `main`). It sees all changes in your feature branch.
-</Accordion>
-<Accordion title="Incremental since last update">
+**Scope:** Compares your current branch against the merge-base with the default branch (e.g., `main`). Sees all changes in your feature branch.
+
+### Since last update
+*When to use: Tight inner loop without reprocessing*
+
 ```bash
 bugster update --against-last-update
 ```
-Compares changes from the last time you ran `bugster update` to now. It only sees new changes since the previous update.
-</Accordion>
-</AccordionGroup>
+**Scope:** Compares changes since the last time you ran `bugster update`. The "last update" state is stored in `.bugster/state/last-update-hash` and tracks the commit hash from your previous update.
 
 ## Recommended Workflow
 
-<CardGroup cols={3}>
-<Card title="During active development">
-Use `--against-last-update` for a tight feedback loop.
-```bash
-bugster update --against-last-update
-```
-</Card>
-<Card title="Before opening a PR">
-Use `--against-default` for a final, comprehensive sweep.
-```bash
-bugster update --against-default
-```
-</Card>
-<Card title="For small, isolated edits">
-The default mode is usually sufficient.
-```bash
-bugster update
-```
-</Card>
-</CardGroup>
-
+| Scenario | Command | Use Case |
+| :--- | :--- | :--- |
+| During active development | `bugster update --against-last-update` | Tight feedback loop |
+| Before opening a PR | `bugster update --against-default` | Final, comprehensive sweep |
+| For small, isolated edits | `bugster update` | Default mode usually sufficient |
 
 ## Examples
 
@@ -149,7 +133,7 @@ bugster update --against-default
 </Accordion>
 <Accordion title="Tight inner loop without reprocessing old changes">
 ```bash
-# Tight inner loop; don’t reprocess old changes
+# Tight inner loop; don't reprocess old changes
 bugster update --against-last-update
 ```
 </Accordion>
@@ -179,7 +163,6 @@ bugster update --against-default --update-only
 </Accordion>
 </AccordionGroup>
 
-
 ## Review Tips
 
 <Tip>
@@ -188,4 +171,4 @@ bugster update --against-default --update-only
 - If a change looks incorrect, adjust the code or the test, rerun `bugster update`, and re-review.
 </Tip>
 
-That’s it: one standardized command keeps your suite aligned with real product changes—locally or automatically on every PR.
+That's it: one standardized command keeps your suite aligned with real product changes—locally or automatically on every PR.
