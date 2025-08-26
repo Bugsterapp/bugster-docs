@@ -57,9 +57,9 @@
             "group": "How-to Guides",
             "pages": [
               "guides/test-management/test-crud",
-              "guides/test-management/credentials-and-roles",
-              "guides/customize-config-yaml",
               "guides/local-development",
+              "guides/test-management/credentials-and-roles",
+              "guides/configuration/customize-config-yaml",
               "guides/test-management/update-test-suite"
             ]
           },

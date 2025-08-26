@@ -1,6 +1,7 @@
 ---
 title: "Local Development Workflow"
 description: "Best practices for running Bugster during development to validate features and catch issues early"
+icon: "code"
 ---
 
 Learn how to integrate Bugster into your daily development workflow for faster feedback, better UX validation, and confident feature delivery.
@@ -11,11 +12,10 @@ Discover the most effective ways to use Bugster locally while developing, from q
 
 <Steps>
 <Step title="Develop your feature">
-  You just finished implementing a new checkout flow with improved validation.
+  You just finished implementing a new checkout flow.
   
   ```javascript
-  // Added new validation logic
-  const validatePayment = (paymentData) => {
+  const Payment = (paymentData) => {
     // Your new feature code
   }
   ```
@@ -29,7 +29,7 @@ Discover the most effective ways to use Bugster locally while developing, from q
   bugster run --only-affected
   
   # Or test specific checkout flows
-  bugster run --prompt "Test the new checkout validation"
+  bugster run --prompt "Test the new checkout"
   ```
 </Step>
 
