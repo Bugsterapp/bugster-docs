@@ -1,76 +1,248 @@
 ---
-title: 'Run your Tests'
+title: 'Run'
 description: 'Execute your test specifications with browser automation'
-icon: "compass"
+icon: "play"
 ---
 
-## Overview
+The `bugster run` command executes your test specifications using an AI agent in automated browser instances. It provides comprehensive test execution with real browser automation and intelligent result analysis.
 
-**Purpose**: Executes your test specifications using an AI agent in an automated browser.
+## Basic Usage
 
-**When to use**:
+```bash
+bugster run
+```
+
+## Command Overview
+
+Executes test specifications using AI-powered browser automation to validate your application's functionality across different scenarios and user flows.
+
+### When to Use
+
 - **Before deploying** to validate functionality
 - In CI/CD pipelines for automated testing
 - During development to catch regressions
 - To verify fixes after bug reports
 
-**Important notes**:
-- **Requires your app to be running** on the configured URL
-- Opens real browser instances (unless `--headless`)
-- Can run individual tests or entire test suites
+### Key Features
+
+- AI agent executes tests in real browser instances
 - Supports parallel execution for faster results
-- Streams results to dashboard when enabled
+- Automatic video recording for failed tests
+- Real-time streaming to dashboard
+- Quick ad-hoc testing with text prompts
 
-## CLI Reference
+<Warning>
+Requires your application to be running and accessible on the configured URL before executing tests.
+</Warning>
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bugster run` | Run all available tests | `bugster run` |
-| `bugster run auth/` | Run tests in specific directory | `bugster run auth/` |
-| `bugster run --headless` | Run without browser UI | `bugster run --headless` |
-| `bugster run --parallel 5` | Run up to 5 tests concurrently | `bugster run --parallel 5` |
-| `bugster run --only-affected` | Run only tests for changed files | `bugster run --only-affected` |
+## Command Syntax
 
-### Execution Flags
+```bash
+bugster run [path] [options]
+```
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--headless` | Run tests in headless mode (no browser UI) | `--headless` |
-| `--silent` | Run in silent mode (less verbose output) | `--silent` |
-| `--verbose` | Enable verbose output for debugging | `--verbose` |
-| `--parallel` | Maximum number of concurrent tests (default: 3) | `--parallel 8` |
-| `--max-concurrent` | Alias for --parallel | `--max-concurrent 5` |
-| `--limit` | Maximum number of tests to run | `--limit 10` |
-| `--browser` | Browser to use for tests | `--browser chromium` |
+## How It Works
 
-### Filtering Flags
+The run command:
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--only-affected` | Only run tests for affected files/directories | `--only-affected` |
-| `--base-url` | Override base URL from config | `--base-url https://staging.myapp.com` |
+1. **Test Discovery**: Scans for test specifications in `.bugster/tests/` directory
+2. **Browser Initialization**: Launches browser instances (visible or headless)
+3. **AI Execution**: AI agent interprets and executes test steps
+4. **Result Analysis**: Captures screenshots, videos, and detailed logs
+5. **Reporting**: Streams results to dashboard and generates reports
 
-### Output Flags
+## Execution Options
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--output` | Save test results to JSON file | `--output results.json` |
-| `--stream-results` | Stream results to dashboard (default: true) | `--stream-results` |
-| `--no-stream-results` | Disable streaming to dashboard | `--no-stream-results` |
+<ParamField query="--headless" type="boolean">
+Run tests in headless mode without visible browser UI. Ideal for CI/CD environments.
+</ParamField>
 
-### Common Usage Patterns
+<ParamField query="--parallel" type="integer" default="3">
+Maximum number of concurrent tests to run simultaneously. Higher values speed up execution but use more resources.
+</ParamField>
 
-| Use Case | Command | Description |
-|----------|---------|-------------|
-| Local development | `bugster run` | Run all tests with browser visible |
-| CI/CD pipeline | `bugster run --headless --stream-results` | Automated testing in CI |
-| Quick validation | `bugster run --limit 5 --parallel 3` | Run subset of tests quickly |
-| Staging testing | `bugster run --base-url https://staging.app.com` | Test against staging environment |
-| Debugging | `bugster run auth/ --verbose` | Debug specific test category |
-| Performance testing | `bugster run --parallel 10 --headless` | Maximum speed execution |
+<ParamField query="--max-concurrent" type="integer">
+Alias for `--parallel`. Specifies the maximum number of tests to run concurrently.
+</ParamField>
 
-**Pro Tips**:
-- Use `--only-affected` in PR workflows to test only changed functionality
-- `--parallel` significantly speeds up execution but uses more resources
-- `--output` is useful for generating test reports in CI/CD
-- Browser videos are automatically recorded for failed tests
+<ParamField query="--limit" type="integer">
+Maximum number of tests to execute. Useful for quick validation or debugging specific test counts.
+</ParamField>
+
+<ParamField query="--browser" type="string" default="chromium">
+Browser engine to use for test execution. Supports chromium, firefox, and webkit.
+</ParamField>
+
+<ParamField query="--prompt" type="string">
+Run an instant test from a text description (max 1000 characters). Creates and executes a test without needing YAML files.
+</ParamField>
+
+<ParamField query="--quick" type="string">
+Alias for `--prompt`. Run a quick test from natural language description.
+</ParamField>
+
+## Filtering Options
+
+<ParamField query="--only-affected" type="boolean">
+Run only tests for files/directories that have been modified. Perfect for PR workflows and focused testing.
+</ParamField>
+
+<ParamField query="--base-url" type="string">
+Override the base URL from configuration. Useful for testing against different environments.
+</ParamField>
+
+## Output Options
+
+<ParamField query="--output" type="string">
+Save detailed test results to a JSON file. Essential for CI/CD integration and test reporting.
+</ParamField>
+
+<ParamField query="--stream-results" type="boolean" default="true">
+Stream real-time results to the Bugster dashboard for live monitoring.
+</ParamField>
+
+<ParamField query="--no-stream-results" type="boolean">
+Disable streaming to dashboard. Results will only be available locally.
+</ParamField>
+
+<ParamField query="--verbose" type="boolean">
+Enable detailed logging output for debugging test execution issues.
+</ParamField>
+
+<ParamField query="--silent" type="boolean">
+Run in silent mode with minimal output. Reduces noise in CI/CD logs.
+</ParamField>
+
+## Examples
+
+### Complete Test Suite
+
+```bash
+bugster run
+```
+
+Runs all available tests with default settings and visible browser.
+
+### Headless CI/CD Execution
+
+```bash
+bugster run --headless --stream-results
+```
+
+Perfect for automated testing in continuous integration pipelines.
+
+### Parallel Execution
+
+```bash
+bugster run --parallel 8 --headless
+```
+
+Runs up to 8 tests concurrently for maximum speed.
+
+### Target Specific Directory
+
+```bash
+bugster run auth/ --verbose
+```
+
+Runs only authentication tests with detailed debugging output.
+
+### Quick Ad-hoc Testing
+
+```bash
+bugster run --prompt "Test user login with valid credentials and verify dashboard loads"
+```
+
+Creates and runs an instant test from natural language description.
+
+### Environment Testing
+
+```bash
+bugster run --base-url https://staging.myapp.com --limit 5
+```
+
+Tests against staging environment with a limited number of tests.
+
+## Quick Test Prompts
+
+<Tabs>
+<Tab title="Authentication">
+```bash
+bugster run --prompt "Test user login with valid credentials and verify dashboard loads"
+```
+Complete login flow validation.
+</Tab>
+
+<Tab title="E-commerce">
+```bash
+bugster run --prompt "Add product to cart, proceed to checkout, and verify total calculation"
+```
+Shopping workflow testing.
+</Tab>
+
+<Tab title="Form Validation">
+```bash
+bugster run --prompt "Test contact form with invalid email and verify error messages"
+```
+Form error handling validation.
+</Tab>
+
+<Tab title="Mobile Testing">
+```bash
+bugster run --prompt "Test navigation menu on mobile device and verify all links work"
+```
+Mobile-specific functionality testing.
+</Tab>
+</Tabs>
+
+## Common Usage Patterns
+
+<CardGroup cols={2}>
+<Card title="Development Testing" icon="code">
+```bash
+bugster run
+```
+Run all tests with visible browser for development.
+</Card>
+
+<Card title="CI/CD Pipeline" icon="rocket">
+```bash
+bugster run --headless --output results.json
+```
+Automated testing with result export.
+</Card>
+
+<Card title="Quick Validation" icon="bolt">
+```bash
+bugster run --limit 5 --parallel 3
+```
+Fast subset testing for quick feedback.
+</Card>
+
+<Card title="Debugging" icon="bug">
+```bash
+bugster run auth/ --verbose
+```
+Detailed logging for specific test categories.
+</Card>
+</CardGroup>
+
+## Test Results
+
+After execution, you'll receive:
+
+- **Pass/Fail Status**: Clear indication of test outcomes
+- **Screenshots**: Visual evidence of test execution
+- **Video Recordings**: Automatic recording for failed tests
+- **Detailed Logs**: Step-by-step execution information
+- **Performance Metrics**: Timing and resource usage data
+
+## Best Practices
+
+<Tip>
+Use `--only-affected` in PR workflows to test only changed functionality. Combine `--parallel` with `--headless` for maximum execution speed in CI/CD environments.
+</Tip>
+
+<Note>
+Quick prompt tests are limited to 1000 characters and run with maximum concurrency of 1. They're perfect for exploratory testing and quick validation scenarios.
+</Note>
