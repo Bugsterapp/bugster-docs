@@ -1,89 +1,247 @@
 ---
-title: 'Update your Tests'
+title: 'Update'
 description: 'Keep your tests synchronized with code changes using bugster update'
 icon: "wand-magic-sparkles"
 ---
 
-## Overview
+The `bugster update` command automatically maintains your test specifications by analyzing code changes and updating, creating, or deleting tests accordingly to keep them synchronized with your evolving codebase.
 
-**Purpose**: Automatically maintains your test specs by analyzing code changes and updating, creating, or deleting tests accordingly.
+## Basic Usage
 
-**When to use**:
+```bash
+bugster update
+```
+
+## Command Overview
+
+Analyzes git changes in your codebase and intelligently updates your test suite to reflect modifications, additions, and deletions in your application code.
+
+### When to Use
+
 - **After modifying existing features** to keep tests in sync
 - **In Pull Request workflows** to automate test maintenance
 - When you've added new pages or components
 - After deleting or refactoring code sections
 
-**Important notes**:
-- **Compares against git changes** to determine what needs updating
-- Can create new tests, modify existing ones, or delete obsolete tests
-- **Saves current state** for future `--against-last-update` comparisons
+### Key Features
+
+- Compares against git changes to determine updates needed
+- Creates new tests, modifies existing ones, or deletes obsolete tests
+- Saves current state for future incremental comparisons
 - Works with both staged and unstaged changes
-- Intelligent enough to update only relevant test sections
+- Intelligent selective updating of relevant test sections
 
-## CLI Reference
+<Note>
+The update command requires a git repository with committed changes for comparison and automatically saves update state after successful runs.
+</Note>
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bugster update` | Update tests based on git changes | `bugster update` |
-| `bugster update --update-only` | Only update existing tests, no new/delete | `bugster update --update-only` |
-| `bugster update --suggest-only` | Only suggest new tests for added files | `bugster update --suggest-only` |
-| `bugster update --delete-only` | Only delete tests for removed files | `bugster update --delete-only` |
+## Command Syntax
 
-### Scope Flags
+```bash
+bugster update [options]
+```
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--update-only` | Only update existing specs, no suggestions or deletes | `--update-only` |
-| `--suggest-only` | Only suggest new specs, no updates or deletes | `--suggest-only` |
-| `--delete-only` | Only delete specs, no updates or suggestions | `--delete-only` |
+## How It Works
 
-### Comparison Flags
+The update command:
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--against-default` | Compare against the default branch instead of HEAD | `--against-default` |
-| `--against-last-update` | Compare against the commit from the last update run | `--against-last-update` |
-| `--show-logs` | Show detailed logs during analysis (deprecated, use --debug) | `--show-logs` |
+1. **Change Analysis**: Compares current code against git history or saved state
+2. **Impact Assessment**: Identifies which tests are affected by code changes
+3. **Test Maintenance**: Updates, creates, or deletes test specifications as needed
+4. **State Saving**: Records current state for future incremental updates
+5. **Validation**: Ensures test specifications remain valid and executable
 
-### What Gets Updated
+## Update Types
 
-| Change Type | Action | Example |
-|-------------|--------|---------|
-| **Modified files** | Updates existing test specs | Function signature changes → updated test steps |
-| **New files** | Suggests new test specs | New component → generates new test file |
-| **Deleted files** | Removes obsolete test specs | Removed page → deletes corresponding tests |
-| **Renamed files** | Updates file references | Moved component → updates import paths |
+<Tabs>
+<Tab title="Modified Files">
+Updates existing test specs when code changes:
+- Function signature changes → updated test steps
+- UI modifications → adjusted interaction flows
+- Logic updates → revised assertion patterns
+</Tab>
 
-### Common Usage Patterns
+<Tab title="New Files">
+Suggests new test specs for added code:
+- New components → generates component test files
+- New pages → creates page-specific test scenarios
+- New features → develops feature test coverage
+</Tab>
 
-| Use Case | Command | Description |
-|----------|---------|-------------|
-| Full maintenance | `bugster update` | Handle all types of changes |
-| Safe updates only | `bugster update --update-only` | Only modify existing tests |
-| New feature testing | `bugster update --suggest-only` | Generate tests for new code |
-| Cleanup after refactor | `bugster update --delete-only` | Remove obsolete tests |
-| Branch comparison | `bugster update --against-default` | Compare against main/master branch |
-| Incremental updates | `bugster update --against-last-update` | Only changes since last update |
+<Tab title="Deleted Files">
+Removes obsolete test specs:
+- Removed pages → deletes corresponding tests
+- Deleted components → removes component tests
+- Refactored code → cleans up outdated specs
+</Tab>
 
-### Workflow Integration
+</Tabs>
 
-| Scenario | Command | When to Use |
-|----------|---------|-------------|
-| **Pre-commit hook** | `bugster update --update-only` | Before committing changes |
-| **PR automation** | `bugster update --against-default` | In GitHub Actions/CI |
-| **Feature branch** | `bugster update` | After completing feature development |
-| **Refactoring** | `bugster update --delete-only` | After removing old code |
-| **Daily maintenance** | `bugster update --against-last-update` | Regular test maintenance |
+## Scope Options
 
-**Pro Tips**:
-- Use `--against-last-update` for incremental updates in active development
-- `--against-default` is perfect for PR workflows to catch all branch changes
-- Combine with `bugster run --only-affected` for complete change validation
-- Update state is automatically saved after successful runs
-- Review suggested changes before committing updated test specs
+<ParamField query="--update-only" type="boolean">
+Only update existing test specifications. No new test suggestions or deletions will be performed.
+</ParamField>
 
-**Important Notes**:
-- Cannot use both `--against-default` and `--against-last-update` simultaneously
-- Requires git repository with committed changes for comparison
-- Always review generated changes before committing to repository 
+<ParamField query="--suggest-only" type="boolean">
+Only suggest new test specifications for added files. No updates to existing tests or deletions.
+</ParamField>
+
+<ParamField query="--delete-only" type="boolean">
+Only delete obsolete test specifications for removed files. No updates or new suggestions.
+</ParamField>
+
+## Comparison Options
+
+<ParamField query="--against-default" type="boolean">
+Compare against the default branch (main/master) instead of HEAD. Perfect for Pull Request workflows.
+</ParamField>
+
+<ParamField query="--against-last-update" type="boolean">
+Compare against the commit from the last update run. Enables incremental updates for active development.
+</ParamField>
+
+<ParamField query="--show-logs" type="boolean">
+Show detailed logs during analysis. (Deprecated - use --debug instead)
+</ParamField>
+
+## Examples
+
+### Complete Test Maintenance
+
+```bash
+bugster update
+```
+
+Handles all types of changes: updates, additions, and deletions.
+
+### Safe Updates Only
+
+```bash
+bugster update --update-only
+```
+
+Only modifies existing tests without creating new ones or deleting any.
+
+### New Feature Testing
+
+```bash
+bugster update --suggest-only
+```
+
+Generates tests only for newly added code and features.
+
+### Post-refactor Cleanup
+
+```bash
+bugster update --delete-only
+```
+
+Removes obsolete tests after code refactoring or deletion.
+
+### Branch Comparison
+
+```bash
+bugster update --against-default
+```
+
+Compares against main/master branch to catch all changes in feature branch.
+
+### Incremental Updates
+
+```bash
+bugster update --against-last-update
+```
+
+Only processes changes since the last update run for efficient maintenance.
+
+## Workflow Integration
+
+<CardGroup cols={2}>
+<Card title="Pre-commit Hook" icon="code-commit">
+```bash
+bugster update --update-only
+```
+Ensure tests stay current before committing changes.
+</Card>
+
+<Card title="PR Automation" icon="code-pull-request">
+```bash
+bugster update --against-default
+```
+Automate test maintenance in GitHub Actions/CI.
+</Card>
+
+<Card title="Feature Development" icon="code">
+```bash
+bugster update
+```
+Complete maintenance after feature development.
+</Card>
+
+<Card title="Daily Maintenance" icon="clock">
+```bash
+bugster update --against-last-update
+```
+Regular incremental test maintenance.
+</Card>
+</CardGroup>
+
+## Update Scenarios
+
+<AccordionGroup>
+<Accordion title="Feature Branch Workflow">
+```bash
+# After completing feature development
+bugster update
+
+# For PR review
+bugster update --against-default
+```
+Maintains tests throughout feature development lifecycle.
+</Accordion>
+
+<Accordion title="Continuous Integration">
+```bash
+# In GitHub Actions
+bugster update --against-default --update-only
+```
+Automated test maintenance in CI/CD pipelines.
+</Accordion>
+
+<Accordion title="Refactoring Projects">
+```bash
+# After major refactoring
+bugster update --delete-only
+
+# Then update remaining tests
+bugster update --update-only
+```
+Systematic test cleanup after code restructuring.
+</Accordion>
+</AccordionGroup>
+
+## Validation Workflow
+
+After running update, follow this validation process:
+
+1. **Review Changes**: Examine generated test modifications
+2. **Run Tests**: Execute updated tests with `bugster run --only-affected`
+3. **Validate Coverage**: Ensure new features have adequate test coverage
+4. **Commit Updates**: Add updated test specifications to version control
+
+## Limitations
+
+<Warning>
+Cannot use both `--against-default` and `--against-last-update` simultaneously. Choose one comparison method per execution.
+</Warning>
+
+## Best Practices
+
+<Tip>
+Use `--against-last-update` for incremental updates during active development. Combine with `bugster run --only-affected` for complete change validation workflow.
+</Tip>
+
+<Note>
+Always review generated changes before committing to your repository. The `--against-default` flag is perfect for PR workflows to catch all branch changes comprehensively.
+</Note> 
