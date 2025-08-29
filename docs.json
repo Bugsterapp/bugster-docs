@@ -61,6 +61,7 @@
               "guides/test-management/credentials-and-roles",
               "guides/configuration/customize-config-yaml",
               "guides/test-management/update-test-suite",
+              "guides/cicd/cicd-integration",
               "guides/coding-agents/cursor"
             ]
           },

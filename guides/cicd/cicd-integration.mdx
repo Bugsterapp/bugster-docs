@@ -1,0 +1,199 @@
+---
+title: "CI/CD Integration"
+description: "Integrate Bugster into your CI/CD pipeline to automatically run tests on pull requests"
+icon: "code-pull-request"
+---
+
+Bugster integrates seamlessly with your CI/CD pipeline to automatically run tests against preview deployments on every pull request. This ensures your application works correctly before merging changes.
+
+<Info>
+Currently supported deployment platforms: **Vercel** and **Railway**. More platforms coming soon.
+</Info>
+
+## Prerequisites
+
+Before setting up CI/CD integration, ensure you have:
+- A Bugster organization and project configured
+- A GitHub repository with your application code
+- Your application deployed on Vercel or Railway
+- Admin access to your GitHub repository and Vercel/Railway project
+
+## Integration Steps
+
+<Steps>
+<Step title="Install GitHub App">
+  Install the Bugster GitHub App in your organization to enable repository access and pull request integration.
+  
+  1. Navigate to your Bugster organization settings
+  2. Go to **Integrations** → **GitHub**
+  3. Click **Install GitHub App**
+  4. Select your organization and repositories
+  5. Complete the installation process
+  
+  <Check>
+  Verify the GitHub App appears in your organization's installed apps.
+  </Check>
+</Step>
+
+<Step title="Integrate GitHub Repository">
+  Connect your GitHub repository to your Bugster project to enable automated test execution.
+  
+  1. In your Bugster project dashboard, go to **Settings** → **Integrations**
+  2. Click **Connect Repository**
+  3. Select your GitHub repository from the list
+  4. Confirm the integration
+  
+  <Warning>
+  Ensure the GitHub repository matches the one where you installed the Bugster GitHub App.
+  </Warning>
+</Step>
+
+<Step title="Configure Vercel Preview Access">
+  Enable Bugster to access your Vercel preview deployments using one of two methods:
+  
+  <Tabs>
+  <Tab title="Protection Bypass (Recommended)">
+    Create a protection bypass secret for automated access while maintaining security.
+    
+    1. In Vercel, navigate to your project's [Deployment Protection settings](https://vercel.com/d?to=%2F%5Bteam%5D%2F%5Bproject%5D%2Fsettings%2Fdeployment-protection&title=Deployment+Protection+settings)
+    2. Navigate to **Protection Bypass for Automation**
+    3. Click **Add Secret** to generate a bypass token
+    4. Copy the generated secret
+    5. In Bugster, go to **Project Settings** → **Config YAML**
+    6. Add the secret to your configuration:
+    
+    ```yaml
+    vercel:
+      protection_bypass: "your-generated-secret-here"
+    ```
+    
+    <Tip>
+    This method maintains Vercel's authentication while allowing Bugster automated access.
+    </Tip>
+  </Tab>
+  
+  <Tab title="Disable Vercel Auth">
+    Temporarily disable Vercel authentication for preview deployments.
+    
+    1. In Vercel, go to your project **Settings** → **Functions**
+    2. Find **Vercel Authentication** 
+    3. Set to **Disabled**
+    4. Save changes
+    
+    <Warning>
+    This method disables authentication entirely and is less secure than using Protection Bypass.
+    </Warning>
+  </Tab>
+  </Tabs>
+</Step>
+
+<Step title="Test the Integration">
+  Verify everything works by creating a test pull request.
+  
+  1. Create a new branch in your repository
+  2. Make a small change to your application
+  3. Open a pull request
+  4. Wait for Bugster to automatically run tests
+  5. Check the PR for Bugster results and status updates
+  
+  <Check>
+  You should see Bugster test results appear as a check in your pull request within a few minutes.
+  </Check>
+</Step>
+</Steps>
+
+## Advanced Configuration
+
+### Organization Preferences
+
+Configure how Bugster behaves across your organization and projects:
+
+<AccordionGroup>
+<Accordion title="Destructive Agent Settings">
+  Control whether Bugster's destructive agent runs on pull requests:
+  
+  1. Go to **Organization Settings** → **General**
+  2. Find **Bugster Destructive** option
+  3. Toggle to enable/disable destructive testing on PRs
+  
+  <Info>
+  The destructive agent tests edge cases and error scenarios that might break your application.
+  </Info>
+</Accordion>
+
+<Accordion title="Test Execution Frequency">
+  Choose when Bugster runs tests on your pull requests:
+  
+  **Available options:**
+  - **On every commit** (default): Runs tests each time you push changes
+  - **Once per PR**: Runs tests only when the PR is first opened
+  
+  Configure in **Organization Settings** → **General** → **Run on Every PR Deployment**
+</Accordion>
+
+<Accordion title="Environment Selection">
+  Select which environments Bugster should test:
+  
+  1. Navigate to **Organization Settings** → **General**
+  2. Find **Run on Environments**
+  3. Choose from:
+     - Production only
+     - Preview only  
+     - Both environments
+</Accordion>
+</AccordionGroup>
+
+### Email Notifications
+
+Get notified when tests fail in your deployments:
+
+1. Go to **Organization Settings** → **General**
+2. Enable **Send Email Alerts for Failed Tests**
+3. Configure recipient preferences
+
+## Troubleshooting
+
+<AccordionGroup>
+<Accordion title="Bugster not running on PRs">
+  **Possible causes:**
+  - GitHub App not installed or missing repository permissions
+  - Repository not connected to Bugster project
+  - Vercel preview access not configured properly
+  
+  **Solutions:**
+  - Verify GitHub App installation and permissions
+  - Re-connect repository in project settings
+  - Check Vercel protection bypass configuration
+</Accordion>
+
+<Accordion title="Tests failing to access preview URL">
+  **Possible causes:**
+  - Vercel authentication blocking access
+  - Invalid protection bypass secret
+  - Preview deployment not ready
+  
+  **Solutions:**
+  - Verify protection bypass secret is correct
+  - Check Vercel deployment status
+  - Ensure preview URL is accessible
+</Accordion>
+
+<Accordion title="No test results in PR">
+  **Possible causes:**
+  - Tests not configured in Bugster project
+  - Test generation failed
+  - CI/CD pipeline issues
+  
+  **Solutions:**
+  - Verify tests exist in your Bugster project
+  - Check Bugster logs for errors
+  - Review GitHub Actions/deployment logs
+</Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+With CI/CD integration complete, you can:
+- [Customize test configurations](/guides/configuration/customize-config-yaml)
+- [Manage your test suite](/guides/test-management/manage-tests)
+- [Set up team collaboration](/commands/team-collaboration)
