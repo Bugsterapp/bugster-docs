@@ -9,6 +9,15 @@
     "light": "#058BFF",
     "dark": "#058BFF"
   },
+    "contextual": {
+      "options": [
+        "copy",
+        "view",
+        "chatgpt",
+        "claude",
+        "perplexity"
+      ]
+    },
   "fonts": {
     "family": "figtree",
       "source": "https://cdn.jsdelivr.net/fontsource/fonts/figtree:vf@latest/latin-wght-normal.woff2",
