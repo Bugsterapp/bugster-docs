@@ -56,11 +56,12 @@
           {
             "group": "GUIDES",
             "pages": [
-              "guides/test-management/test-crud",
+              "guides/test-management/manage-tests",
               "guides/local-development",
               "guides/test-management/credentials-and-roles",
               "guides/configuration/customize-config-yaml",
-              "guides/test-management/update-test-suite"
+              "guides/test-management/update-test-suite",
+              "guides/coding-agents/cursor"
             ]
           },
           {
