@@ -76,7 +76,7 @@ Define login accounts used by tests.
 Create environment variables following our dedicated guide. We do not recommend storing testing credentials directly in the config file.
 </Tip>
 
-For more details, see: [Add Credentials, Roles and Permissions](/guides/authentication).
+For more details, see: [Add Credentials, Roles and Permissions](/guides/test-management/credentials-and-roles).
 
 ## Vercel Preview Protection
 
@@ -88,6 +88,8 @@ For more details, see: [Add Credentials, Roles and Permissions](/guides/authenti
 Use when your Vercel previews are protected. Add your bypass secret so Bugster can test non-interactively.
 
 **Use case:** CI runs against vercel.app previews that normally require login.
+
+To generate the bypass secret, navigate to your project's [Deployment Protection settings](https://vercel.com/d?to=%2F%5Bteam%5D%2F%5Bproject%5D%2Fsettings%2Fdeployment-protection&title=Deployment+Protection+settings) in Vercel.
 </ResponseField>
 
 ## Test Execution Preferences
