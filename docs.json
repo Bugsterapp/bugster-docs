@@ -72,8 +72,7 @@
               "commands/generate",
               "commands/run",
               "commands/destructive-agent",
-              "commands/update",
-              "commands/advanced_configuration"
+              "commands/update"
             ]
           },
           {
