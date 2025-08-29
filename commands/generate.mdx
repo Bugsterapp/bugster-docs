@@ -1,53 +1,197 @@
 ---
-title: 'Generate your Tests'
+title: 'Generate'
 description: 'Generate AI-powered tests from your codebase with bugster generate'
 icon: "sparkles"
 ---
 
-## Overview
+The `bugster generate` command analyzes your codebase with AI and generates intelligent test specifications automatically. This powerful automation tool significantly reduces the manual work required to set up comprehensive test coverage.
 
-**Purpose**: Analyzes your codebase with AI and generates intelligent test specifications.
+## Basic Usage
 
-**When to use**:
+```bash
+bugster generate
+```
+
+## Command Overview
+
+Analyzes your codebase structure, user flows, and components to create intelligent test specifications that cover critical functionality and edge cases.
+
+### When to Use
+
 - After adding new features or pages to your application
 - When you want comprehensive test coverage for specific components
 - To create initial test suite for existing projects
 - Before major releases to ensure thorough testing
 
-**Important notes**:
-- **Can take few minutes** for large codebases
+### Key Features
+
+- AI-powered analysis of your app structure and user flows
 - Generates test specs in `.bugster/tests/` directory
-- Uses AI to understand your app structure and user flows
-- Can be run multiple times - won't duplicate existing tests
 - Supports filtering by specific pages/components
+- Custom prompts to guide test generation
+- Safe to run multiple times - won't duplicate existing tests
 
-## CLI Reference
+<Warning>
+Can take several minutes for large codebases during the initial analysis phase.
+</Warning>
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bugster generate` | Analyze entire codebase and generate tests | `bugster generate` |
-| `bugster generate --count 10` | Generate specific number of tests per page | `bugster generate --count 10` |
-| `bugster generate --page <paths>` | Generate tests for specific pages only | `bugster generate --page "pages/auth.tsx,pages/settings.tsx"` |
+## Command Syntax
 
-### Flags
+```bash
+bugster generate [options]
+```
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--count` | Number of test specs to generate per page (min: 1, max: 30, default: varies) | `--count 15` |
-| `--page` | Generate specs only for specific page files (comma-separated relative paths) | `--page "pages/login.tsx,components/auth/signup.tsx"` |
-| `--show-logs` | Show detailed logs during analysis (deprecated, use --debug) | `--show-logs` |
+## How It Works
 
-### Page Filtering Examples
+The generate command:
 
-| Use Case | Command | Description |
-|----------|---------|-------------|
-| Single page | `--page "pages/dashboard.tsx"` | Generate tests for one specific page |
-| Multiple pages | `--page "pages/auth.tsx,pages/settings.tsx"` | Generate tests for multiple pages |
-| Component focus | `--page "components/forms/login.tsx"` | Generate tests for specific components |
-| Directory pattern | `--page "pages/admin/"` | Target all pages in a directory |
+1. **Codebase Analysis**: Scans your application structure and identifies key components
+2. **AI Processing**: Uses AI to understand user flows and critical functionality
+3. **Test Generation**: Creates intelligent test scenarios based on the analysis
+4. **File Output**: Saves test specifications as YAML files with human-readable steps
+5. **Caching**: Stores analysis results for faster subsequent runs
 
-**Pro Tips**:
-- Use `--page` to focus on recently modified files
-- Higher `--count` values generate more comprehensive test scenarios
-- First run analyzes your entire app structure (caching for faster subsequent runs)
-- Generated tests are saved as YAML files with human-readable test steps
+## Options
+
+<ParamField query="--count" type="integer" default="varies">
+Number of test specs to generate per page. Range: 1-30. Higher values create more comprehensive test scenarios.
+</ParamField>
+
+<ParamField query="--page" type="string">
+Generate specs only for specific page files. Provide comma-separated relative paths to target specific components.
+</ParamField>
+
+<ParamField query="--prompt" type="string">
+Custom prompt to guide AI test generation with specific instructions and focus areas. Must be used together with `--page`.
+</ParamField>
+
+<ParamField query="--show-logs" type="boolean">
+Show detailed logs during analysis. (Deprecated - use --debug instead)
+</ParamField>
+
+## Examples
+
+### Complete Codebase Analysis
+
+```bash
+bugster generate
+```
+
+Analyzes the entire codebase and generates comprehensive test coverage.
+
+### Generate Specific Number of Tests
+
+```bash
+bugster generate --count 10
+```
+
+Creates exactly 10 test scenarios per page for thorough coverage.
+
+### Target Specific Pages
+
+```bash
+bugster generate --page "pages/auth.tsx,pages/settings.tsx"
+```
+
+Generates tests only for the specified page files.
+
+### Custom Test Focus with Page Filtering
+
+```bash
+bugster generate --page "pages/product.tsx" --prompt "Focus on edge cases and error handling"
+```
+
+Uses AI to emphasize specific testing scenarios for targeted pages. The `--prompt` flag requires `--page` to be specified.
+
+## Page Filtering Strategies
+
+<Tabs>
+<Tab title="Single Page">
+```bash
+bugster generate --page "pages/dashboard.tsx"
+```
+Focus on one specific page for detailed testing.
+</Tab>
+
+<Tab title="Multiple Pages">
+```bash
+bugster generate --page "pages/auth.tsx,pages/settings.tsx"
+```
+Target multiple specific pages simultaneously.
+</Tab>
+
+<Tab title="Component Focus">
+```bash
+bugster generate --page "components/forms/login.tsx"
+```
+Generate tests for specific reusable components.
+</Tab>
+
+<Tab title="Directory Pattern">
+```bash
+bugster generate --page "pages/admin/"
+```
+Target all pages within a specific directory.
+</Tab>
+</Tabs>
+
+## Output Structure
+
+Generated tests are organized in the `.bugster/tests/` directory:
+
+```
+.bugster/tests/
+├── pages/
+│   ├── auth.yaml           # Authentication page tests
+│   └── dashboard.yaml      # Dashboard functionality tests
+└── components/
+    └── forms/
+        └── login.yaml      # Login component tests
+```
+
+## Example Generated Test
+
+Here's an example of what a generated test specification looks like:
+
+```yaml
+name: "User Login Flow"
+description: "Test successful user authentication"
+steps:
+  - action: navigate
+    url: "/login"
+  - action: fill
+    selector: '[data-testid="email"]'
+    value: "user@example.com"
+  - action: fill
+    selector: '[data-testid="password"]'
+    value: "password123"
+  - action: click
+    selector: '[data-testid="login-button"]'
+  - action: assert
+    selector: '[data-testid="dashboard"]'
+    condition: "visible"
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+<Card title="Targeted Generation" icon="bullseye">
+Use `--page` to focus on recently modified files for efficient test creation.
+</Card>
+
+<Card title="Custom Prompts" icon="message">
+Combine `--page` and `--prompt` for targeted, customized test generation.
+</Card>
+
+<Card title="Incremental Testing" icon="layer-group">
+Run regularly as your codebase evolves - tests won't be duplicated.
+</Card>
+
+<Card title="Comprehensive Coverage" icon="shield">
+Higher `--count` values generate more comprehensive test scenarios.
+</Card>
+</CardGroup>
+
+<Tip>
+The first run analyzes your entire app structure and caches results for faster subsequent runs. Remember that custom prompts require the `--page` flag to specify which components to target.
+</Tip>
