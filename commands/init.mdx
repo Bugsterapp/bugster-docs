@@ -1,44 +1,140 @@
 ---
-title: 'Initialize project'
+title: 'Init'
 description: 'Set up Bugster CLI in your project and authenticate with your account'
 icon: 'fingerprint'
 ---
 
-## Overview
+The `bugster init` command guides you through setting up a new Bugster project. It creates configuration files, helps you configure your application, and sets up test credentials for automated testing.
 
-**Purpose**: Sets up Bugster configuration in your repository for the first time.
+## Basic Usage
 
-**When to use**:
+```bash
+bugster init
+```
+
+## Command Overview
+
+Sets up Bugster configuration in your repository for the first time, creating the necessary project structure and configuration files.
+
+### When to Use
+
 - Once per repository - typically done by one team member
 - When starting a new project with Bugster
 - If you need to reconfigure project settings
 
-**Important notes**:
+### Key Features
+
+- Interactive project setup
 - Creates `.bugster/` directory with project configuration
-- Must be committed to git for CI/CD integration
-- Requires API key (will prompt for authentication if needed)
+- Configures application URL and credentials
 - Safe to re-run (will ask before overwriting existing config)
 
-## CLI Reference
+<Note>
+The configuration must be committed to git for CI/CD integration and requires an API key for authentication.
+</Note>
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bugster init` | Initialize with interactive prompts | `bugster init` |
-| `bugster init --api-key <key>` | Initialize with specific API key | `bugster init --api-key bugster_abc123...` |
-| `bugster init --project-name <name>` | Set custom project name | `bugster init --project-name "My App"` |
-| `bugster init --url <url>` | Set application URL | `bugster init --url http://localhost:3000` |
-| `bugster init --user <username> --password <pwd>` | Configure login credentials | `bugster init --user admin --password secret` |
-| `bugster init --no-credentials` | Skip credential setup entirely | `bugster init --no-credentials` |
+## Command Syntax
 
-### Flags
+```bash
+bugster init [options]
+```
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--api-key` | Bugster API key (starts with 'bugster_') | `--api-key bugster_org_abc...` |
-| `--project-name` | Name for your project | `--project-name "E-commerce App"` |
-| `--url` | Base URL of your application | `--url https://staging.myapp.com` |
-| `--user` | Username for login credentials | `--user testuser@example.com` |
-| `--password` | Password for login credentials | `--password mypassword123` |
-| `--credential-name` | Name for credential entry (default: admin) | `--credential-name staging` |
-| `--no-credentials` | Skip credential setup entirely | `--no-credentials` |
-| `--bypass-protection` | Protection bypass secret for deployment platforms | `--bypass-protection abc123...` |
+## Configuration Process
+
+When you run `bugster init`, the following steps occur:
+
+1. **Authentication Check**: Verifies you're authenticated with the Bugster API (run `bugster auth` first if not)
+2. **Project Setup**: Creates `.bugster/` directory and configuration files
+3. **Application Configuration**: Collects your application URL and settings
+4. **Credential Setup**: Configures login credentials for testing
+5. **Verification**: Tests the configuration to ensure it works
+
+## Options
+
+<ParamField query="--api-key" type="string">
+Bugster API key for authentication. Must start with 'bugster_'. If not provided, will prompt for authentication.
+</ParamField>
+
+<ParamField query="--project-name" type="string">
+Custom name for your project. Used for identification in the Bugster dashboard.
+</ParamField>
+
+<ParamField query="--url" type="string">
+Base URL of your application where tests will be executed.
+</ParamField>
+
+<ParamField query="--user" type="string">
+Username for login credentials used in automated tests.
+</ParamField>
+
+<ParamField query="--password" type="string">
+Password for login credentials used in automated tests.
+</ParamField>
+
+<ParamField query="--credential-name" type="string" default="admin">
+Name for the credential entry in your configuration.
+</ParamField>
+
+<ParamField query="--no-credentials" type="boolean">
+Skip credential setup entirely. You can configure credentials later.
+</ParamField>
+
+<ParamField query="--bypass-protection" type="string">
+Protection bypass secret for deployment platforms like Vercel or Netlify.
+</ParamField>
+
+## Examples
+
+### Interactive Setup
+
+```bash
+bugster init
+```
+
+Guides you through the complete setup process with interactive prompts.
+
+### Quick Setup with Parameters
+
+```bash
+bugster init --project-name "My E-commerce App" --url http://localhost:3000
+```
+
+### Setup with Credentials
+
+```bash
+bugster init --user admin@example.com --password secret123 --credential-name staging
+```
+
+### Skip Credential Configuration
+
+```bash
+bugster init --no-credentials
+```
+
+Sets up the project without configuring any login credentials.
+
+## Project Structure
+
+After running the command, the following structure is created:
+
+```
+.bugster/
+├── config.yaml          # Main project configuration
+└── credentials/          # Encrypted credential storage
+    └── admin.yaml       # Default credential file
+```
+
+<Warning>
+Always commit the `.bugster/` directory to version control. The configuration is required for CI/CD integration and team collaboration.
+</Warning>
+
+## Example Configuration
+
+After initialization, your `config.yaml` might look like:
+
+```yaml
+project_id: "proj_abc123"
+project_name: "My E-commerce App"
+base_url: "https://staging.myapp.com"
+default_credentials: "admin"
+```

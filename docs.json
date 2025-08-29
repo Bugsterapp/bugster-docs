@@ -42,11 +42,11 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Documentation",
+        "tab": "DOCS",
         "icon": "book",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "GETTING STARTED",
             "pages": [
               "index",
               "installation",
@@ -54,7 +54,7 @@
             ]
           },
           {
-            "group": "How-to Guides",
+            "group": "GUIDES",
             "pages": [
               "guides/test-management/test-crud",
               "guides/local-development",
@@ -64,11 +64,11 @@
             ]
           },
           {
-            "group": "CLI Commands",
+            "group": "USING THE CLI",
             "pages": [
               "commands/overview",
-              "commands/init",
               "commands/auth",
+              "commands/init",
               "commands/generate",
               "commands/run",
               "commands/destructive-agent",
@@ -77,7 +77,7 @@
             ]
           },
           {
-            "group": "Integrations",
+            "group": "INTEGRATIONS",
             "pages": [
               "integrations/github",
               "howto/vercel",
@@ -87,11 +87,11 @@
         ]
       },
       {
-      "tab": "Changelog", 
+      "tab": "CHANGELOG", 
       "icon": "newspaper",
         "groups": [
           {
-            "group": "Changelog",
+            "group": "CHANGELOG",
             "pages": [
                 "changelog"
             ]

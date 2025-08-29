@@ -1,37 +1,84 @@
 ---
-title: 'Authenticate with API Key'
+title: 'Auth'
 description: 'Configure and manage your Bugster API key for CLI authentication'
-icon: 'key'
+icon: 'lock'
 ---
 
-## Overview
+The `bugster auth` command allows you to configure and manage your Bugster API key for CLI authentication.
 
-**Purpose**: Configure or update your Bugster API key for authentication.
+## Basic Usage
 
-**When to use**:
-- When switching between organizations/teams
-- Setting up Bugster for the first time
+```bash
+bugster auth
+```
+
+## Command Overview
+
+Configure or update your Bugster API key for authentication with the Bugster platform.
+
+### When to Use
+
+- When setting up Bugster for the first time
+- When switching between organizations or teams
 - If your API key expires or gets rotated
 - When API key authentication fails
 
-**Important notes**:
-- API keys start with `bugster_` prefix
-- Stored securely in `~/.bugsterrc` 
-- Can also use `BUGSTER_CLI_API_KEY` environment variable
-- Required for all Bugster operations
+### Key Features
 
-## CLI Reference
+- Interactive API key setup
+- Secure storage in `~/.bugsterrc`
+- Environment variable support via `BUGSTER_CLI_API_KEY`
+- API key validation and verification
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bugster auth` | Interactive API key setup | `bugster auth` |
-| `bugster auth --api-key <key>` | Set API key directly | `bugster auth --api-key bugster_org_abc123...` |
-| `bugster auth --clear` | Remove existing API key | `bugster auth --clear` |
+<Note>
+API keys start with the `bugster_` prefix and are required for all Bugster operations.
+</Note>
 
-### Flags
+## Command Syntax
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--api-key` | Bugster API key to set (starts with 'bugster_') | `--api-key bugster_org_abc123...` |
-| `--clear` | Clear the existing API key | `--clear` |
+```bash
+bugster auth [options]
+```
+
+### Options
+
+<ParamField query="--api-key" type="string">
+Set the Bugster API key directly without interactive prompts. The key must start with 'bugster_'.
+</ParamField>
+
+<ParamField query="--clear" type="boolean">
+Remove the existing API key from local storage.
+</ParamField>
+
+## Examples
+
+### Interactive Setup
+
+```bash
+bugster auth
+```
+
+This opens an interactive prompt to enter your API key.
+
+### Direct API Key Setup
+
+```bash
+bugster auth --api-key bugster_org_abc123def456...
+```
+
+### Clear Existing Authentication
+
+```bash
+bugster auth --clear
+```
+
+## Authentication Storage
+
+Your API key is stored securely in:
+- **Local file**: `~/.bugsterrc`
+- **Environment variable**: `BUGSTER_CLI_API_KEY` (optional)
+
+<Warning>
+Keep your API key secure and never commit it to version control. The environment variable takes precedence over the local file.
+</Warning>
 
