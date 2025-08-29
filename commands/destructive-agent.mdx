@@ -4,77 +4,238 @@ description: 'Run AI-powered destructive agents to find potential bugs in your c
 icon: "bomb"
 ---
 
-## Overview
+The `bugster destructive` command runs AI-powered destructive agents to find potential bugs by simulating edge cases, unexpected user behavior, and malicious inputs that could break your application.
 
-**Purpose**: Runs AI-powered destructive agents to find potential bugs by simulating edge cases and unexpected user behavior.
+## Basic Usage
 
-**When to use**:
+```bash
+bugster destructive
+```
+
+## Command Overview
+
+Executes specialized AI agents designed to stress-test your application by attempting to break it through aggressive interactions, malicious inputs, and edge case scenarios.
+
+### When to Use
+
 - **Before major releases** to catch edge case bugs
 - On staging environments to stress-test changes
 - After significant code modifications
 - When you want to find vulnerabilities proactively
 
-**Important notes**:
-- **Only targets pages with recent code changes** (git diff)
-- Agents like "UI Crashers" and "Form Destroyer" attempt to break your app
-- **Can cause data corruption** - use on test/staging environments only
+### Key Features
+
+- AI agents simulate malicious and edge case user behavior
+- Only targets pages with recent code changes (git diff)
 - Records videos of destructive attempts for debugging
-- More aggressive than regular testing
+- Multiple specialized agent types with different attack vectors
+- More aggressive than regular testing approaches
 
-## CLI Reference
+<Warning>
+**NEVER run against production environments.** Destructive agents can cause data corruption, submit forms, delete data, or trigger irreversible actions. Use only on test/staging environments.
+</Warning>
 
-| Command | Description | Example |
-|---------|-------------|---------|
-| `bugster destructive` | Run destructive agents on all changed pages | `bugster destructive` |
-| `bugster destructive --headless` | Run without browser UI | `bugster destructive --headless` |
-| `bugster destructive --parallel 5` | Run up to 5 agents concurrently | `bugster destructive --parallel 5` |
-| `bugster destructive --limit 8` | Limit number of agents to run | `bugster destructive --limit 8` |
+## Command Syntax
 
-### Execution Flags
+```bash
+bugster destructive [options]
+```
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--headless` | Run agents in headless mode (no browser UI) | `--headless` |
-| `--silent` | Run agents silently (minimal output) | `--silent` |
-| `--verbose` | Show detailed agent execution logs | `--verbose` |
-| `--max-concurrent` | Maximum number of concurrent agents (default: 3) | `--max-concurrent 6` |
-| `--limit` | Maximum number of destructive agents to run (default: 5, min: 1) | `--limit 10` |
-| `--browser` | Browser to use for destructive testing | `--browser firefox` |
+## How It Works
 
-### Output Flags
+The destructive command:
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--stream-results` | Stream destructive results as they complete (default: true) | `--stream-results` |
-| `--no-stream-results` | Disable streaming to dashboard | `--no-stream-results` |
-| `--base-url` | Override base URL from config | `--base-url https://staging.myapp.com` |
+1. **Change Detection**: Identifies pages with recent code changes using git diff
+2. **Agent Selection**: Deploys specialized destructive agents based on page types
+3. **Aggressive Testing**: Agents attempt to break functionality through various methods
+4. **Result Recording**: Captures videos and logs of all destructive attempts
+5. **Bug Analysis**: Reports potential vulnerabilities and edge case failures
 
-### Agent Types & Priority
+## Agent Types
 
-| Agent Type | Priority | Description | Example Behaviors |
-|------------|----------|-------------|-------------------|
-| **UI Crashers** | Highest | Attempts to crash UI components | Rapid clicking, invalid inputs, boundary testing |
-| **Form Destroyer** | High | Targets forms with malicious inputs | SQL injection attempts, XSS payloads, buffer overflows |
-| **Navigation Chaos** | Medium | Tests navigation edge cases | Back/forward spam, deep linking, invalid routes |
+<Tabs>
+<Tab title="UI Crashers">
+**Priority**: Highest
 
-### Common Usage Patterns
+Attempts to crash UI components through:
+- Rapid clicking and interaction spam
+- Invalid input combinations
+- Boundary value testing
+- Component state corruption
+</Tab>
 
-| Use Case | Command | Description |
-|----------|---------|-------------|
-| Pre-release testing | `bugster destructive --limit 15` | Comprehensive destructive testing |
-| Quick vulnerability scan | `bugster destructive --limit 3 --headless` | Fast security check |
-| CI/CD integration | `bugster destructive --headless --stream-results` | Automated destructive testing |
-| Staging validation | `bugster destructive --base-url https://staging.app.com` | Test staging environment |
-| Performance testing | `bugster destructive --parallel 8` | Maximum concurrent destruction |
+<Tab title="Form Destroyer">
+**Priority**: High
 
-**Safety Notes**:
-- **Never run against production** - destructive agents may cause real damage
-- Use test databases and isolated environments
-- Agents may submit forms, delete data, or trigger irreversible actions
-- Review video recordings to understand what caused any detected issues
+Targets forms with malicious inputs:
+- SQL injection attempts
+- XSS payload testing
+- Buffer overflow attempts
+- Invalid data type submissions
+</Tab>
 
-**Pro Tips**:
-- Run after `bugster update` to test newly modified pages
-- Higher `--limit` values increase chance of finding edge case bugs
-- Videos are automatically saved for any bugs found
-- Best used as final validation step before releases
+
+</Tabs>
+
+## Execution Options
+
+<ParamField query="--headless" type="boolean">
+Run agents in headless mode without visible browser UI. Recommended for CI/CD environments.
+</ParamField>
+
+<ParamField query="--parallel" type="integer" default="3">
+Maximum number of concurrent agents to run simultaneously. Higher values increase testing speed but use more resources.
+</ParamField>
+
+<ParamField query="--max-concurrent" type="integer" default="3">
+Alias for `--parallel`. Specifies the maximum number of agents to run concurrently.
+</ParamField>
+
+<ParamField query="--limit" type="integer" default="5">
+Maximum number of destructive agents to execute. Range: 1-30. Higher values increase bug discovery chances.
+</ParamField>
+
+<ParamField query="--browser" type="string" default="chromium">
+Browser engine to use for destructive testing. Supports chromium, firefox, and webkit.
+</ParamField>
+
+## Output Options
+
+<ParamField query="--stream-results" type="boolean" default="true">
+Stream real-time results to the Bugster dashboard as agents complete their destruction attempts.
+</ParamField>
+
+<ParamField query="--no-stream-results" type="boolean">
+Disable streaming to dashboard. Results will only be available locally.
+</ParamField>
+
+<ParamField query="--base-url" type="string">
+Override the base URL from configuration. Essential for testing staging environments.
+</ParamField>
+
+<ParamField query="--verbose" type="boolean">
+Enable detailed logging of agent execution and attack patterns.
+</ParamField>
+
+<ParamField query="--silent" type="boolean">
+Run agents silently with minimal output. Reduces noise in automated environments.
+</ParamField>
+
+## Examples
+
+### Complete Destructive Testing
+
+```bash
+bugster destructive
+```
+
+Runs all available destructive agents on pages with recent changes.
+
+### Pre-release Validation
+
+```bash
+bugster destructive --limit 15 --parallel 5
+```
+
+Comprehensive destructive testing with maximum coverage before major releases.
+
+### Quick Vulnerability Scan
+
+```bash
+bugster destructive --limit 3 --headless
+```
+
+Fast security and stability check with minimal resource usage.
+
+### Staging Environment Testing
+
+```bash
+bugster destructive --base-url https://staging.myapp.com --limit 10
+```
+
+Test staging environment with comprehensive destructive scenarios.
+
+### CI/CD Integration
+
+```bash
+bugster destructive --headless --stream-results --silent
+```
+
+Automated destructive testing optimized for continuous integration pipelines.
+
+## Usage Patterns
+
+<CardGroup cols={2}>
+<Card title="Pre-release Testing" icon="rocket">
+```bash
+bugster destructive --limit 15
+```
+Comprehensive destructive testing before major releases.
+</Card>
+
+<Card title="Quick Security Check" icon="shield">
+```bash
+bugster destructive --limit 3 --headless
+```
+Fast vulnerability and stability validation.
+</Card>
+
+<Card title="CI/CD Integration" icon="gear">
+```bash
+bugster destructive --headless --stream-results
+```
+Automated testing in continuous integration pipelines.
+</Card>
+
+<Card title="Performance Testing" icon="bolt">
+```bash
+bugster destructive --parallel 8
+```
+Maximum concurrent destruction for stress testing.
+</Card>
+</CardGroup>
+
+## Safety Guidelines
+
+<AccordionGroup>
+<Accordion title="Environment Safety">
+- **Never run against production environments**
+- Use dedicated test databases and isolated environments
+- Ensure all data is disposable or properly backed up
+- Test on staging environments that mirror production
+</Accordion>
+
+<Accordion title="Data Protection">
+- Agents may submit forms with test data
+- Potential for data deletion or corruption
+- May trigger irreversible actions
+- Always use test credentials and mock data
+</Accordion>
+
+<Accordion title="Video Evidence">
+- All destructive attempts are automatically recorded
+- Videos help understand what caused detected issues
+- Review recordings to learn about attack patterns
+- Use videos for security team analysis
+</Accordion>
+</AccordionGroup>
+
+## Result Analysis
+
+After execution, you'll receive:
+
+- **Vulnerability Reports**: Detailed analysis of potential security issues
+- **Edge Case Failures**: Documentation of unexpected behavior patterns
+- **Video Recordings**: Visual evidence of successful attacks or crashes
+- **Agent Logs**: Detailed execution traces for debugging
+- **Severity Ratings**: Prioritized list of discovered issues
+
+## Best Practices
+
+<Tip>
+Run destructive agents after `bugster update` to test newly modified pages. Higher `--limit` values increase the chance of finding edge case bugs, and videos are automatically saved for any issues found.
+</Tip>
+
+<Note>
+Destructive testing is most effective as a final validation step before releases. Combine with regular testing for comprehensive coverage, and always review video recordings to understand root causes.
+</Note>
