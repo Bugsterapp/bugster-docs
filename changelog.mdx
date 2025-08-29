@@ -1,10 +1,67 @@
 ---
 title: "Changelog"
 description: "All notable changes to Bugster CLI"
+icon: "rocket"
 rss: true
 ---
 
-<Update label="v0.3.30" description="Latest Release">
+# Changelog
+
+All notable changes to Bugster CLI will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+<Update label="v0.5.0" description="Latest Release">
+  ### Added
+  - **`bugster generate --prompt`** - Generate tests directly from natural language prompts without needing existing spec files
+</Update>
+
+<Update label="v0.4.13" description="Configuration & Resource Management">
+  ### Added
+  - **Optional `credential_id` field** to the Test model to enhance test configuration capabilities
+
+  ### Changed
+  - **Default maximum concurrent tests** changed from 5 to 3 for better resource management
+  - **Added `--quick` option** to the prompt parameter in the `run` command
+
+  ### Fixed
+  - **Simplified log visibility condition** in `should_show_detailed_logs` function for improved debugging experience
+</Update>
+
+<Update label="v0.4.12" description="Output Options & Quick Tests">
+  ### Added
+  - **`bugster destructive --output` option** to save results to a JSON file, enabling easier integration with other tools and workflows
+  - **`bugster run --prompt` option** for creating quick, on-the-fly tests without pre-existing spec files
+  - **PowerShell installer script** for Bugster CLI on Windows
+  - **Windows installation instructions** to the documentation
+
+  ### Changed
+  - **Enhanced PowerShell installer** to automatically check for and install Node.js and npm if missing
+
+  ### Removed
+  - **Legacy CI workflow configuration file**
+</Update>
+
+<Update label="v0.4.2" description="Configuration Command Updates">
+  ### Changed
+  - **`bugster config` command flags** now uses separate flags: `--bypass-protection-interactive` for guided setup and `--bypass-protection-secret` for direct secret input
+</Update>
+
+<Update label="v0.4.1" description="Validation & User Experience">
+  ### Added
+  - **Credentials validation** in `bugster init` - prevents empty username/password entries
+  - **Localhost reminder** in `bugster run` - warns users to ensure app is running before tests
+  - **CI/CD integration warning** in `bugster init` - clear instructions on which files to commit
+  - **Enhanced messaging system** with proper console message methods
+
+  ### Changed
+  - **Improved URL prompt** in `bugster init` - clarifies localhost usage and CI/CD auto-changes
+  - **Better credentials explanation** - explains when authentication gateway credentials are needed
+  - **Config.yaml now includes commit reminder comment** for CI/CD integration
+</Update>
+
+<Update label="v0.3.30" description="Config & Install Commands">
   ### Added
   - **`bugster config` command** - Access and manipulate the data inside config.yaml to avoid human error
     - `--bypass-protection` flag: Guides users on how to get the x-vercel-bypass-secret by redirecting them with the Deeplink
@@ -175,3 +232,31 @@ rss: true
   - **Project configuration system** with YAML-based config files
   - **Core specs format and parsing capabilities**
 </Update>
+
+[Unreleased]: https://github.com/Bugsterapp/bugster-cli/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/Bugsterapp/bugster-cli/compare/v0.4.13...v0.5.0
+[0.4.13]: https://github.com/Bugsterapp/bugster-cli/compare/v0.4.12...v0.4.13
+[0.4.12]: https://github.com/Bugsterapp/bugster-cli/compare/v0.4.2...v0.4.12
+[0.4.2]: https://github.com/Bugsterapp/bugster-cli/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.30...v0.4.1
+[0.3.30]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.26...v0.3.30
+[0.3.26]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.25...v0.3.26
+[0.3.25]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.24...v0.3.25
+[0.3.24]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.23...v0.3.24
+[0.3.23]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.22...v0.3.23
+[0.3.22]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.21...v0.3.22
+[0.3.21]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.20...v0.3.21
+[0.3.20]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.19...v0.3.20
+[0.3.19]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.15...v0.3.19
+[0.3.15]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.14...v0.3.15
+[0.3.14]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.13...v0.3.14
+[0.3.13]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.12...v0.3.13
+[0.3.12]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.11...v0.3.12
+[0.3.11]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.10...v0.3.11
+[0.3.10]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.9...v0.3.10
+[0.3.9]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.7...v0.3.9
+[0.3.7]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.6...v0.3.7
+[0.3.6]: https://github.com/Bugsterapp/bugster-cli/compare/v0.3.0...v0.3.6
+[0.3.0]: https://github.com/Bugsterapp/bugster-cli/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/Bugsterapp/bugster-cli/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/Bugsterapp/bugster-cli/releases/tag/v0.1.0

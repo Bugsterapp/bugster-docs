@@ -1,39 +1,109 @@
 ---
-title: 'CLI Overview'
+title: 'Overview'
 description: 'Complete overview of Bugster CLI commands and capabilities'
-icon: 'terminal'
+icon: 'globe'
 ---
 
 # Bugster CLI Overview
 
-Bugster CLI is an AI-powered command-line tool that generates, executes, and maintains end-to-end tests for web applications. Use it to interact with Bugster directly from your IDE.
+The Bugster CLI is a powerful AI-powered command-line tool designed to generate, execute, and maintain end-to-end tests for web applications. It provides an intuitive interface to interact with the Bugster platform directly from your development environment.
 
-## 🚀 Initial Setup Commands
+## Installation
 
-These commands are used during initial project configuration.
+Before using the Bugster CLI, you'll need to install it. See the [installation guide](/installation) for detailed instructions for your operating system.
 
-| Command               | Description | When to use |
-|---------              |-------------|-------------|
-| `bugster auth`        | Configure your Bugster API key | When switching organizations or updating credentials |
-| `bugster init`        | Initialize Bugster in your repository | Once per repository |
-| `bugster quickstart`  | Initialize project and generate 3 tests automatically | Perfect for first-time setup |
+## Available Commands
 
-## 🧪 Core Testing Commands
+The CLI includes the following commands:
 
-Commands you'll use regularly in your development workflow.
+| Command | Description |
+|---------|-------------|
+| [`auth`](/commands/auth) | Configure and manage your Bugster API key for CLI authentication |
+| [`init`](/commands/init) | Set up Bugster CLI in your project and authenticate with your account |
+| [`generate`](/commands/generate) | Generate AI-powered tests from your codebase |
+| [`run`](/commands/run) | Execute your test specifications with browser automation |
+| [`update`](/commands/update) | Keep your tests synchronized with code changes |
+| [`destructive`](/commands/destructive-agent) | Run AI-powered destructive agents to find potential bugs |
 
-| Command             | Description | Use cases |
-|---------            |-------------|-----------|
-| `bugster generate`  | Analyzes code and generates  test specs | Generate tests for new features, use `--page` for specific pages |
-| `bugster run`       | Executes test specs in automated browser | Validate before deployment, run in CI/CD, use `--parallel` |
-| `bugster update`      | Updates existing tests based on code changes | Keep tests synchronized, automate in PRs |
+## Getting Help
 
-## 🔥 Advanced Testing
+For help with any command, use the `--help` flag:
 
-| Command | Description | Use cases |
-|---------|-------------|-----------|
-| `bugster destructive` | Runs destructive agents to find bugs through edge cases | Discover vulnerabilities, stress testing, simulate unexpected behaviors |
+```bash
+bugster --help              # General CLI help
+bugster init --help         # Help for the init command
+bugster generate --help     # Help for the generate command
+```
+
+## Command Syntax
+
+The Bugster CLI follows a consistent command structure:
+
+```
+bugster <command> [options]
+```
+
+Most commands accept various options that modify their behavior. These options are typically provided using the `--option-name value` format or boolean flags like `--headless`.
+
+## Workflow Example
+
+A typical workflow with the Bugster CLI might look like:
+
+1. **Authenticate**: `bugster auth`
+2. **Initialize project**: `bugster init`
+3. **Generate tests**: `bugster generate`
+4. **Run tests**: `bugster run`
+5. **Update tests**: `bugster update` (after code changes)
+6. **Advanced testing**: `bugster destructive` (before releases)
+
+## Command Categories
+
+### Setup Commands
+
+Essential commands for initial project configuration:
+
+<CardGroup cols={2}>
+<Card title="Authentication" icon="key" href="/commands/auth">
+Configure your API key and authenticate with Bugster
+</Card>
+
+<Card title="Project Setup" icon="rocket" href="/commands/init">
+Initialize Bugster in your repository with configuration
+</Card>
+</CardGroup>
+
+### Core Testing Workflow
+
+Commands you'll use regularly in your development process:
+
+<CardGroup cols={3}>
+<Card title="Generate Tests" icon="sparkles" href="/commands/generate">
+AI-powered test generation from your codebase
+</Card>
+
+<Card title="Execute Tests" icon="play" href="/commands/run">
+Run tests with automated browser instances
+</Card>
+
+<Card title="Maintain Tests" icon="wand-magic-sparkles" href="/commands/update">
+Keep tests synchronized with code changes
+</Card>
+</CardGroup>
+
+### Advanced Testing
+
+Specialized testing capabilities for comprehensive validation:
+
+<Card title="Destructive Testing" icon="bomb" href="/commands/destructive-agent">
+AI agents that find bugs through edge cases and unexpected behavior
+</Card>
+
+## Best Practices
 
 <Tip>
-Start with `bugster quickstart` if you're new to Bugster - it sets up everything and generates your first tests automatically.
+Start with `bugster auth` and `bugster init` to set up your project. Then use `bugster generate` to create your initial test suite.
 </Tip>
+
+<Note>
+For the best experience, run `bugster update` after making code changes and `bugster run --only-affected` to validate your modifications.
+</Note>
