@@ -1,0 +1,86 @@
+---
+title: "Destructive Agent Testing"
+description: "Use AI agents to break your application and find bugs in changed pages"
+icon: "bomb"
+---
+
+Run AI-powered destructive agents like `form_destroyer` and `ui_crasher` to find potential bugs in your recent code changes by attempting to break your application.
+
+## Basic Usage
+
+```bash
+# Run destructive agents on all changed pages
+bugster destructive
+
+# Run in headless mode for faster execution
+bugster destructive --headless
+
+# Limit number of agents (default: 5)
+bugster destructive --limit 10
+```
+
+## Common Scenarios
+
+### After Feature Development
+
+You just built a new checkout flow and want to stress-test it:
+
+```bash
+# Run destructive testing with moderate scope
+bugster destructive --limit 8
+
+# Run multiple agents in parallel for speed
+bugster destructive --max-concurrent 5
+```
+
+### Pre-Release Testing
+
+Before deploying, run comprehensive destructive testing:
+
+```bash
+# Extended testing session
+bugster destructive --limit 15 --verbose
+
+# Export results for review
+bugster destructive --output destructive-results.json
+```
+
+
+
+## Key Options
+
+<ResponseField name="--limit" type="integer" default="5">
+Maximum number of destructive agents to run.
+</ResponseField>
+
+<ResponseField name="--max-concurrent" type="integer" default="3">
+Number of agents running simultaneously for faster execution.
+</ResponseField>
+
+<ResponseField name="--headless" type="boolean" default="false">
+Run agents without browser UI for faster, unattended testing.
+</ResponseField>
+
+<ResponseField name="--output" type="string">
+Save detailed results to JSON file for analysis or CI integration.
+</ResponseField>
+
+<Warning>
+Destructive agents can generate unusual data and trigger error states. Always run in development or staging environments, never production.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Local Development" icon="code" href="/guides/local-development">
+  Integrate destructive testing into your daily development workflow
+</Card>
+
+<Card title="CLI Commands" icon="terminal" href="/commands/destructive-agent">
+  Explore all destructive agent command options and flags
+</Card>
+</CardGroup>
+
+<Note>
+Destructive testing is most effective when combined with regular testing. Use it to discover edge cases that traditional tests might miss.
+</Note>

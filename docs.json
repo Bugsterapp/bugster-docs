@@ -62,18 +62,19 @@
               "quickstart"
             ]
           },
-          {
-            "group": "GUIDES",
-            "pages": [
-              "guides/test-management/manage-tests",
-              "guides/local-development",
-              "guides/test-management/credentials-and-roles",
-              "guides/configuration/customize-config-yaml",
-              "guides/test-management/update-test-suite",
-              "guides/cicd/cicd-integration",
-              "guides/coding-agents/cursor"
-            ]
-          },
+                      {
+              "group": "GUIDES",
+              "pages": [
+                "guides/test-management/manage-tests",
+                "guides/local-development",
+                "guides/destructive-testing",
+                "guides/test-management/credentials-and-roles",
+                "guides/configuration/customize-config-yaml",
+                "guides/test-management/update-test-suite",
+                "guides/cicd/cicd-integration",
+                "guides/coding-agents/cursor"
+              ]
+            },
           {
             "group": "USING THE CLI",
             "pages": [
