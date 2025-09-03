@@ -29,7 +29,7 @@ Discover the most effective ways to use Bugster locally while developing, from q
   bugster run --only-affected
   
   # Or test specific checkout flows
-  bugster run --prompt "Test the new checkout"
+  bugster run --quick "Test the new checkout"
   ```
 </Step>
 
@@ -91,14 +91,14 @@ When you want to watch tests run and debug issues:
 
 ```bash
 # Watch tests in real browser with detailed logs
-bugster run --headless false --verbose --limit 10
+bugster run --headless  --verbose --limit 10
 
 # Debug specific test scenarios
-bugster run --headless false --parallel 1 --verbose
+bugster run --headless  --parallel 1 --verbose
 ```
 
 <Tip>
-You might want to use `--headless false` when first learning, but prefer headless mode for better concentration during development.
+You might want to use `--headless` when first learning, but prefer headless mode for better concentration during development.
 </Tip>
 
 ## Additional Testing Options
@@ -118,10 +118,10 @@ Ask Bugster to test something specific using natural language:
 
 ```bash
 # Test a component you just built
-bugster run --prompt "Test this component I just built"
+bugster run --quick "Test this component I just built"
 
 # Test specific functionality
-bugster run --prompt "Check if the search works with empty results"
+bugster run --quick "Check if the search works with empty results"
 ```
 
 
