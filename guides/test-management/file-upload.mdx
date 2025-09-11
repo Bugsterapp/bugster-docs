@@ -1,0 +1,266 @@
+---
+title: "File Upload Testing"
+description: "Learn how Bugster can upload any type of file to your application during test execution with a simple workflow."
+icon: "upload"
+---
+
+This guide explains how to enable file uploads during test runs. Bugster can upload any type of file to your application during a test. See use cases below for examples.
+
+**The workflow is simple**: upload the files you want Bugster to use during the test, tell Bugster which file you want to use, and you're ready to go.
+
+
+## Workflow
+
+<Steps>
+<Step title="Upload files in File Management">
+Go to your project in the Bugster App → Settings → File Management and upload your test files.
+
+
+Upload any files you want to use during testing. Supported formats include documents, images, code files, etc.
+</Step>
+
+<Step title="Add files to your test YAML">
+Add the `files:` field at the root level of your test and list the exact filenames as they appear in the File Management section.
+
+```yaml
+name: Upload file attachment
+page: /upload
+files:
+  - sample.csv
+task: Upload a CSV file through the file picker
+steps:
+  - Navigate to the upload page
+  - Click the "Choose File" button
+  - Select a file to upload
+  - Verify "sample.csv" appears in the file list
+expected_result: File is successfully attached and visible in the UI
+```
+
+<Warning>
+File names are case-sensitive and must match exactly as they appear in the File Management section.
+</Warning>
+</Step>
+
+<Step title="Run your test">
+Execute your test normally. Bugster automatically handles file attachment during test execution.
+
+```bash
+bugster run .bugster/tests/upload-test.yaml
+```
+
+<Check>
+Bugster will automatically attach the specified file to any file picker in your UI during the test.
+</Check>
+</Step>
+</Steps>
+
+## File management
+
+All test files are stored in the Bugster App under Project → Settings → File Management. This centralized approach ensures:
+
+- **Universal availability**: Files work in local development and CI/CD
+- **Team collaboration**: Shared access across team members  
+- **Secure storage**: Files are stored securely with direct URL access
+- **Easy management**: Upload, view, and delete files through the web interface
+
+<Info>
+Files uploaded to the File Management are automatically available for all test environments without additional configuration.
+</Info>
+
+## Test examples
+
+### Single file upload
+
+Test uploading a single file through a file picker:
+
+```yaml
+name: Document upload via file picker
+page: /documents
+files:
+  - contract.pdf
+task: Upload a PDF document using the file picker
+steps:
+  - Navigate to the documents page
+  - Click the "Upload Document" button
+  - Select a file from the picker
+  - Wait for upload progress to complete
+  - Verify "contract.pdf" appears in the document list
+expected_result: Document is successfully uploaded and listed
+```
+
+### Multiple file upload
+
+Test uploading multiple files simultaneously:
+
+```yaml
+name: Bulk file upload
+page: /gallery
+files:
+  - photo1.jpg
+  - photo2.jpg
+  - photo3.jpg
+task: Upload multiple images to gallery
+steps:
+  - Navigate to the gallery page
+  - Click "Add Photos" button
+  - Select multiple files for upload
+  - Verify all three images appear in the upload queue
+  - Wait for batch upload to complete
+expected_result: All three photos are successfully added to the gallery
+```
+
+### Image upload with preview
+
+Test image uploads that show preview functionality:
+
+```yaml
+name: Profile picture upload
+page: /profile
+files:
+  - avatar.png
+task: Upload and preview profile picture
+steps:
+  - Navigate to the profile page
+  - Click "Change Avatar" button
+  - Select "avatar.png" from the file picker
+  - Wait for the upload to process
+  - Verify the image preview is displayed
+expected_result: New avatar is shown in the profile section
+```
+
+## File naming and organization
+
+<Info>
+File references in YAML are case-sensitive and must include the file extension.
+</Info>
+
+### Naming best practices
+
+- Use descriptive names: `user-avatar.png` instead of `img1.png`
+- Include file extensions: `data.csv`, `report.pdf`
+- Avoid spaces and special characters: use hyphens or underscores
+- Keep names concise but meaningful
+
+<Tip>
+Use the exact filename as it appears in the Bugster App File Management interface.
+</Tip>
+
+## Best practices
+
+<AccordionGroup>
+<Accordion title="File selection and preparation">
+- **Use synthetic data**: Never include real user data or PII in test files
+- **Keep files lightweight**: Use small files for faster test execution
+- **Test edge cases**: Include files with different formats, sizes, and names
+- **Upload to File Management**: All files must be uploaded through the web interface
+</Accordion>
+
+<Accordion title="Test design">
+- **Verify upload states**: Test loading indicators and progress bars
+- **Check error handling**: Test with invalid file types or oversized files
+- **Validate UI feedback**: Ensure success messages and file lists update correctly
+- **Test accessibility**: Verify keyboard navigation and screen reader support
+</Accordion>
+
+<Accordion title="File management">
+- **Centralized storage**: All files are managed through File Management interface
+- **Team sharing**: Files are accessible to all team members
+- **Clean up regularly**: Remove unused files to keep storage organized
+- **Use Copy YAML**: Leverage the copy button for accurate file references
+</Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+### Common issues and solutions
+
+<Tabs>
+<Tab title="File not found">
+**Problem:** Test fails with "file not found" error.
+
+**Solution:**
+1. Verify the file is uploaded in Bugster App → Project → Settings → File Management
+2. Check the filename matches exactly (case-sensitive)
+3. Ensure the file extension is included in the YAML reference
+
+```yaml
+files:
+  - sample.csv  # ✅ Correct: includes extension
+  - sample      # ❌ Wrong: missing extension
+```
+</Tab>
+
+<Tab title="File picker not opening">
+**Problem:** Clicking the upload button doesn't open the file picker.
+
+**Solution:**
+1. Verify user authentication and permissions
+2. Check that any required form fields are completed
+3. Ensure the UI is in the correct state for file uploads
+4. Look for disabled states or loading conditions
+
+```yaml
+steps:
+  - Log in with valid credentials
+  - Navigate to the upload page
+  - Fill in required form fields
+  - Click the "Choose File" button
+```
+</Tab>
+
+<Tab title="Wrong file selected">
+**Problem:** Test selects a different file than expected.
+
+**Solution:**
+1. Use the "Copy YAML" button in the File Management for exact filename
+2. Verify no duplicate filenames exist in your file storage
+3. Check that the filename in YAML matches the uploaded file exactly
+
+```yaml
+files:
+  - Frame1410087848.png  # ✅ Exact filename from File Management
+```
+</Tab>
+</Tabs>
+
+## Advanced scenarios
+
+### Testing file validation
+
+Test your application's file validation logic:
+
+```yaml
+name: File type validation
+page: /upload
+files:
+  - invalid.txt
+  - valid-image.jpg
+task: Test file type validation
+steps:
+  - Navigate to upload page
+  - Attempt to upload "invalid.txt"
+  - Verify error message appears
+  - Upload "valid-image.jpg"
+  - Verify successful upload
+expected_result: Invalid files are rejected with clear error messages
+```
+
+### Testing file size limits
+
+```yaml
+name: File size limit validation
+page: /upload
+files:
+  - large-file.pdf
+task: Test file size restrictions
+steps:
+  - Navigate to upload page
+  - Attempt to upload "large-file.pdf"
+  - Verify size limit error message
+  - Check that upload is prevented
+expected_result: Large files are rejected with appropriate error message
+```
+
+<Check>
+Your file upload tests are now ready! Upload files to the File Management, reference them in your YAML, and run tests with file upload capabilities.
+</Check>
