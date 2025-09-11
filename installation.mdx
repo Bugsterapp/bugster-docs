@@ -127,7 +127,36 @@ bugster --version
     ```
   </Accordion>
   <Accordion title="Permission errors (macOS/Linux)">
-    Try running the installation with sudo if you encounter permission issues.
+    **Symptom:** Installation fails with permission errors, even when using `sudo`.
+
+    **Cause:** The `~/.local` directory may have been created by another process with root ownership, preventing your user from writing to `~/.local/bin`.
+
+    **Solution:**
+    <Steps>
+    <Step title="Check directory ownership">
+      ```bash
+      ls -ld ~/.local ~/.local/bin
+      ```
+      If the owner is `root` instead of your username, proceed to the next step.
+    </Step>
+    <Step title="Fix ownership">
+      ```bash
+      sudo chown -R $(whoami) ~/.local
+      ```
+    </Step>
+    <Step title="Retry installation">
+      Run the installer again **without** sudo:
+      ```bash
+      curl -sSL https://bugster.dev/install.sh | bash
+      ```
+    </Step>
+    </Steps>
+
+    **Alternative solution:** Install directly to `/usr/local/bin`:
+    ```bash
+    # Download the binary manually first, then:
+    sudo cp bugster /usr/local/bin/
+    ```
   </Accordion>
   <Accordion title="Unsupported Linux distribution">
     If you encounter compatibility issues on Linux, ensure your distribution has GLIBC 2.35 or higher. Supported distributions include Ubuntu 22+, Ubuntu 24+, Debian 12+, and other modern distributions.
