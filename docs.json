@@ -69,6 +69,7 @@
                 "guides/local-development",
                 "guides/destructive-testing",
                 "guides/test-management/credentials-and-roles",
+                "guides/test-management/file-upload",
                 "guides/configuration/customize-config-yaml",
                 "guides/test-management/update-test-suite",
                 "guides/cicd/cicd-integration",
