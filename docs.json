@@ -92,8 +92,9 @@
             "group": "INTEGRATIONS",
             "pages": [
               "integrations/github",
-              "howto/vercel",
-              "howto/railway"
+              "integrations/vercel",
+              "integrations/netlify",
+              "integrations/railway"
             ]
           }
         ]

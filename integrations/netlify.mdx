@@ -1,0 +1,37 @@
+---
+title: 'Netlify'
+description: 'Automatically run tests on deployments with GitHub App integration'
+icon: "asterisk"
+---
+
+<Steps>
+<Step title="Go to your project configuration">
+Navigate to your Netlify project settings.
+</Step>
+
+<Step title="Access notifications settings">
+Click on **Notifications > Emails and Webhooks**.
+
+<Frame>
+<img src="/images/netlify/settings-notif.png" alt="Netlify notifications settings" />
+</Frame>
+</Step>
+
+<Step title="Add HTTP POST request notifications">
+Add HTTP POST request notifications for "Deploy succeed", "Deploy started" and "Deploy failed".
+
+<Frame>
+<img src="/images/netlify/deploy-succed.png" alt="Deploy notifications setup" />
+</Frame>
+</Step>
+
+<Step title="Get the webhook URL from Bugster">
+Copy the webhook URL from your Bugster Project Settings > Integrations > Netlify Integration.
+
+<Frame>
+<img src="/images/netlify/netlify-bugster.png" alt="Bugster Netlify integration settings" />
+</Frame>
+</Step>
+</Steps>
+
+Now you're ready! Open a new PR and watch Bugster run your test suite against the Netlify preview.
