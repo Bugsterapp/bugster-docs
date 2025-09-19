@@ -1,0 +1,218 @@
+---
+title: 'GCP Cloud Build'
+description: 'Integrate Bugster with Google Cloud Build using custom webhooks'
+icon: "box"
+---
+
+Automatically trigger Bugster tests when your Google Cloud Build deployments complete. This integration uses Bugster's custom webhook API to run tests on your deployed applications.
+
+## Overview
+
+The GCP Cloud Build integration works by adding a webhook step to your `cloudbuild.yaml` file that calls Bugster's API after your deployment succeeds. This approach gives you full control over when tests are triggered in your build pipeline.
+
+<Tip>
+This integration uses the same [Custom Integration API](/integrations/custom) that powers other Bugster integrations.
+</Tip>
+
+## Quick Start
+
+We've created a complete example repository to help you get started quickly:
+
+<Card title="Bugster Cloud Build Example" icon="github" href="https://github.com/Bugsterapp/bugster-quickstart/tree/main/platforms/gcp/cloud-build">
+Complete Next.js application with Cloud Build configuration for Bugster integration
+</Card>
+
+## Configuration
+
+<Steps>
+<Step title="Add Cloud Build configuration">
+Create or update your `cloudbuild.yaml` file to include the Bugster webhook step:
+
+```yaml cloudbuild.yaml
+steps:
+  # Your existing build steps here
+  # ...
+  
+  # Bugster webhook step
+  - name: 'curlimages/curl'
+    entrypoint: 'curl'
+    args:
+      - '-X'
+      - 'POST'
+      - 'https://api.bugster.app/webhooks/integrations/custom'
+      - '-H'
+      - 'Content-Type: application/json'
+      - '-H'
+      - 'X-API-KEY: ${_BUGSTER_API_KEY}'
+      - '--data'
+      - |
+        {
+          "deployment_state": "success",
+          "project_id": "${_PROJECT_ID}",
+          "organization_id": "${_ORG_ID}",
+          "branch": "${_BRANCH_NAME}",
+          "environment_url": "${_DEPLOYMENT_URL}",
+          "environment": "production"
+        }
+options:
+  logging: CLOUD_LOGGING_ONLY
+```
+
+<Warning>
+Add this step **after** your deployment is complete and your application is accessible at the target URL.
+</Warning>
+</Step>
+
+<Step title="Get your Bugster credentials">
+Navigate to your Bugster dashboard and collect:
+- **API Key**: Settings > API Keys
+- **Project ID**: Project Settings > General
+- **Organization ID**: Settings > Organization
+
+<Info>
+All three values can also be found in **Project Settings > Integrations** for convenience.
+</Info>
+</Step>
+
+<Step title="Configure substitution variables">
+In Google Cloud Console, go to **Cloud Build > Triggers** and configure these substitution variables:
+
+| Variable | Example Value | Description |
+|----------|---------------|-------------|
+| `_BUGSTER_API_KEY` | `bugster_xxx` | Your Bugster API key |
+| `_PROJECT_ID` | `my-project-1234567890` | Bugster project identifier |
+| `_ORG_ID` | `org_abc123def456ghi789jkl` | Bugster organization identifier |
+| `_DEPLOYMENT_URL` | `https://preview.example.com` | Public URL where your app is deployed |
+| `_BRANCH_NAME` | `main` | Target branch for the trigger |
+
+<Tip>
+Set these variables once in your Cloud Build trigger configuration - they'll be available for all builds.
+</Tip>
+</Step>
+
+<Step title="Create the Cloud Build trigger">
+1. Go to **Cloud Build > Triggers > Create Trigger**
+2. Select your GitHub repository
+3. Set **Event** to "Pull request"
+4. Set **Target branch** to `main` (or your preferred branch)
+5. Set **Configuration** to "Cloud Build configuration file"
+6. Set **Configuration file location** to `/cloudbuild.yaml` (or your file path)
+7. Add the substitution variables from Step 3
+8. Save the trigger
+
+<Check>
+Your trigger is now configured to run Bugster tests on every pull request to the main branch.
+</Check>
+</Step>
+</Steps>
+
+## How It Works
+
+<Steps>
+<Step title="Developer creates pull request">
+A developer opens a pull request against your main branch.
+</Step>
+
+<Step title="Cloud Build trigger activates">
+Google Cloud Build detects the pull request and starts the build process using your `cloudbuild.yaml` configuration.
+</Step>
+
+<Step title="Application builds and deploys">
+Your application builds and deploys to the specified environment (e.g., preview URL, staging environment).
+</Step>
+
+<Step title="Bugster webhook triggers">
+The curl step in your Cloud Build configuration sends a webhook to Bugster with the deployment details.
+</Step>
+
+<Step title="Tests run automatically">
+Bugster receives the webhook, accesses your deployed application at the provided URL, and runs your test suite automatically.
+</Step>
+</Steps>
+
+## Advanced Configuration
+
+### Custom Environment Variables
+
+You can customize the webhook payload based on your deployment setup:
+
+```yaml cloudbuild.yaml
+# Example for staging environment
+- name: 'curlimages/curl'
+  entrypoint: 'curl'
+  args:
+    - '--data'
+    - |
+      {
+        "deployment_state": "success",
+        "project_id": "${_PROJECT_ID}",
+        "organization_id": "${_ORG_ID}",
+        "commit_sha": "${COMMIT_SHA}",
+        "environment_url": "https://${_BRANCH_NAME}-${SHORT_SHA}.example.com",
+        "environment": "staging"
+      }
+```
+
+### Conditional Webhook Execution
+
+Only trigger Bugster for specific branches or conditions:
+
+```yaml cloudbuild.yaml
+# Only run Bugster webhook for main branch
+- name: 'curlimages/curl'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      if [ "${_BRANCH_NAME}" = "main" ]; then
+        curl -X POST 'https://api.bugster.app/webhooks/integrations/custom' \
+          -H 'Content-Type: application/json' \
+          -H 'X-API-KEY: ${_BUGSTER_API_KEY}' \
+          --data '{
+            "deployment_state": "success",
+            "project_id": "${_PROJECT_ID}",
+            "organization_id": "${_ORG_ID}",
+            "branch": "${_BRANCH_NAME}",
+            "environment_url": "${_DEPLOYMENT_URL}",
+            "environment": "production"
+          }'
+      fi
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+<Accordion title="Webhook step fails with authentication error">
+- Verify your `_BUGSTER_API_KEY` is correct and hasn't expired
+- Check that the API key has proper permissions in your Bugster dashboard
+- Ensure the `X-API-KEY` header is properly formatted in your `cloudbuild.yaml`
+</Accordion>
+
+<Accordion title="Tests not running after successful webhook">
+- Confirm your `_DEPLOYMENT_URL` is publicly accessible
+- Verify your repository has the `.bugster` configuration folder
+- Check that `deployment_state` is set to `"success"`
+- Ensure your `_PROJECT_ID` and `_ORG_ID` are correct
+</Accordion>
+
+<Accordion title="Build fails on webhook step">
+- Check Cloud Build logs for specific curl error messages
+- Verify all substitution variables are properly configured
+- Ensure the `curlimages/curl` image is accessible in your project
+</Accordion>
+
+<Accordion title="Substitution variables not resolving">
+- Confirm variables are defined in your Cloud Build trigger settings
+- Check variable names match exactly (including underscores)
+- Verify you're using `${VARIABLE_NAME}` syntax in your YAML file
+</Accordion>
+</AccordionGroup>
+
+## Example Repository
+
+For a complete working example, check out our [Bugster Cloud Build Quickstart repository](https://github.com/Bugsterapp/bugster-quickstart/tree/main/platforms/gcp/cloud-build) which includes:
+
+- A Next.js sample application
+- Complete `cloudbuild.yaml` configuration
+- Bugster test setup in the `.bugster` folder
+- Detailed README with setup instructions

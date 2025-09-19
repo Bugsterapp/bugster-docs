@@ -1,0 +1,387 @@
+---
+title: 'GitHub Actions'
+description: 'Integrate Bugster with GitHub Actions using our official action'
+icon: "code-merge"
+---
+
+Automatically trigger Bugster tests from your GitHub workflows using the official Bugster GitHub Action. Perfect for running tests after deployments or on pull requests.
+
+## Overview
+
+The [Bugster GitHub Action](https://github.com/marketplace/actions/bugster-dev) sends deployment notifications to Bugster Cloud directly from your GitHub workflows. It uses the same webhook API as our custom integrations but provides a simpler, GitHub-native experience.
+
+<Card title="Bugster.dev GitHub Action" icon="github" href="https://github.com/marketplace/actions/bugster-dev">
+Official GitHub Action available in the GitHub Marketplace
+</Card>
+
+## Quick Setup
+
+<Steps>
+<Step title="Add Bugster API key to secrets">
+In your GitHub repository, go to **Settings > Secrets and variables > Actions** and add:
+
+- **Name**: `BUGSTER_API_KEY`
+- **Value**: Your Bugster API key (from **Settings > API Keys** in your Bugster dashboard)
+
+<Warning>
+Never commit your API key directly to your workflow file. Always use GitHub secrets.
+</Warning>
+</Step>
+
+<Step title="Get your project credentials">
+From your Bugster dashboard, collect:
+- **Organization ID**: Settings > Organization
+- **Project ID**: Project Settings > General
+
+<Info>
+Both values are also available in **Project Settings > Integrations** for convenience.
+</Info>
+</Step>
+
+<Step title="Add the action to your workflow">
+Create or update your `.github/workflows` file to include the Bugster action:
+
+```yaml .github/workflows/deploy.yml
+name: Deploy and Test
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Your deployment steps here
+      # ...
+      
+      - name: Trigger Bugster Tests
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_your_org_id"
+          project_id: "your_project_id"
+          environment_url: "https://preview.example.com"
+```
+
+<Check>
+Replace the `organization_id` and `project_id` with your actual values from the Bugster dashboard.
+</Check>
+</Step>
+</Steps>
+
+## Action Inputs
+
+### Required Parameters
+
+<ParamField body="bugster_api_key" type="string" required>
+Your Bugster API key. Store this in `secrets.BUGSTER_API_KEY` for security.
+</ParamField>
+
+<ParamField body="organization_id" type="string" required>
+Your Bugster organization ID from the dashboard.
+</ParamField>
+
+<ParamField body="project_id" type="string" required>
+Your Bugster project ID from the dashboard.
+</ParamField>
+
+<ParamField body="environment_url" type="string" required>
+URL where your application is deployed and accessible for testing.
+</ParamField>
+
+### Optional Parameters
+
+<ParamField body="deployment_state" type="string" default="success">
+Deployment status. Options: `success`, `in_progress`, `cancelled`, `failed`, `error`. 
+Bugster only runs tests when set to `success`.
+</ParamField>
+
+<ParamField body="commit_sha" type="string" default="${{ github.sha }}">
+Git commit SHA. Automatically filled from GitHub context if not provided.
+</ParamField>
+
+<ParamField body="branch" type="string" default="${{ github.ref_name }}">
+Git branch name. Automatically filled from GitHub context if not provided.
+</ParamField>
+
+<ParamField body="api_base" type="string" default="https://api.bugster.app">
+Base API URL. Useful for testing or custom deployments.
+</ParamField>
+
+<ParamField body="timeout_seconds" type="number" default="60">
+Request timeout in seconds.
+</ParamField>
+
+## Action Outputs
+
+<ResponseField name="status" type="string">
+HTTP status code returned by the Bugster API.
+</ResponseField>
+
+<ResponseField name="response" type="string">
+Response body returned by the API (truncated for logging).
+</ResponseField>
+
+## Common Use Cases
+
+### Basic Pull Request Testing
+
+Test every pull request after deployment:
+
+```yaml .github/workflows/pr-test.yml
+name: PR Testing
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Bugster
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: "https://terminal-todo-delta.vercel.app"
+```
+
+### Multi-Environment Testing
+
+Test different environments with different configurations:
+
+<CodeGroup>
+```yaml Staging
+name: Staging Deploy
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Bugster (Staging)
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: "https://staging.example.com"
+          deployment_state: "success"
+```
+
+```yaml Production
+name: Production Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Bugster (Production)
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: "https://app.example.com"
+          deployment_state: "success"
+```
+</CodeGroup>
+
+### Conditional Testing
+
+Only run tests under specific conditions:
+
+```yaml .github/workflows/conditional.yml
+name: Conditional Testing
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  trigger-tests:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'test-required')
+    steps:
+      - name: Trigger Bugster
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: ${{ env.PREVIEW_URL }}
+```
+
+### Deployment State Tracking
+
+Track deployment progress with different states:
+
+```yaml .github/workflows/deployment-tracking.yml
+name: Deployment with Status Tracking
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Bugster (In Progress)
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: "https://app.example.com"
+          deployment_state: "in_progress"
+      
+      # Your deployment steps here
+      # ...
+      
+      - name: Notify Bugster (Success)
+        if: success()
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: "https://app.example.com"
+          deployment_state: "success"
+      
+      - name: Notify Bugster (Failed)
+        if: failure()
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: "https://app.example.com"
+          deployment_state: "error"
+```
+
+## Integration with Popular Platforms
+
+### Vercel Integration
+
+```yaml .github/workflows/vercel-bugster.yml
+name: Vercel + Bugster
+
+on:
+  pull_request:
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        id: vercel-deploy
+      
+      - name: Trigger Bugster Tests
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: ${{ steps.vercel-deploy.outputs.preview-url }}
+```
+
+### Netlify Integration
+
+```yaml .github/workflows/netlify-bugster.yml
+name: Netlify + Bugster
+
+on:
+  pull_request:
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: './dist'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        id: netlify-deploy
+      
+      - name: Trigger Bugster Tests
+        uses: Bugsterapp/bugster-action@v1
+        with:
+          bugster_api_key: ${{ secrets.BUGSTER_API_KEY }}
+          organization_id: "org_abc123def456ghi789jkl"
+          project_id: "my-project-1234567890"
+          environment_url: ${{ steps.netlify-deploy.outputs.deploy-url }}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+<Accordion title="Action fails with authentication error">
+- Verify your `BUGSTER_API_KEY` secret is set correctly in repository settings
+- Check that the API key hasn't expired in your Bugster dashboard
+- Ensure the API key has proper permissions for the organization and project
+</Accordion>
+
+<Accordion title="Tests not running after successful action">
+- Confirm your `environment_url` is publicly accessible
+- Verify your repository has the `.bugster` configuration folder
+- Check that `deployment_state` is set to `"success"` (default)
+- Ensure your `organization_id` and `project_id` are correct
+</Accordion>
+
+<Accordion title="Action times out">
+- Increase the `timeout_seconds` parameter (default is 60)
+- Check if the Bugster API is accessible from GitHub Actions
+- Verify your network connectivity and API endpoint
+</Accordion>
+
+<Accordion title="Missing repository configuration">
+**Error:** "Repository does not have .bugster configuration folder"
+
+Run `bugster quickstart --api-key=YOUR_API_KEY` in your repository and commit the generated `.bugster/` folder.
+</Accordion>
+</AccordionGroup>
+
+## Real-World Examples
+
+Check out these working implementations:
+
+- [Terminal Todo App](https://github.com/Naquiao/terminal-todo/blob/main/.github/workflows/bugster-execution.yml) - Simple PR-triggered testing
+- [Bugster Action Source](https://github.com/Bugsterapp/bugster-action) - Official action implementation
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Custom Integration" icon="webhook" href="/integrations/custom">
+  Learn about the underlying webhook API for custom implementations
+</Card>
+
+<Card title="Test Management" icon="list-check" href="/guides/test-management/manage-tests">
+  Configure and manage your Bugster test suite
+</Card>
+</CardGroup>

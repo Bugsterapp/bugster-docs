@@ -89,12 +89,16 @@
             ]
           },
           {
-            "group": "INTEGRATIONS",
+            "group": "HOSTING AND CI/CD",
             "pages": [
               "integrations/github",
               "integrations/vercel",
               "integrations/netlify",
-              "integrations/railway"
+              "integrations/railway",
+              "integrations/github-actions",
+              "integrations/custom",
+              "integrations/cloud-build"
+
             ]
           }
         ]
