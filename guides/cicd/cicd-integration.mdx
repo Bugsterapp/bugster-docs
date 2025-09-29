@@ -16,7 +16,7 @@ icon: "code-pull-request"
 Bugster integrates seamlessly with your CI/CD pipeline to automatically run tests against preview deployments on every pull request. This ensures your application works correctly before merging changes.
 
 <Info>
-Currently supported deployment platforms: **Vercel** and **Railway**. More platforms coming soon.
+Currently supported deployment platforms: **Vercel**, **Railway**, and **Netlify**.
 </Info>
 
 ## Prerequisites
@@ -24,8 +24,8 @@ Currently supported deployment platforms: **Vercel** and **Railway**. More platf
 Before setting up CI/CD integration, ensure you have:
 - A Bugster organization and project configured
 - A GitHub repository with your application code
-- Your application deployed on Vercel or Railway
-- Admin access to your GitHub repository and Vercel/Railway project
+- Your application deployed on Vercel, Railway, or Netlify
+- Admin access to your GitHub repository and deployment platform project
 
 ## Integration Steps
 
@@ -57,12 +57,12 @@ Before setting up CI/CD integration, ensure you have:
   </Warning>
 </Step>
 
-<Step title="Configure Vercel Preview Access">
-  Enable Bugster to access your Vercel preview deployments using one of two methods:
+<Step title="Configure Platform Integration">
+  Set up your deployment platform integration based on where your application is hosted:
   
   <Tabs>
-  <Tab title="Protection Bypass (Recommended)">
-    Create a protection bypass secret for automated access while maintaining security.
+  <Tab title="Vercel" icon="triangle">
+    Enable Bugster to access your Vercel preview deployments using Protection Bypass:
     
     1. In Vercel, navigate to your project's [Deployment Protection settings](https://vercel.com/d?to=%2F%5Bteam%5D%2F%5Bproject%5D%2Fsettings%2Fdeployment-protection&title=Deployment+Protection+settings)
     2. Navigate to **Protection Bypass for Automation**
@@ -76,22 +76,41 @@ Before setting up CI/CD integration, ensure you have:
       protection_bypass: "your-generated-secret-here"
     ```
     
-    <Tip>
-    This method maintains Vercel's authentication while allowing Bugster automated access.
-    </Tip>
+    <Card title="Detailed Vercel Setup" icon="triangle" href="/integrations/vercel">
+      Complete Vercel integration guide with troubleshooting
+    </Card>
   </Tab>
   
-  <Tab title="Disable Vercel Auth">
-    Temporarily disable Vercel authentication for preview deployments.
+  <Tab title="Railway" icon="train">
+    Railway integration activates automatically when you connect your GitHub repository:
     
-    1. In Vercel, go to your project **Settings** → **Functions**
-    2. Find **Vercel Authentication** 
-    3. Set to **Disabled**
-    4. Save changes
+    1. Ensure your Railway project is connected to your GitHub repository
+    2. Verify preview deployments are enabled in Railway
+    3. No additional configuration required
     
-    <Warning>
-    This method disables authentication entirely and is less secure than using Protection Bypass.
-    </Warning>
+    <Check>
+    Railway integration works seamlessly with your existing GitHub connection.
+    </Check>
+    
+    <Card title="Railway Setup Guide" icon="train" href="/integrations/railway">
+      Railway integration documentation
+    </Card>
+  </Tab>
+  
+  <Tab title="Netlify" icon="globe">
+    Configure Netlify webhook notifications for deployment events:
+    
+    1. In Netlify, go to your project **Settings** → **Notifications > Emails and Webhooks**
+    2. Add HTTP POST request notifications for:
+       - Deploy succeed
+       - Deploy started  
+       - Deploy failed
+    3. Get the webhook URL from Bugster Project Settings → Integrations → Netlify Integration
+    4. Add the webhook URL to each notification type
+    
+    <Card title="Netlify Setup Guide" icon="globe" href="/integrations/netlify">
+      Complete Netlify integration with screenshots
+    </Card>
   </Tab>
   </Tabs>
 </Step>
@@ -167,24 +186,28 @@ Get notified when tests fail in your deployments:
   **Possible causes:**
   - GitHub App not installed or missing repository permissions
   - Repository not connected to Bugster project
-  - Vercel preview access not configured properly
+  - Platform integration not configured properly
   
   **Solutions:**
   - Verify GitHub App installation and permissions
   - Re-connect repository in project settings
-  - Check Vercel protection bypass configuration
+  - Check platform-specific configuration:
+    - **Vercel**: Verify protection bypass configuration
+    - **Railway**: Ensure preview deployments are enabled
+    - **Netlify**: Check webhook notifications are configured
 </Accordion>
 
 <Accordion title="Tests failing to access preview URL">
   **Possible causes:**
-  - Vercel authentication blocking access
-  - Invalid protection bypass secret
-  - Preview deployment not ready
+  - Platform authentication blocking access
+  - Invalid configuration settings
+  - Preview deployment not ready or failed
   
   **Solutions:**
-  - Verify protection bypass secret is correct
-  - Check Vercel deployment status
-  - Ensure preview URL is accessible
+  - **Vercel**: Verify protection bypass secret is correct
+  - **Railway**: Check deployment status and environment variables
+  - **Netlify**: Verify webhook URL is configured and deployments are successful
+  - Ensure preview URL is accessible and deployment completed
 </Accordion>
 
 <Accordion title="No test results in PR">
