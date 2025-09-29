@@ -16,29 +16,13 @@ After you complete this guide, you will have automated tests running against you
   - A Bugster account created at [bugster.dev](https://app.bugster.dev/auth/sign-up)
 </Info>
 
-## Choose Your Setup Method
-Bugster offers two ways to get started. Choose the method that best fits your workflow:
-<CardGroup cols={2}>
-
-<Card title="Manual Integration" icon="wrench"  href="/quickstart#manual-integration">
-<Tip>Recommended for most users</Tip>
-Use the Bugster CLI for complete control over the setup process and configuration.
-
-</Card>
-<Card title="Automatic Integration" icon="bolt"  href="/quickstart#automatic-integration">
-<Note>For users who prefer automated setup</Note>
-
-Bugster creates a pull request with everything configured.
-</Card>
-</CardGroup>
-
-## Manual Integration
-For users who prefer CLI control or need custom configurations, follow this manual setup process.
+## Getting Started
+Follow these steps to set up Bugster CLI and create your first AI-powered tests.
 
 <iframe
   className="w-full aspect-video rounded-xl"
   src="https://www.youtube.com/embed/MX2mTs5o7Sw"
-  title="Bugster Manual Quickstart Guide"
+  title="Bugster Quickstart Guide"
   frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowFullScreen
@@ -109,59 +93,6 @@ git push origin main
 </Step>
 </Steps>
 
-## Automatic Integration
-The automatic integration is the fastest way to get started. It begins after account creation and guides you through a seamless setup process.
-
-### How It Works
-After signing up at Bugster, you'll be taken through an automated onboarding flow that:
-
-<Steps>
-  <Step title="Create Account & Connect GitHub">
-    Sign up at [Bugster](https://app.bugster.dev/sign-up) and you'll be automatically directed to the GitHub integration screen.
-Click **"Connect GitHub Organization"** to link your GitHub account.
-  </Step>
-  <Step title="Select Your Repository">
-    Choose the Next.js repository you want to integrate with Bugster from your available repositories.
-<Warning>
-  **Repository Requirements**: Your repository must be a Next.js project for automatic integration.
-</Warning>
-  </Step>
-  <Step title="Configure Project Settings">
-    Fill in your project information:
-<AccordionGroup>
-  <Accordion title="Platform Selection" icon="cloud">
-    Choose your deployment platform:
-    - **Vercel** - For Vercel deployments
-    - **Railway** - For Railway deployments
-  </Accordion>
-  
-  <Accordion title="Bypass Protection (Vercel)" icon="shield">
-    If using Vercel, configure bypass protection for preview deployments.
-    
-    <Card title="Vercel Bypass Setup" icon="shield" href="/howto/vercel#protection-bypass-for-automation">
-      Learn how to configure bypass protection for Vercel deployments
-    </Card>
-  </Accordion>
-  
-  <Accordion title="Testing Credentials" icon="key">
-    If your application requires authentication, provide testing credentials.
-    
-    <Card title="Authentication Configuration" icon="key" href="/commands/advanced_configuration#multiple-testing-credentials">
-      Learn about configuring authentication for testing
-    </Card>
-  </Accordion>
-</AccordionGroup>
-  </Step>
-  <Step title="Receive Configuration Pull Request">
-    After completing the setup (usually within a few minutes), you'll receive a pull request with:
-- Complete Bugster CLI configuration
-- Generated test specifications
-- GitHub Actions workflow
-- All necessary project files
-
-**Simply review and merge the pull request to activate Bugster testing!**
-  </Step>
-</Steps>
 
 ## Next Steps
 Congratulations! You now have Bugster set up and running. Here's what to explore next:
