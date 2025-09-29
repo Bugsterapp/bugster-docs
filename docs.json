@@ -59,7 +59,8 @@
             "pages": [
               "index",
               "installation",
-              "quickstart"
+              "quickstart",
+              "framework-compatibility"
             ]
           },
                       {
