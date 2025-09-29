@@ -1,0 +1,274 @@
+---
+title: "Framework Compatibility"
+description: "Detailed framework and routing support information for Bugster CLI"
+icon: "code"
+---
+
+Bugster analyzes your application's routing structure to generate and execute automated tests. This page provides detailed information about supported frameworks and routing patterns.
+
+<Info>
+Bugster focuses on **routing analysis** to understand your application structure and generate comprehensive test coverage across all your pages and components.
+</Info>
+
+## Supported Frameworks
+
+<CardGroup cols={2}>
+  <Card title="Next.js" icon={<svg viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M119.616813,0.0688905149 C119.066276,0.118932037 117.314565,0.294077364 115.738025,0.419181169 C79.3775171,3.69690087 45.3192571,23.3131775 23.7481916,53.4631946 C11.7364614,70.2271045 4.05395894,89.2428829 1.15112414,109.384595 C0.12512219,116.415429 0,118.492153 0,128.025062 C0,137.557972 0.12512219,139.634696 1.15112414,146.665529 C8.10791789,194.730411 42.3163245,235.11392 88.7116325,250.076335 C97.0197458,252.753556 105.778299,254.580072 115.738025,255.680985 C119.616813,256.106338 136.383187,256.106338 140.261975,255.680985 C157.453763,253.779407 172.017986,249.525878 186.382014,242.194795 C188.584164,241.068861 189.00958,240.768612 188.709286,240.518404 C188.509091,240.36828 179.124927,227.782837 167.86393,212.570214 L147.393939,184.922273 L121.743891,146.965779 C107.630108,126.098464 96.0187683,109.034305 95.9186706,109.034305 C95.8185728,109.009284 95.7184751,125.873277 95.6684262,146.465363 C95.5933529,182.52028 95.5683284,183.971484 95.1178886,184.82219 C94.4672532,186.048207 93.9667644,186.548623 92.915738,187.099079 C92.114956,187.499411 91.4142717,187.574474 87.6355816,187.574474 L83.3063539,187.574474 L82.1552297,186.848872 C81.4044966,186.373477 80.8539589,185.747958 80.4785924,185.022356 L79.9530792,183.896422 L80.0031281,133.729796 L80.0782014,83.5381493 L80.8539589,82.5623397 C81.25435,82.0369037 82.1051808,81.3613431 82.7057674,81.0360732 C83.7317693,80.535658 84.1321603,80.4856165 88.4613881,80.4856165 C93.5663734,80.4856165 94.4172043,80.6857826 95.7434995,82.1369867 C96.1188661,82.5373189 110.007429,103.454675 126.623656,128.650581 C143.239883,153.846488 165.962072,188.250034 177.122972,205.139048 L197.392766,235.839522 L198.418768,235.163961 C207.502639,229.259062 217.112023,220.852086 224.719453,212.09482 C240.910264,193.504394 251.345455,170.835585 254.848876,146.665529 C255.874878,139.634696 256,137.557972 256,128.025062 C256,118.492153 255.874878,116.415429 254.848876,109.384595 C247.892082,61.3197135 213.683675,20.9362052 167.288368,5.97379012 C159.105376,3.32158945 150.396872,1.49507389 140.637341,0.394160408 C138.234995,0.143952798 121.693842,-0.131275573 119.616813,0.0688905149 L119.616813,0.0688905149 Z M172.017986,77.4831252 C173.219159,78.0836234 174.195112,79.2345784 174.545455,80.435575 C174.74565,81.0861148 174.795699,94.9976579 174.74565,126.348671 L174.670577,171.336 L166.73783,159.17591 L158.780059,147.01582 L158.780059,114.313685 C158.780059,93.1711423 158.880156,81.2862808 159.030303,80.7108033 C159.430694,79.3096407 160.306549,78.2087272 161.507722,77.5581875 C162.533724,77.0327515 162.909091,76.98271 166.837928,76.98271 C170.541544,76.98271 171.19218,77.0327515 172.017986,77.4831252 Z" fill="#000000"> </path> </g> </g></svg>} color="#green">
+    Fully supported with both routing patterns
+  </Card>
+  <Card title="React.js" icon="react">
+    React 18+ with React Router DOM support
+  </Card>
+</CardGroup>
+
+## Next.js Support
+
+Bugster provides comprehensive support for Next.js applications across different routing patterns.
+
+### Supported Routing Patterns
+
+<Tabs>
+  <Tab title="Pages Router">
+    **Pages Router** (`/pages` directory - Next.js 12 and legacy versions)
+    
+    <CodeGroup>
+    ```javascript pages/index.js
+    // pages/index.js
+    export default function Home() {
+      return <div>Welcome to the homepage</div>
+    }
+    ```
+    
+    ```javascript pages/about.js
+    // pages/about.js
+    export default function About() {
+      return <div>About page</div>
+    }
+    ```
+    
+    ```javascript pages/blog/[slug].js
+    // pages/blog/[slug].js
+    export default function BlogPost({ params }) {
+      return <div>Blog post: {params.slug}</div>
+    }
+    ```
+    </CodeGroup>
+    
+    <Check>
+    Bugster automatically detects all pages in your `/pages` directory and generates tests for static and dynamic routes.
+    </Check>
+  </Tab>
+  
+  <Tab title="App Router">
+    **App Router** (`/app` directory - Next.js 13+) with file-based routing
+    
+    <CodeGroup>
+    ```javascript app/page.js
+    // app/page.js
+    export default function HomePage() {
+      return <div>Welcome to the homepage</div>
+    }
+    ```
+    
+    ```javascript app/about/page.js
+    // app/about/page.js
+    export default function AboutPage() {
+      return <div>About page</div>
+    }
+    ```
+    
+    ```javascript app/blog/[slug]/page.js
+    // app/blog/[slug]/page.js
+    export default function BlogPost({ params }) {
+      return <div>Blog post: {params.slug}</div>
+    }
+    ```
+    </CodeGroup>
+    
+    <Check>
+    Bugster understands the new App Router structure and generates tests for all route segments, including nested layouts and dynamic routes.
+    </Check>
+  </Tab>
+</Tabs>
+
+
+## React.js Support
+
+Bugster supports React 18+ applications using React Router DOM in standard configurations.
+
+### Supported Routing Patterns
+
+<Tabs>
+  <Tab title="Code-based Routing">
+    **Code-based routing** - Routes defined programmatically in your code
+    
+    <CodeGroup>
+    ```javascript Create React App - JavaScript
+    // src/App.js
+    import { BrowserRouter, Routes, Route } from 'react-router-dom';
+    import Home from './components/Home';
+    import About from './components/About';
+    import Contact from './components/Contact';
+
+    function App() {
+      return (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    export default App;
+    ```
+    
+    ```typescript Vite - TypeScript
+    // src/App.tsx
+    import { BrowserRouter, Routes, Route } from 'react-router-dom';
+    import Home from './components/Home';
+    import About from './components/About';
+    import Contact from './components/Contact';
+
+    function App(): JSX.Element {
+      return (
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+          </Routes>
+        </BrowserRouter>
+      );
+    }
+
+    export default App;
+    ```
+    </CodeGroup>
+    
+    <Check>
+    Bugster analyzes your route definitions and generates tests for all declared routes, including dynamic parameters.
+    </Check>
+  </Tab>
+  
+  <Tab title="File-based Routing">
+    **File-based routing** - React Router v7 with file-based route definitions
+    
+    <CodeGroup>
+    ```typescript React Router v7
+    // app/routes.ts
+    import type { RouteConfig } from "@react-router/dev/routes";
+
+    export default [
+      {
+        path: "/",
+        file: "routes/home.tsx",
+      },
+      {
+        path: "/about",
+        file: "routes/about.tsx",
+      },
+      {
+        path: "/blog/:slug",
+        file: "routes/blog.$slug.tsx",
+      },
+    ] satisfies RouteConfig;
+    ```
+    
+    ```typescript Home Route
+    // app/routes/home.tsx
+    export default function Home() {
+      return <div>Welcome to the homepage</div>;
+    }
+    ```
+    
+    ```typescript Dynamic Route
+    // app/routes/blog.$slug.tsx
+    import { useParams } from "@react-router/react";
+
+    export default function BlogPost() {
+      const { slug } = useParams();
+      return <div>Blog post: {slug}</div>;
+    }
+    ```
+    </CodeGroup>
+    
+    <Check>
+    Bugster supports React Router v7's file-based routing system and automatically discovers routes from your configuration.
+    </Check>
+  </Tab>
+</Tabs>
+
+### React Router Versions
+
+<AccordionGroup>
+  <Accordion title="React Router DOM v6" icon="check">
+    **Fully Supported** - Standard routing patterns with `<Routes>` and `<Route>` components.
+    
+    ```javascript
+    import { BrowserRouter, Routes, Route } from 'react-router-dom';
+    ```
+  </Accordion>
+  
+  <Accordion title="React Router DOM v7" icon="check">
+    **Fully Supported** - Both code-based and file-based routing patterns.
+    
+    ```typescript
+    import type { RouteConfig } from "@react-router/dev/routes";
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Not Supported
+
+- Custom routers or dynamic routing systems with routes scattered across multiple files
+- Alternative routing libraries (TanStack Router, Wouter, Reach Router)
+- Complex routing factories that generate routes programmatically at runtime
+
+
+## Getting Started with Your Framework
+
+<Steps>
+  <Step title="Verify Framework Compatibility">
+    Check that your project uses one of the supported frameworks and routing patterns listed above.
+  </Step>
+  
+  <Step title="Install Bugster CLI">
+    Follow the [installation guide](/installation) to set up Bugster CLI on your system.
+  </Step>
+  
+  <Step title="Initialize Your Project">
+    Run the quickstart command in your project directory:
+    ```bash
+    bugster quickstart --api-key=YOUR_API_KEY
+    ```
+  </Step>
+  
+  <Step title="Run Your Tests">
+    Execute the generated tests:
+    ```bash
+    bugster run
+    ```
+  </Step>
+</Steps>
+
+## Need Help?
+
+<CardGroup cols={2}>
+  <Card title="Get Started" icon="rocket" href="/quickstart">
+    Follow our quickstart guide to set up Bugster with your framework
+  </Card>
+  <Card title="Join Community" icon="discord" href="https://discord.gg/fQtsfDmwNA">
+    Get help from the community and Bugster team
+  </Card>
+</CardGroup>
+
+## Coming Soon
+
+<Info>
+**Vue.js Support** - We're working on adding support for Vue.js applications with Vue Router. Stay tuned for updates!
+</Info>
