@@ -14,7 +14,7 @@ Connect Bugster to your GitHub repository to automatically run tests on pull req
     Tests run automatically on every pull request
   </Card>
   <Card title="Preview Testing" icon="eye">
-    Tests against Vercel/Railway preview deployments
+    Tests against Vercel/Railway/Netlify preview deployments
   </Card>
   <Card title="PR Status Checks" icon="code-pull-request">
     Pass/fail status reported directly in GitHub
@@ -51,44 +51,62 @@ Connect Bugster to your GitHub repository to automatically run tests on pull req
 
 ## Platform Setup
 
-### Vercel Integration
+<Tabs>
+  <Tab title="Vercel" icon="triangle">
+    <Steps>
+      <Step title="Enable Preview Access">
+        Configure Vercel protection bypass for automated testing access
+      </Step>
+      
+      <Step title="Configure Environment Variables">
+        Ensure your preview deployments have the necessary environment variables for testing
+      </Step>
+    </Steps>
 
-<Steps>
-  <Step title="Enable Preview Access">
-    In your Vercel project settings, add the Vercel protection bypass key to your Bugster configuration
-  </Step>
-  
-  <Step title="Configure Environment Variables">
-    Ensure your preview deployments have the necessary environment variables for testing
-  </Step>
-</Steps>
+    <Card title="Vercel Setup Guide" icon="triangle" href="/integrations/vercel">
+      Detailed Vercel configuration and protection bypass setup
+    </Card>
+  </Tab>
 
-<Card title="Vercel Setup Guide" icon="triangle" href="/howto/vercel">
-  Detailed Vercel configuration and protection bypass setup
-</Card>
+  <Tab title="Railway" icon="train">
+    <Steps>
+      <Step title="Configure Preview Deployments">
+        Ensure Railway preview deployments are enabled for your project
+      </Step>
+      
+      <Step title="Set Environment Variables">
+        Configure necessary environment variables for your Railway previews
+      </Step>
+    </Steps>
 
-### Railway Integration
+    <Card title="Railway Setup Guide" icon="train" href="/integrations/railway">
+      Complete Railway integration and deployment configuration
+    </Card>
+  </Tab>
 
-<Steps>
-  <Step title="Configure Preview Deployments">
-    Ensure Railway preview deployments are enabled for your project
-  </Step>
-  
-  <Step title="Set Environment Variables">
-    Configure necessary environment variables for your Railway previews
-  </Step>
-</Steps>
+  <Tab title="Netlify" icon="globe">
+    <Steps>
+      <Step title="Configure Webhook Notifications">
+        Set up Netlify webhook notifications for deployment events
+      </Step>
+      
+      <Step title="Add Bugster Webhook URL">
+        Configure the webhook URL from your Bugster project settings
+      </Step>
+    </Steps>
 
-<Card title="Railway Setup Guide" icon="train" href="/howto/railway">
-  Complete Railway integration and deployment configuration
-</Card>
+    <Card title="Netlify Setup Guide" icon="globe" href="/integrations/netlify">
+      Complete Netlify integration with webhook configuration
+    </Card>
+  </Tab>
+</Tabs>
 
 ## How It Works
 
 ### Pull Request Workflow
 
 1. **PR Created** → GitHub notifies Bugster
-2. **Preview Deployed** → Vercel/Railway creates preview URL  
+2. **Preview Deployed** → Platform creates preview URL  
 3. **Tests Execute** → Bugster runs tests against preview
 4. **Results Reported** → Status check appears in GitHub PR
 
@@ -160,9 +178,10 @@ Click the status check to view:
     **Issue**: Tests fail to connect to preview deployment
     
     **Solutions**:
-    - Configure Vercel protection bypass correctly
-    - Verify Railway deployment settings
-    - Check environment variables in preview
+    - **Vercel**: Configure protection bypass correctly
+    - **Railway**: Verify deployment settings and environment variables
+    - **Netlify**: Check webhook configuration and deployment status
+    - Verify environment variables in preview deployment
   </Accordion>
 </AccordionGroup>
 
@@ -188,13 +207,16 @@ Click the status check to view:
 
 ## Next Steps
 
-<CardGroup cols={2}>
-  <Card title="Vercel Setup Guide" icon="triangle" href="/howto/vercel">
-  Complete Vercel integration and deployment configuration
-</Card>
+<CardGroup cols={3}>
+  <Card title="Vercel Setup Guide" icon="triangle" href="/integrations/vercel">
+    Complete Vercel integration and deployment configuration
+  </Card>
 
-  <Card title="Railway Setup Guide" icon="train" href="/howto/railway">
-  Complete Railway integration and deployment configuration
-</Card>
- 
+  <Card title="Railway Setup Guide" icon="train" href="/integrations/railway">
+    Complete Railway integration and deployment configuration
+  </Card>
+
+  <Card title="Netlify Setup Guide" icon="globe" href="/integrations/netlify">
+    Complete Netlify integration with webhook configuration
+  </Card>
 </CardGroup>
