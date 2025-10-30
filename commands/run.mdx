@@ -77,6 +77,10 @@ Maximum number of tests to execute. Useful for quick validation or debugging spe
 Browser engine to use for test execution. Supports chromium, firefox, and webkit.
 </ParamField>
 
+<ParamField query="--viewport-size" type="string" default="1280x720">
+Set the browser viewport size in WIDTHxHEIGHT format (e.g., 1920x1080, 1280x720, 375x667 for mobile).
+</ParamField>
+
 <ParamField query="--prompt" type="string">
 Run an instant test from a text description (max 1000 characters). Creates and executes a test without needing YAML files.
 </ParamField>
@@ -166,6 +170,14 @@ bugster run --base-url https://staging.myapp.com --limit 5
 ```
 
 Tests against staging environment with a limited number of tests.
+
+### Custom Viewport Size
+
+```bash
+bugster run --viewport-size 1920x1080
+```
+
+Run tests with a specific browser viewport size. Useful for testing responsive designs or specific screen resolutions.
 
 ## Quick Test Prompts
 
