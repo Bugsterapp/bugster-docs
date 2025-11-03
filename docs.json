@@ -81,6 +81,7 @@
             "group": "USING THE CLI",
             "pages": [
               "commands/overview",
+              "commands/interactive-mode",
               "commands/auth",
               "commands/init",
               "commands/generate",
