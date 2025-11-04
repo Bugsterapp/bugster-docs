@@ -1,0 +1,156 @@
+---
+title: "Integrate with Claude Code"
+description: "Configure Claude Code to be your Bugster test generation assistant"
+icon: "alien-8bit"
+"og:type": "article"
+"og:title": "Claude Code + Bugster Integration - AI Test Generation"
+"og:description": "Generate Bugster tests in Claude Code with AI assistance. Automated test creation, validation workflows, and intelligent YAML generation for web applications."
+"og:url": "https://docs.bugster.dev/guides/coding-agents/claude-code"
+---
+
+Transform Claude Code into a Bugster expert that can generate and maintain comprehensive test specifications directly in your editor.
+
+## Two Claude Code Use Cases for Bugster
+
+Bugster provides two specialized Claude Code rules to enhance your development workflow:
+
+<CardGroup cols={2}>
+<Card title="Test Generation" icon="file-lines" href="#test-generation-rule">
+**Manual activation** - Generate comprehensive test specifications following Bugster's YAML structure and best practices.
+</Card>
+
+<Card title="Test Update" icon="arrows-rotate" href="#test-update-rule">
+**Manual activation** - Update existing test specifications based on code changes and new requirements.
+</Card>
+</CardGroup>
+
+| Rule | When to Use | Activation | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Test Generation** | Building test suites | Manual (`@BUGSTER_GENERATE`) | Create comprehensive test specifications |
+| **Test Update** | Maintaining tests | Manual (`@BUGSTER_UPDATE`) | Update existing tests after code changes |
+
+## Test Generation Rule
+
+This rule provides Claude Code with context to properly generate Bugster test specifications following the required YAML structure and best practices.
+
+### Installation
+
+Install the official test generation rule using the Bugster CLI:
+
+```bash
+bugster plugin --agent claude
+```
+
+This installs `BUGSTER_GENERATE.md` in your `.claude/rules/` directory.
+
+<Info>
+View the official rule: [Claude Code Test Generation Rule](https://github.com/Bugsterapp/bugster-cli/tree/main/plugins/claude)
+</Info>
+
+### How to Use
+
+Reference the rule in your Claude Code chat to activate it:
+
+<CodeGroup>
+```text Basic Usage
+@BUGSTER_GENERATE Create a test for the user login page
+```
+
+```text Specific Feature
+@BUGSTER_GENERATE Generate tests for the shopping cart checkout flow
+```
+
+```text Multiple Tests
+@BUGSTER_GENERATE Create 3 tests for the dashboard analytics page
+```
+</CodeGroup>
+
+### What It Does
+
+- Generates comprehensive test specifications in proper YAML format
+- Follows Bugster naming conventions and file structure
+- Creates tests in `.bugster/tests/` with correct hierarchy
+- Validates all required fields are present
+- Limits generation to avoid test duplication
+
+<Tip>
+The rule automatically checks existing tests to avoid duplicates and follows your project's file structure conventions.
+</Tip>
+
+## Test Update Rule
+
+This rule helps you update existing test specifications when your code changes or requirements evolve.
+
+### Installation
+
+Install the official test update rule using the Bugster CLI:
+
+```bash
+bugster plugin --agent claude
+```
+
+This installs `BUGSTER_UPDATE.md` in your `.claude/rules/` directory.
+
+<Info>
+View the official rule: [Claude Code Test Update Rule](https://github.com/Bugsterapp/bugster-cli/tree/main/plugins/claude)
+</Info>
+
+### How to Use
+
+Reference the rule in your Claude Code chat to activate it:
+
+<CodeGroup>
+```text Update After Changes
+@BUGSTER_UPDATE Update tests for the authentication flow based on recent changes
+```
+
+```text Specific File
+@BUGSTER_UPDATE Refresh tests for app/checkout/page.tsx to match new UI
+```
+
+```text Bulk Update
+@BUGSTER_UPDATE Update all dashboard tests to reflect new navigation structure
+```
+</CodeGroup>
+
+### What It Does
+
+- Updates existing test specifications to match code changes
+- Maintains test structure while adapting to new requirements
+- Preserves test intent while updating implementation details
+- Ensures tests stay synchronized with your codebase
+- Follows the same YAML standards as test generation
+
+<Tip>
+Use this rule after refactoring components or updating user flows to keep your test suite current without starting from scratch.
+</Tip>
+
+## Combining Both Rules
+
+For optimal workflow, use both rules together:
+
+<Steps>
+<Step title="Setup">
+Install the official rules using the Bugster CLI:
+
+```bash
+bugster plugin --agent claude
+```
+
+This installs both `BUGSTER_GENERATE.md` and `BUGSTER_UPDATE.md` in your `.claude/rules/` directory.
+</Step>
+
+<Step title="Development Flow">
+1. Use **Test Generation rule** to create comprehensive test suites for new features
+2. Use **Test Update rule** when refactoring or updating existing features
+3. Reference the rules with `@BUGSTER_GENERATE` or `@BUGSTER_UPDATE` in your Claude Code chat
+</Step>
+
+<Step title="Team Consistency">
+Both rules ensure team members follow the same Bugster standards and test quality across your project.
+</Step>
+</Steps>
+
+<Tip>
+The plugin command installs both generation and update rules automatically, making it easy to maintain consistent test coverage as your codebase evolves.
+</Tip>

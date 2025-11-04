@@ -9,7 +9,11 @@ icon: "keyboard"
 "og:url": "https://docs.bugster.dev/guides/test-management/manage-tests"
 ---
 
-Generating tests in Bugster is simple and flexible. You can auto-generate tests across your entire app for quick coverage, manually craft precise test scenarios, or use AI assistance to write and refine tests. Once created, tests are easy to edit and delete as your application evolves.
+Generating tests in Bugster is simple and flexible. The approach depends on your framework: Next.js and React have enhanced automatic generation with routing analysis, while Angular, Svelte, Vue, and other frameworks use AI-assisted generation. All frameworks support manual YAML creation for precise scenarios. Once created, tests are easy to edit and delete as your application evolves.
+
+<Info>
+**Framework-specific generation**: Next.js and React use `bugster generate` with routing analysis. Angular, Svelte, Vue, and other frameworks use AI assistance with Cursor or Claude Code.
+</Info>
 
 In this guide you will learn: 
 
@@ -26,18 +30,22 @@ In this guide you will learn:
 
 ## 1. Generate tests (3 ways)
 
-Bugster supports **three** creation modes:
+Bugster supports **three** creation modes, with availability depending on your framework:
 
-| If you want to… | Use | Why |
-| :--- | :--- | :--- |
-| Seed broad coverage fast | Automatic `bugster generate` | Highest coverage per minute |
-| Generate targeted scenarios | `bugster generate --prompt` | AI-guided generation with custom focus |
-| Capture a very specific scenario | Manual YAML | Full control over task/steps/expected_result |
-| Write/refine with an AI editor | Assisted (Claude Code/Cursor) | Faster authoring, inline edits |
+| If you want to… | Use | Available For | Why |
+| :--- | :--- | :--- | :--- |
+| Seed broad coverage fast | Automatic `bugster generate` | Next.js & React | Highest coverage per minute with routing analysis |
+| Generate targeted scenarios | `bugster generate --prompt` | Next.js & React | AI-guided generation with custom focus |
+| Capture a very specific scenario | Manual YAML | All frameworks | Full control over task/steps/expected_result |
+| Write/refine with an AI editor | Assisted (Claude Code/Cursor) | All frameworks | AI-powered generation with Agent rules |
 
 ### 1.1 Automatic (bulk) — `bugster generate`
 
-Bugster can **propose and create** many tests across your app or for specific pages.
+<Note>
+**Available for:** Next.js and React applications with enhanced routing analysis.
+</Note>
+
+Bugster can **propose and create** many tests across your app or for specific pages using automatic route discovery.
 
 **Commands:**
 ```bash
@@ -98,17 +106,22 @@ bugster run relative_path_to_my_test.yaml
 
 ### 1.3 Assisted (Claude Code / Cursor)
 
-Use AI coding assistants like Cursor or Claude to generate Bugster-compliant test specifications with intelligent guidance.
+<Note>
+**Available for:** Angular, Svelte, Vue, and other frameworks (including Nuxt, SvelteKit, Remix, Preact, and more).
+</Note>
+
+Use AI coding assistants like Cursor or Claude Code to generate Bugster-compliant test specifications with intelligent guidance using Bugster Agent rules.
 
 **Advantages:**
 - **AI-powered**: Intelligent test scenario generation
-- **Compliant**: Follows Bugster YAML structure when properly configured
+- **Compliant**: Follows Bugster YAML structure using Agent rules
 - **Fast**: Quicker than manual YAML writing
+- **Flexible**: Works with any framework or routing pattern
 - **Guided**: Built-in best practices and validation
 
-<Info>
-See the [Cursor Integration guide](/guides/coding-agents/cursor) for complete setup instructions and usage patterns.
-</Info>
+<Card title="Cursor Integration Guide" icon="cube" href="/guides/coding-agents/cursor">
+See the complete setup instructions for using Bugster with Cursor or Claude Code
+</Card>
 
 ## 2. Test morphology in Bugster
 

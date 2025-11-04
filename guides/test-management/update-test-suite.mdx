@@ -8,22 +8,62 @@ icon: "wand-magic-sparkles"
 "og:url": "https://docs.bugster.dev/guides/test-management/update-test-suite"
 ---
 
-Run `bugster update` to automatically create tests for new functionality, modify tests impacted by code changes, and delete tests for removed features. Use it locally on demand or automatically on every pull request via the GitHub App.
+Keep your test suite synchronized with code changes. The approach depends on your framework: Next.js and React can use the automatic `bugster update` command, while Angular, Svelte, Vue, and other frameworks use AI-assisted updates with Cursor or Claude Code.
+
+<Info>
+**Framework-specific updates**: Next.js and React use `bugster update` command with automatic routing analysis. Angular, Svelte, Vue, and other frameworks use AI assistance with Cursor or Claude Code Agent rules.
+</Info>
 
 In this guide you will learn:
-- How to keep your test suite synchronized with your codebase using `bugster update`.
-- How to use different update modes for local development and CI workflows.
-- How to compare changes against different baselines like the default branch or the last update.
+- How to keep your test suite synchronized with your codebase.
+- How to use different update modes for local development and CI workflows (Next.js & React).
+- How to use AI-assisted updates for other frameworks (Angular, Svelte, Vue & Others).
 
 <Card title="Prerequisites">
 - Bugster CLI installed and authenticated.
 - Run commands from your repo root (the directory containing `/.bugster/`).
-- For PR automation: the Bugster GitHub App is installed on the repo (document required permissions) and PR previews are available if your flow depends on them.
+- For Next.js & React PR automation: the Bugster GitHub App is installed on the repo (document required permissions) and PR previews are available if your flow depends on them.
 </Card>
 
-## Usage Modes
+## Framework-Specific Approaches
+
+<Tabs>
+  <Tab title="Next.js & React">
+    **Automatic `bugster update` Command**
+    
+    Next.js and React applications can use the `bugster update` command to automatically:
+    - Create tests for new functionality
+    - Modify tests impacted by code changes
+    - Delete tests for removed features
+    
+    Available both locally on demand and automatically on pull requests via the GitHub App.
+    
+    Continue reading below for detailed usage instructions.
+  </Tab>
+  
+  <Tab title="Angular, Svelte, Vue & Others">
+    **AI-Assisted Updates with Cursor or Claude Code**
+    
+    For Angular, Svelte, Vue, and other frameworks (including Nuxt, SvelteKit, Remix, Preact, and more), test updates are handled through AI coding assistants:
+    
+    - Use Cursor or Claude Code with Bugster Agent rules
+    - AI assistant analyzes your code changes and updates tests accordingly
+    - Provides intelligent suggestions for test modifications
+    - Works with any framework or routing pattern
+    
+    <Card title="Cursor Integration Guide" icon="cube" href="/guides/coding-agents/cursor">
+      See the complete setup instructions for using Bugster with Cursor or Claude Code
+    </Card>
+  </Tab>
+</Tabs>
+
+## Usage Modes (Next.js & React)
 
 ### Local (manual)
+
+<Note>
+**Available for:** Next.js and React applications with enhanced routing analysis.
+</Note>
 
 Run `bugster update` when you're confident about local changes and ready to sync them. The command analyzes **committed changes only** - both staged and unstaged files are ignored. Only differences between commits are considered for test updates.
 
@@ -49,6 +89,10 @@ bugster update --delete-only
 </Info>
 
 ### Automatic on Pull Requests
+
+<Note>
+**Available for:** Next.js and React applications with the Bugster GitHub App installed.
+</Note>
 
 When you open a Pull Request, Bugster's E2E agent runs `bugster update` first. New commits or force-pushes will **amend the existing Update PR** rather than creating a new one.
 
@@ -77,7 +121,7 @@ You create a PR  →  bugster update runs  →  Bugster opens "Update PR" →
 Bugster comments results in original PR → you review/merge Update PR → merge feature PR
 ```
 
-## Comparison Baselines
+## Comparison Baselines (Next.js & React)
 
 Choose the comparison model that fits your development stage:
 
@@ -111,7 +155,7 @@ bugster update --against-last-update
 ```
 **Scope:** Compares changes since the last time you ran `bugster update`. The "last update" state is stored in `.bugster/state/last-update-hash` and tracks the commit hash from your previous update.
 
-## Recommended Workflow
+## Recommended Workflow (Next.js & React)
 
 | Scenario | Command | Use Case |
 | :--- | :--- | :--- |
@@ -119,9 +163,19 @@ bugster update --against-last-update
 | Before opening a PR | `bugster update --against-default` | Final, comprehensive sweep |
 | For small, isolated edits | `bugster update` | Default mode usually sufficient |
 
-## Examples
+## Workflow for Other Frameworks
 
-Here are common scenarios and the commands to use.
+For Angular, Svelte, Vue, and other frameworks:
+
+| Scenario | Approach | Use Case |
+| :--- | :--- | :--- |
+| Test updates needed | Use Cursor or Claude Code with Bugster Agent rules | AI-assisted test updates based on code changes |
+| Review and refine | AI coding assistant + manual review | Ensure tests match your changes |
+| Commit test changes | Standard git workflow | Keep tests in sync with code |
+
+## Examples (Next.js & React)
+
+Here are common scenarios and the commands to use for Next.js and React applications.
 
 <AccordionGroup>
 <Accordion title="Default update for recently touched files">
@@ -171,9 +225,19 @@ bugster update --against-default --update-only
 ## Review Tips
 
 <Tip>
+**For Next.js & React:**
 - Always review the Update PR diff before merging.
 - Keep descriptive commit messages (e.g., `bugster: update tests for billing portal flow`).
 - If a change looks incorrect, adjust the code or the test, rerun `bugster update`, and re-review.
+
+**For Angular, Svelte, Vue & Others:**
+- Review AI-generated test updates in your coding assistant.
+- Ensure tests accurately reflect your code changes.
+- Commit test updates alongside your feature changes.
 </Tip>
 
-That's it: one standardized command keeps your suite aligned with real product changes—locally or automatically on every PR.
+## Summary
+
+**Next.js & React**: Use the `bugster update` command to keep your test suite aligned with code changes—locally or automatically on every PR.
+
+**Angular, Svelte, Vue & Others**: Use AI-assisted updates with Cursor or Claude Code Agent rules for intelligent test synchronization.

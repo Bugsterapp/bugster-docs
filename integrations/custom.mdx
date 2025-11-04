@@ -43,11 +43,11 @@ Your Bugster API key. Get this from **Settings > API Keys** in your Bugster dash
 </ParamField>
 
 <ParamField body="project_id" type="string" required>
-Your Bugster project identifier. Find this in **Project Settings > General** in your Bugster dashboard.
+Your Bugster project identifier. Find this in **Settings > General** of your project in your Bugster dashboard.
 </ParamField>
 
 <ParamField body="organization_id" type="string" required>
-Your Bugster organization identifier. Available in **Settings > Organization** in your Bugster dashboard.
+Your Bugster organization identifier. Find this in **Settings > General** of your project in your Bugster dashboard.
 </ParamField>
 
 <ParamField body="environment_url" type="string" required>
@@ -102,10 +102,13 @@ The deployment environment name (e.g., "production", "staging", "preview").
 ## Prerequisites
 
 <Warning>
-You must have the [Bugster GitHub App](https://github.com/apps/bugster-dev) installed and connected to your repository before using this integration.
-</Warning>
+To use this integration, you must:
+1. Install the [Bugster GitHub App](https://github.com/apps/bugster-dev)
+2. Select the repository you want to integrate
+3. Commit the `.bugster` folder to the branch you're deploying
 
-Visit your [Bugster Dashboard](https://app.bugster.dev) → Project Settings → GitHub Integration to install the GitHub App if you haven't already.
+Without these prerequisites, the webhook will not trigger test runs.
+</Warning>
 
 ## Integration Steps
 
@@ -113,8 +116,8 @@ Visit your [Bugster Dashboard](https://app.bugster.dev) → Project Settings →
 <Step title="Get your credentials">
 Navigate to your Bugster dashboard and collect:
 - **API Key**: Settings > API Keys
-- **Project ID**: Project Settings > General  
-- **Organization ID**: Settings > Organization
+- **Project ID**: Settings > General (in your project)
+- **Organization ID**: Settings > General (in your project)
 
 <Warning>
 Keep your API key secure. Never commit it to version control or expose it in client-side code.

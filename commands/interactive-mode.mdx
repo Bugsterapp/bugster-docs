@@ -1,0 +1,94 @@
+---
+title: 'Shell'
+description: 'Interactive CLI session with smart autocomplete and instant testing'
+icon: "terminal"
+"og:type": "article"
+"og:title": "bugster - Interactive CLI Session"
+"og:description": "Persistent interactive environment for running tests and commands with smart autocomplete, file navigation, and natural language testing."
+"og:url": "https://docs.bugster.dev/commands/interactive-mode"
+---
+
+The `bugster` shell provides a persistent, interactive environment for running tests and commands. Type natural language to test instantly, browse commands with `/`, and navigate files with `@`.
+
+## Quick Start
+
+```bash
+bugster
+```
+
+## Core Concepts
+
+<CardGroup cols={3}>
+<Card title="/" icon="terminal">
+**Command Browser**
+
+Type `/` to browse and autocomplete all Bugster commands
+</Card>
+
+<Card title="@" icon="folder">
+**File Navigator**
+
+Type `@` to interactively select test or source files
+</Card>
+
+<Card title="Natural Text" icon="message">
+**Inline Tests**
+
+Type 5+ words to instantly run a test
+</Card>
+</CardGroup>
+
+## Usage Examples
+
+```bash
+# Start shell
+bugster
+
+# Browse and run command
+/generate --page @
+
+# Quick inline test (5+ words required)
+test login form with invalid email addresses
+
+# Run specific test file
+/run @
+
+# Exit
+/exit
+```
+
+## Key Features
+
+- **No `bugster` prefix needed** - Direct command execution
+- **Command history** - Use ↑/↓ arrows to navigate previous commands
+- **Smart file filtering** - `/run @` shows only tests, `/generate --page @` excludes tests
+- **Persistent session** - Stay in context across multiple operations
+- **Instant execution** - Natural language (5+ words) runs tests immediately
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `/` | Command browser |
+| `@` | File browser |
+| `↑` `↓` | Navigate history/items |
+| `Enter` | Execute/Select |
+| `Ctrl+C` × 2 | Exit shell |
+
+## Common Commands
+
+```bash
+/generate              # Generate tests
+/run                   # Run all tests
+/run --fast           # Run tests in fast mode
+/update               # Update test specs
+/validate             # Validate config
+```
+
+<Tip>
+Use the shell for active development sessions. It's faster than one-off commands and maintains your workflow context.
+</Tip>
+
+<Warning>
+Inline tests require **at least 5 words**. Shorter phrases won't execute as tests.
+</Warning>
