@@ -74,7 +74,8 @@
                 "guides/configuration/customize-config-yaml",
                 "guides/test-management/update-test-suite",
                 "guides/cicd/cicd-integration",
-                "guides/coding-agents/cursor"
+                "guides/coding-agents/cursor",
+                "guides/coding-agents/claude-code"
               ]
             },
           {
@@ -87,7 +88,8 @@
               "commands/generate",
               "commands/run",
               "commands/destructive-agent",
-              "commands/update"
+              "commands/update",
+              "commands/plugin"
             ]
           },
           {
