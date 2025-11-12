@@ -18,7 +18,7 @@ Connect Bugster to your GitHub repository to automatically run tests on pull req
     Tests run automatically on every pull request
   </Card>
   <Card title="Preview Testing" icon="eye">
-    Tests against Vercel/Railway/Netlify preview deployments
+    Tests against preview deployments from any platform
   </Card>
   <Card title="PR Status Checks" icon="code-pull-request">
     Pass/fail status reported directly in GitHub
@@ -103,6 +103,54 @@ Connect Bugster to your GitHub repository to automatically run tests on pull req
       Complete Netlify integration with webhook configuration
     </Card>
   </Tab>
+
+  <Tab title="GitHub Actions" icon="code-merge">
+    <Steps>
+      <Step title="Add Bugster API Key to Secrets">
+        Store your Bugster API key in GitHub repository secrets
+      </Step>
+      
+      <Step title="Configure Workflow">
+        Add the Bugster GitHub Action to your workflow file
+      </Step>
+    </Steps>
+
+    <Card title="GitHub Actions Setup Guide" icon="code-merge" href="/integrations/github-actions">
+      Complete GitHub Actions integration with official Bugster action
+    </Card>
+  </Tab>
+
+  <Tab title="GCP Cloud Build" icon="box">
+    <Steps>
+      <Step title="Add Webhook Step">
+        Include Bugster webhook step in your cloudbuild.yaml
+      </Step>
+      
+      <Step title="Configure Substitution Variables">
+        Set up Bugster credentials in Cloud Build trigger settings
+      </Step>
+    </Steps>
+
+    <Card title="Cloud Build Setup Guide" icon="box" href="/integrations/cloud-build">
+      Complete GCP Cloud Build integration with webhook configuration
+    </Card>
+  </Tab>
+
+  <Tab title="Custom Platform" icon="cubes">
+    <Steps>
+      <Step title="Get API Credentials">
+        Collect your Bugster API key, project ID, and organization ID
+      </Step>
+      
+      <Step title="Add Webhook to Pipeline">
+        Call Bugster webhook API after successful deployment
+      </Step>
+    </Steps>
+
+    <Card title="Custom Integration Guide" icon="cubes" href="/integrations/custom">
+      Complete custom integration using Bugster webhook API
+    </Card>
+  </Tab>
 </Tabs>
 
 ## How It Works
@@ -182,10 +230,12 @@ Click the status check to view:
     **Issue**: Tests fail to connect to preview deployment
     
     **Solutions**:
+    - Ensure deployment is complete and URL is publicly accessible
     - **Vercel**: Configure protection bypass correctly
     - **Railway**: Verify deployment settings and environment variables
     - **Netlify**: Check webhook configuration and deployment status
-    - Verify environment variables in preview deployment
+    - **GitHub Actions/Cloud Build/Custom**: Verify environment URL is accessible
+    - Check that environment variables are properly configured
   </Accordion>
 </AccordionGroup>
 
@@ -212,15 +262,27 @@ Click the status check to view:
 ## Next Steps
 
 <CardGroup cols={3}>
-  <Card title="Vercel Setup Guide" icon="triangle" href="/integrations/vercel">
+  <Card title="Vercel Setup" icon="triangle" href="/integrations/vercel">
     Complete Vercel integration and deployment configuration
   </Card>
 
-  <Card title="Railway Setup Guide" icon="train" href="/integrations/railway">
+  <Card title="Railway Setup" icon="train" href="/integrations/railway">
     Complete Railway integration and deployment configuration
   </Card>
 
-  <Card title="Netlify Setup Guide" icon="globe" href="/integrations/netlify">
+  <Card title="Netlify Setup" icon="globe" href="/integrations/netlify">
     Complete Netlify integration with webhook configuration
+  </Card>
+
+  <Card title="GitHub Actions Setup" icon="code-merge" href="/integrations/github-actions">
+    Use official GitHub Action for workflow integration
+  </Card>
+
+  <Card title="Cloud Build Setup" icon="box" href="/integrations/cloud-build">
+    Integrate with GCP Cloud Build pipelines
+  </Card>
+
+  <Card title="Custom Integration" icon="cubes" href="/integrations/custom">
+    Build custom integration with webhook API
   </Card>
 </CardGroup>
