@@ -1,0 +1,216 @@
+---
+title: 'Plugin'
+description: 'Install Bugster rules for AI coding agents to generate tests in your editor'
+icon: 'puzzle-piece'
+"og:type": "article"
+"og:title": "bugster plugin - AI Coding Agent Integration"
+"og:description": "Install Bugster rules for Cursor or Claude Code. Enable your AI coding agent to generate and update test specs directly in your editor."
+"og:url": "https://docs.bugster.dev/commands/plugin"
+---
+
+The `bugster plugin` command installs test generation rules for AI coding agents like Cursor or Claude Code, enabling them to create and update Bugster test specifications without leaving your editor.
+
+## Basic Usage
+
+```bash
+bugster plugin
+```
+
+## Command Overview
+
+Installs rule files that teach your AI coding agent how to generate and maintain Bugster test specifications directly in your development environment.
+
+### When to Use
+
+- After setting up Bugster in your project for the first time
+- When switching to a new AI coding agent
+- To update rules when new versions are released
+- When setting up a new team member's development environment
+
+### Key Features
+
+- Interactive agent selection (Cursor or Claude Code)
+- Installs both generation and update rules
+- Safe installation with overwrite protection
+- Downloads official rules from Bugster repository
+- Works seamlessly with your existing workflow
+
+<Note>
+Requires internet connection to download the latest rule files from the official Bugster GitHub repository.
+</Note>
+
+## Command Syntax
+
+```bash
+bugster plugin [options]
+```
+
+## Options
+
+<ParamField query="--agent" type="string">
+Specify the coding agent to install rules for. Accepts `cursor` or `claude`. Skips the interactive selection prompt.
+</ParamField>
+
+<ParamField query="--force" type="boolean">
+Overwrite existing rule files without confirmation. Useful for updating to the latest rule versions.
+</ParamField>
+
+## What Gets Installed
+
+The command installs two rule files specific to your coding agent:
+
+1. **Generate Rule**: Creates new test specifications from your codebase
+2. **Update Rule**: Updates existing test specs based on code changes
+
+<Tabs>
+<Tab title="Cursor">
+**Installation Location**: `.cursor/rules/`
+
+Files installed:
+- `bugster-generate.mdc` - Test generation rule
+- `bugster-update.mdc` - Test update rule
+
+**Source**: [Cursor Plugin Rules](https://github.com/Bugsterapp/bugster-cli/tree/main/plugins/cursor)
+</Tab>
+
+<Tab title="Claude Code">
+**Installation Location**: `.claude/rules/`
+
+Files installed:
+- `BUGSTER_GENERATE.md` - Test generation rule
+- `BUGSTER_UPDATE.md` - Test update rule
+
+**Source**: [Claude Code Plugin Rules](https://github.com/Bugsterapp/bugster-cli/tree/main/plugins/claude)
+</Tab>
+</Tabs>
+
+## Examples
+
+### Interactive Installation
+
+```bash
+bugster plugin
+```
+
+Prompts you to select your coding agent and installs the appropriate rules.
+
+### Install for Cursor
+
+```bash
+bugster plugin --agent cursor
+```
+
+Directly installs Bugster rules for Cursor without prompting.
+
+### Install for Claude Code
+
+```bash
+bugster plugin --agent claude
+```
+
+Installs Bugster rules for Claude Code with no interactive prompt.
+
+### Force Update Existing Rules
+
+```bash
+bugster plugin --agent cursor --force
+```
+
+Overwrites existing rule files to update to the latest versions.
+
+## Using the Rules in Your Editor
+
+<Steps>
+<Step title="Open Your Editor">
+Launch Cursor or Claude Code in your project directory where Bugster is configured.
+</Step>
+
+<Step title="Reference the Rule">
+In your AI chat, mention `@bugster-generate` or `@bugster-update` to activate the corresponding rule.
+
+<Check>
+Your coding agent will now understand how to create and update Bugster test specifications.
+</Check>
+</Step>
+
+<Step title="Generate Tests">
+Ask your AI agent to create tests for specific files, components, or user flows.
+</Step>
+</Steps>
+
+## Example Prompts
+
+<Tabs>
+<Tab title="Generate Tests">
+```
+@bugster-generate Create tests for src/components/LoginForm.tsx
+```
+Generates comprehensive test coverage for a specific component.
+</Tab>
+
+<Tab title="Update Tests">
+```
+@bugster-update Update tests for the authentication flow based on recent changes
+```
+Updates existing test specs to reflect code modifications.
+</Tab>
+
+<Tab title="Comprehensive Coverage">
+```
+@bugster-generate Generate comprehensive test coverage for the checkout process
+```
+Creates multiple test scenarios for complex user flows.
+</Tab>
+
+<Tab title="Feature Testing">
+```
+@bugster-generate Create edge case tests for the payment form validation
+```
+Focuses on specific testing scenarios with detailed instructions.
+</Tab>
+</Tabs>
+
+## Rule Capabilities
+
+<CardGroup cols={2}>
+<Card title="Smart Generation" icon="brain">
+AI understands your code structure and creates relevant test scenarios automatically.
+</Card>
+
+<Card title="YAML Format" icon="code">
+Generates properly formatted test specs that work with `bugster run`.
+</Card>
+
+<Card title="Incremental Updates" icon="arrows-rotate">
+Updates existing tests when your code changes without duplicating specs.
+</Card>
+
+<Card title="Best Practices" icon="star">
+Follows Bugster conventions for selectors, assertions, and test structure.
+</Card>
+</CardGroup>
+
+## Workflow Integration
+
+After installation, your typical workflow becomes:
+
+1. Write or modify application code
+2. Reference `@bugster-generate` in your AI chat
+3. Ask your coding agent to create tests for the changes
+4. Review and commit the generated test specs
+5. Run tests with `bugster run`
+
+<Tip>
+Run `bugster plugin --force` periodically to ensure you have the latest rule versions with improved test generation capabilities.
+</Tip>
+
+<Warning>
+The rules require your coding agent to have access to your project files. Ensure your editor has proper permissions to read the `.bugster/` directory.
+</Warning>
+
+## Best Practices
+
+- **Version Control**: Commit the rule files to your repository so the entire team benefits
+- **Regular Updates**: Use `--force` to update rules when Bugster releases new versions
+- **Consistent Usage**: Reference the rules consistently across your team for uniform test quality
+- **Combine with Generate**: Use plugin rules for targeted test creation and `bugster generate` for comprehensive coverage

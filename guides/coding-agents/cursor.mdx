@@ -10,13 +10,17 @@ icon: "cube"
 
 Transform Cursor into a Bugster expert that can both generate comprehensive test specifications and automatically validate your UI changes as you build.
 
-## Two Cursor Use Cases for Bugster
+## Three Cursor Use Cases for Bugster
 
-Bugster provides two specialized Cursor rules to enhance your development workflow:
+Bugster provides three specialized Cursor rules to enhance your development workflow:
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
 <Card title="Test Generation" icon="file-lines" href="#test-generation-rule">
 **Manual activation** - Generate comprehensive test specifications following Bugster's YAML structure and best practices.
+</Card>
+
+<Card title="Test Update" icon="arrows-rotate" href="#test-update-rule">
+**Manual activation** - Update existing test specifications based on code changes and new requirements.
 </Card>
 
 <Card title="Quick Validation" icon="bolt" href="#quick-test-rule">
@@ -26,7 +30,8 @@ Bugster provides two specialized Cursor rules to enhance your development workfl
 
 | Rule | When to Use | Activation | Purpose |
 | :--- | :--- | :--- | :--- |
-| **Test Generation** | Building test suites | Manual (`@bugster-test-rules`) | Create comprehensive test specifications |
+| **Test Generation** | Building test suites | Manual (`@bugster-generate`) | Create comprehensive test specifications |
+| **Test Update** | Maintaining tests | Manual (`@bugster-update`) | Update existing tests after code changes |
 | **Quick Validation** | After UI changes | Automatic (on file save) | Validate implementation meets requirements |
 
 ## Using Cursor with Bugster
@@ -44,206 +49,97 @@ Create rules files in the `.cursor/rules` directory of your project. See the [Cu
 
 This rule provides Cursor with context to properly generate Bugster test specifications following the required YAML structure and best practices.
 
+### Installation
+
+Install the official test generation rule using the Bugster CLI:
+
+```bash
+bugster plugin --agent cursor
+```
+
+This installs `bugster-generate.mdc` in your `.cursor/rules/` directory.
+
 <Info>
-**File name suggestion:** `bugster-test-generation.mdc`
+View the official rule: [Cursor Test Generation Rule](https://github.com/Bugsterapp/bugster-cli/tree/main/plugins/cursor)
 </Info>
 
-Add this rule as a `.mdc` file in the `.cursor/rules` directory of your project:
+### How to Use
 
-````mdx
----
-alwaysApply: false
----
-# Bugster Test Generation Rules
-
-When creating Bugster test specifications, follow these strict requirements:
-
-## YAML Structure (Non-negotiable)
-
-```yaml
-name: Descriptive test name
-page: /route/path
-page_path: relative/file/path.tsx # always relative to the frontend project (e.g., app/route.tsx); do not include a monorepo prefix like 'frontend/'
-task: Clear test objective
-steps:
-  - Action 1
-  - Action 2
-  - Verification step
-expected_result: Success criteria
-```
-
-**All fields are required. No exceptions.**
-
-## page_path Requirements
-
-- Must be the **relative path** to the actual page file being tested
-- Examples:
-  - `app/dashboard/users/page.tsx` (App Router)
-  - `pages/auth/login.tsx` (Pages Router)  
-  - `src/pages/products/[id].tsx` (Dynamic route)
-
-## File Naming & Location
-
-### File naming: snake_case, descriptive, .yaml extension
-- ✅ `user_profile_edit_form.yaml`
-- ✅ `login_authentication_flow.yaml`
-- ❌ `userProfile.yaml` (camelCase)
-- ❌ `test1.yaml` (not descriptive)
-
-### File location: Mirror your app's filesystem hierarchy
-```
-# If page_path: app/dashboard/users/page.tsx
-# Save to: .bugster/tests/dashboard/users/user_list_navigation.yaml
-
-# If page_path: pages/auth/login.tsx
-# Save to: .bugster/tests/auth/login_form_validation.yaml
-
-# If page_path: src/components/profile/settings.tsx
-# Save to: .bugster/tests/profile/settings_panel_functionality.yaml
-```
-
-## Test Generation Limits
-
-**Before creating new tests:**
-- Check existing tests in `.bugster/tests/` to avoid duplicates
-- Review similar functionality that may already be covered
-- Only create tests for uncovered scenarios
-
-**Maximum 5 tests per feature** (unless user explicitly requests more)
-- Focus on core functionality first
-- Avoid repetitive test scenarios
-- Quality over quantity - one comprehensive test is better than multiple redundant ones
-- Stop early if core functionality is already covered
-
-## Quick Reference
-
-**Always provide:**
-1. Complete YAML with all required fields
-2. Correct relative page_path 
-3. Proper snake_case filename suggestion
-4. Full file path under `.bugster/tests/`
-
-**Never:**
-- Skip required fields
-- Use absolute paths in page_path
-- Suggest camelCase or space-separated filenames
-- Place files outside `.bugster/tests/` hierarchy
-- Generate more than 5 tests per feature without explicit request
-````
-
-## How to Use the Rule
-
-<Warning>
-This rule is set to `alwaysApply: false`, meaning it only activates when explicitly tagged in your Cursor chat.
-</Warning>
-
-### Manual Activation
-
-To use the Bugster test generation rule, mention it explicitly in your Cursor chat:
+Reference the rule in your Cursor chat to activate it:
 
 <CodeGroup>
 ```text Basic Usage
-@bugster-test-rules Generate a test for the user login page
+@bugster-generate Create a test for the user login page
 ```
 
 ```text Specific Feature
-@bugster-test-rules Create tests for the shopping cart checkout flow
+@bugster-generate Generate tests for the shopping cart checkout flow
 ```
 
 ```text Multiple Tests
-@bugster-test-rules Generate 3 tests for the dashboard analytics page
+@bugster-generate Create 3 tests for the dashboard analytics page
 ```
 </CodeGroup>
 
-### Best Practices
+### What It Does
 
-<CardGroup cols={2}>
-<Card title="Explicit Requests" icon="tag">
-Always tag the rule when you want Bugster-compliant test generation.
-</Card>
+- Generates comprehensive test specifications in proper YAML format
+- Follows Bugster naming conventions and file structure
+- Creates tests in `.bugster/tests/` with correct hierarchy
+- Validates all required fields are present
+- Limits generation to avoid test duplication
 
-<Card title="Check Existing Tests" icon="magnifying-glass">
-Review `.bugster/tests/` before generating new tests to avoid duplicates.
-</Card>
+<Tip>
+The rule automatically checks existing tests to avoid duplicates and follows your project's file structure conventions.
+</Tip>
 
-<Card title="Quality Focus" icon="star">
-Request comprehensive tests rather than many simple ones.
-</Card>
+## Test Update Rule
 
-<Card title="File Structure" icon="folder">
-Ensure generated tests follow your app's hierarchy in `.bugster/tests/`.
-</Card>
-</CardGroup>
+This rule helps you update existing test specifications when your code changes or requirements evolve.
 
-## Example Generated Test
+### Installation
 
-When using the rule, Cursor will generate tests following this structure:
+Install the official test update rule using the Bugster CLI:
 
-```yaml
-name: User login authentication flow
-page: /auth/login
-page_path: app/auth/login/page.tsx
-task: Authenticate user with valid credentials and redirect to dashboard
-steps:
-  - Navigate to the login page
-  - Fill in email field with valid email
-  - Fill in password field with valid password
-  - Click the login button
-  - Verify redirect to dashboard occurs
-  - Verify user session is established
-expected_result: User should be successfully authenticated and redirected to the dashboard with an active session
+```bash
+bugster plugin --agent cursor
 ```
 
-## Rule Customization
+This installs `bugster-update.mdc` in your `.cursor/rules/` directory.
 
-You can customize the rule for your specific project needs:
+<Info>
+View the official rule: [Cursor Test Update Rule](https://github.com/Bugsterapp/bugster-cli/tree/main/plugins/cursor)
+</Info>
 
-<Tabs>
-<Tab title="Framework-Specific">
-Modify the `page_path` examples to match your framework:
-- Next.js App Router: `app/route/page.tsx`
-- Next.js Pages Router: `pages/route.tsx`
-- React Router: `src/pages/route.tsx`
-</Tab>
+### How to Use
 
-<Tab title="Monorepo Structure">
-Adjust path requirements for monorepo setups:
-```yaml
-# Example for frontend subdirectory
-page_path: src/pages/dashboard.tsx # not frontend/src/pages/dashboard.tsx
+Reference the rule in your Cursor chat to activate it:
+
+<CodeGroup>
+```text Update After Changes
+@bugster-update Update tests for the authentication flow based on recent changes
 ```
-</Tab>
 
-<Tab title="Test Limits">
-Modify the maximum test limits based on your project size:
-```markdown
-**Maximum 10 tests per feature** (for large applications)
-**Maximum 3 tests per feature** (for smaller projects)
+```text Specific File
+@bugster-update Refresh tests for app/checkout/page.tsx to match new UI
 ```
-</Tab>
-</Tabs>
 
-## Troubleshooting
+```text Bulk Update
+@bugster-update Update all dashboard tests to reflect new navigation structure
+```
+</CodeGroup>
 
-<AccordionGroup>
-<Accordion title="Rule not activating">
-- Ensure you're tagging the rule with `@bugster-test-rules`
-- Check that the rule file is saved in `.cursor/rules/`
-- Verify the rule has the correct `.mdc` extension
-</Accordion>
+### What It Does
 
-<Accordion title="Wrong file paths generated">
-- Review your project structure and update the rule examples
-- Ensure `page_path` examples match your framework conventions
-- Check that generated paths are relative, not absolute
-</Accordion>
+- Updates existing test specifications to match code changes
+- Maintains test structure while adapting to new requirements
+- Preserves test intent while updating implementation details
+- Ensures tests stay synchronized with your codebase
+- Follows the same YAML standards as test generation
 
-<Accordion title="Too many tests generated">
-- The rule limits to 5 tests by default
-- Be more specific in your request to generate fewer tests
-- Review existing tests before requesting new ones
-</Accordion>
-</AccordionGroup>
+<Tip>
+Use this rule after refactoring components or updating user flows to keep your test suite current without starting from scratch.
+</Tip>
 
 ## Quick Test Rule
 
@@ -318,28 +214,33 @@ bugster run --prompt "Test the new user registration form - verify all fields ac
 - Use only as final verification step
 ````
 
-## Combining Both Rules
+## Combining All Rules
 
-For optimal workflow, use both rules together:
+For optimal workflow, use all three rules together:
 
 <Steps>
 <Step title="Setup">
-Add both rule files to your `.cursor/rules` directory:
-- `bugster-test-generation.mdc` (manual activation)
-- `bugster-quick-test.mdc` (auto-activation)
+Install the official rules and add the quick test rule to your `.cursor/rules` directory:
+
+```bash
+bugster plugin --agent cursor
+```
+
+Then add `bugster-quick-test.mdc` (see Quick Test Rule section above) for auto-validation.
 </Step>
 
 <Step title="Development Flow">
 1. Build your feature as requested
 2. **Quick Test rule** automatically validates the implementation
-3. Use **Test Generation rule** when you need comprehensive test suites
+3. Use **Test Generation rule** to create comprehensive test suites
+4. Use **Test Update rule** when refactoring or updating features
 </Step>
 
 <Step title="Team Consistency">
-Both rules ensure all team members follow the same Bugster standards and validation processes.
+All three rules ensure team members follow the same Bugster standards and validation processes.
 </Step>
 </Steps>
 
 <Tip>
-Start with the default rules and customize them as you learn your team's testing patterns and preferences. The rules help maintain consistency across all contributors to your Bugster project.
+The plugin command installs both generation and update rules automatically. Add the quick validation rule manually for auto-testing after code changes.
 </Tip>

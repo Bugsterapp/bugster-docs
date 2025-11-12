@@ -74,19 +74,22 @@
                 "guides/configuration/customize-config-yaml",
                 "guides/test-management/update-test-suite",
                 "guides/cicd/cicd-integration",
-                "guides/coding-agents/cursor"
+                "guides/coding-agents/cursor",
+                "guides/coding-agents/claude-code"
               ]
             },
           {
             "group": "USING THE CLI",
             "pages": [
               "commands/overview",
+              "commands/interactive-mode",
               "commands/auth",
               "commands/init",
               "commands/generate",
               "commands/run",
               "commands/destructive-agent",
-              "commands/update"
+              "commands/update",
+              "commands/plugin"
             ]
           },
           {
