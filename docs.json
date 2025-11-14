@@ -101,8 +101,8 @@
               "integrations/railway",
               "integrations/github-actions",
               "integrations/custom",
-              "integrations/cloud-build"
-
+              "integrations/cloud-build",
+              "integrations/slack"
             ]
           }
         ]
