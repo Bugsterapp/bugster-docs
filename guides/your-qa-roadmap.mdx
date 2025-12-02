@@ -1,0 +1,155 @@
+---
+title: "MVP Roadmap with Bugster"
+description: "Get your first E2E test suite running in under a week. Critical flows tested, running locally, ready for CI."
+icon: "road"
+"og:type": "article"
+"og:title": "MVP Roadmap with Bugster: Your First E2E Suite"
+"og:description": "Build your first E2E test suite covering critical user flows. From zero to CI-ready in 5 steps."
+"og:url": "https://docs.bugster.dev/guides/your-qa-roadmap"
+---
+
+<Check>
+**Goal:** 3-5 critical flows tested. Running locally. Ready for CI.
+</Check>
+
+## Step 1: Define Your Critical Paths
+
+Get your team together for 30 minutes. Ask:
+
+1. **What do users pay for?** → #1 critical path
+2. **What blocks users from value?** → Usually auth
+3. **What wakes you up at 3am?** → That's critical
+
+| Priority | Flow Type | Example |
+|----------|-----------|---------|
+| P0 | Auth gate | Login, Signup |
+| P0 | Core value | Create project, Make purchase |
+| P1 | Conversion | Upgrade plan, Invite team |
+
+<Tip>
+Write down 3-5 flows. No more. If you can't pick 5, pick 3.
+</Tip>
+
+## Step 2: Setup Bugster
+
+<Steps>
+<Step title="Install">
+  <Tabs>
+  <Tab title="macOS / Linux">
+  ```bash
+  curl -sSL https://bugster.dev/install.sh | bash
+  ```
+  </Tab>
+  <Tab title="Windows">
+  ```powershell
+  irm https://bugster.dev/install.ps1 | iex
+  ```
+  </Tab>
+  </Tabs>
+  
+  See [Installation Guide](/installation) for troubleshooting.
+</Step>
+
+<Step title="Authenticate and initialize">
+  ```bash
+  bugster auth
+  bugster init
+  ```
+  
+  See [Auth](/commands/auth) and [Init](/commands/init) command reference.
+</Step>
+</Steps>
+
+## Step 3: Configure Authentication
+
+Create a test user in your app, then add credentials:
+
+```yaml config.yaml
+credentials:
+  - id: user
+    username: ${BUGSTER_USERNAME}
+    password: ${BUGSTER_PASSWORD}
+```
+
+Store secrets in `.env` (add to `.gitignore`):
+
+```bash .env
+BUGSTER_USERNAME=test@yourcompany.dev
+BUGSTER_PASSWORD=TestPassword123!
+```
+
+<Note>
+See [Credentials and Roles](/guides/test-management/credentials-and-roles) for multiple roles and advanced setup.
+</Note>
+
+## Step 4: Write Your First Test
+
+<Tabs>
+<Tab title="AI Agent">
+  ```bash
+  bugster plugin --agent cursor  # or --agent claude
+  ```
+  
+  Then: `@bugster-generate Create a test for user login`
+  
+  See [Plugin Command](/commands/plugin) for details.
+</Tab>
+
+<Tab title="Manual">
+  ```yaml .bugster/tests/auth/login.yaml
+  name: User login
+  page: /login
+  credential_id: user
+  task: Log in to the application
+  steps:
+    - Enter credentials and submit
+  expected_result: User sees the dashboard
+  ```
+</Tab>
+</Tabs>
+
+Run it:
+
+```bash
+bugster run .bugster/tests/auth/login.yaml
+```
+
+See [Run Command](/commands/run) for all options.
+
+## Step 5: Cover Critical Paths
+
+Write one test per critical path. Organize in folders:
+
+```
+.bugster/tests/
+├── auth/login.yaml
+├── core/create-project.yaml
+└── billing/upgrade-plan.yaml
+```
+
+```bash
+bugster run  # Run all tests
+```
+
+## Checklist
+
+- [ ] 3-5 critical paths identified
+- [ ] Bugster installed and initialized
+- [ ] Test user created with credentials in `.env`
+- [ ] All critical path tests passing locally
+
+## What's Next
+
+<CardGroup cols={3}>
+<Card title="CI Integration" icon="github" href="/integrations/github">
+  Run tests on PRs
+</Card>
+
+<Card title="Configuration" icon="gear" href="/guides/configuration/customize-config-yaml">
+  Customize settings
+</Card>
+
+<Card title="Test Management" icon="layer-group" href="/guides/test-management/manage-tests">
+  Expand coverage
+</Card>
+</CardGroup>

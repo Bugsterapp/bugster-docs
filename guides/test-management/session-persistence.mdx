@@ -1,0 +1,209 @@
+---
+title: "Persist login sessions across tests"
+description: "Configure tests to share authenticated sessions, eliminating redundant logins and speeding up your test suite."
+icon: "user-lock"
+"og:type": "article"
+"og:title": "Bugster Session Persistence - Share Login State Across Tests"
+"og:description": "Learn how to configure Bugster to persist authentication sessions across multiple tests. Reduce test execution time by logging in once and reusing the session."
+"og:url": "https://docs.bugster.dev/guides/test-management/session-persistence"
+---
+
+When you have multiple tests that require authentication, Bugster can log in once and reuse that session across all tests that need it. This eliminates redundant login steps, speeds up your test suite, and makes tests more reliable.
+
+<Card title="How it works">
+Tests with `requires_login: true` share an authenticated session. Bugster logs in once using the specified `credential_id`, then each subsequent test starts already authenticated—no repeated login flows.
+</Card>
+
+## Prerequisites
+
+Before using session persistence, you need:
+
+1. **Credentials configured** in your `config.yaml` — see [Add credentials, roles & permissions](/guides/test-management/credentials-and-roles)
+2. **Environment variables** set with your login secrets
+
+## Configure a test to require login
+
+Add two fields to your test YAML:
+
+```yaml
+name: Dashboard data export
+page: /dashboard
+page_path: app/dashboard/page.tsx
+credential_id: user
+requires_login: true
+task: Export dashboard data as CSV
+steps:
+  - Navigate to the dashboard
+  - Click the export button
+  - Select CSV format
+  - Verify the download starts
+expected_result: CSV file download should begin automatically
+```
+
+<ParamField body="credential_id" type="string" required>
+The ID of the credential profile to use for authentication. Must match a `credentials[].id` in your `config.yaml`.
+</ParamField>
+
+<ParamField body="requires_login" type="boolean" required>
+Set to `true` to indicate this test needs an authenticated session. Bugster will ensure the user is logged in before the test begins.
+</ParamField>
+
+## How session persistence works
+
+<Steps>
+<Step title="First test with requires_login runs">
+  Bugster detects `requires_login: true` and `credential_id: user`. It performs the login flow using the credentials from `config.yaml`.
+</Step>
+
+<Step title="Session is cached">
+  After successful authentication, Bugster stores the session (cookies, tokens, local storage) for reuse.
+</Step>
+
+<Step title="Subsequent tests skip login">
+  Any other test with the same `credential_id` and `requires_login: true` will start with the cached session—no login flow needed.
+</Step>
+</Steps>
+
+<Note>
+Session persistence works per `credential_id`. If you have tests using different credentials (e.g., `user` vs `admin`), Bugster maintains separate sessions for each.
+</Note>
+
+<Warning>
+**Sessions are regenerated on each `bugster run` command.** The cached session only persists within a single test run. When you execute `bugster run` again, Bugster will perform a fresh login for the first test that requires it.
+</Warning>
+
+## Example: Multiple tests sharing a session
+
+Here's how a typical test suite might look with session persistence:
+
+### config.yaml
+
+```yaml
+project_name: my-app
+project_id: my-app-123
+base_url: "http://localhost:3000"
+
+credentials:
+  - id: user
+    username: ${BUGSTER_USERNAME}
+    password: ${BUGSTER_PASSWORD}
+    
+  - id: admin
+    username: ${BUGSTER_ADMIN_USERNAME}
+    password: ${BUGSTER_ADMIN_PASSWORD}
+```
+
+### Test 1: View profile (user)
+
+```yaml
+name: View user profile
+page: /profile
+credential_id: user
+requires_login: true
+task: View and verify profile information
+steps:
+  - Navigate to profile page
+  - Verify username is displayed
+  - Verify email is displayed
+expected_result: Profile page shows correct user information
+```
+
+### Test 2: Edit profile (user)
+
+```yaml
+name: Edit user profile
+page: /profile/edit
+credential_id: user
+requires_login: true
+task: Update profile display name
+steps:
+  - Navigate to profile edit page
+  - Change display name
+  - Save changes
+  - Verify success message
+expected_result: Profile updates successfully with confirmation message
+```
+
+### Test 3: Admin dashboard (admin)
+
+```yaml
+name: Admin user management
+page: /admin/users
+credential_id: admin
+requires_login: true
+task: View user list in admin panel
+steps:
+  - Navigate to admin users page
+  - Verify user list is displayed
+  - Check pagination works
+expected_result: Admin can see and navigate the user list
+```
+
+<Tip>
+In this example, **Test 1** and **Test 2** share the same `user` session—Bugster logs in once. **Test 3** uses a different credential (`admin`), so it gets its own login session.
+</Tip>
+
+## When to use session persistence
+
+<AccordionGroup>
+<Accordion title="Use requires_login: true when...">
+- Your test interacts with authenticated-only pages
+- You're testing features behind a login wall
+- You want to verify user-specific data or permissions
+- You're running multiple tests that all need the same authenticated state
+</Accordion>
+
+<Accordion title="Don't use requires_login when...">
+- The test is for public/unauthenticated pages
+- You're testing the login flow itself
+- The test explicitly needs to start logged out
+</Accordion>
+</AccordionGroup>
+
+## Performance benefits
+
+Session persistence significantly reduces test execution time:
+
+| Scenario | Without persistence | With persistence |
+|----------|---------------------|------------------|
+| 10 tests requiring login | 10 login flows (~30s each) | 1 login flow |
+| Total login overhead | ~5 minutes | ~30 seconds |
+
+<Check>
+**Pro tip:** Group tests by `credential_id` when running your suite. This maximizes session reuse and minimizes total execution time.
+</Check>
+
+## Troubleshooting
+
+<AccordionGroup>
+<Accordion title="Test fails saying user is not logged in">
+- Verify `credential_id` matches exactly with a `credentials[].id` in `config.yaml`
+- Check that environment variables are set correctly in `.bugster/.env`
+- Ensure the login page and flow haven't changed
+</Accordion>
+
+<Accordion title="Session not persisting between tests">
+- Confirm both tests have `requires_login: true`
+- Verify both tests use the same `credential_id`
+- Check if your app has aggressive session timeouts
+</Accordion>
+
+<Accordion title="Wrong user in test">
+- Double-check the `credential_id` in your test file
+- Verify environment variables point to the correct credentials
+- Ensure you're not mixing up credential IDs between environments
+</Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+<Card title="Add credentials & roles" icon="key" href="/guides/test-management/credentials-and-roles">
+  Set up multiple credential profiles for different user roles
+</Card>
+
+<Card title="Manage your tests" icon="list-check" href="/guides/test-management/manage-tests">
+  Learn how to organize and run your test suite effectively
+</Card>
+</CardGroup>
+

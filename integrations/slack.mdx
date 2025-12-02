@@ -1,0 +1,47 @@
+---
+title: "Slack"
+description: "Send notifications, alerts, and updates to Slack channels"
+icon: "slack"
+"og:type": "article"
+"og:title": "Integrate Bugster with Slack - Tests Runs Notifications"
+"og:description": "Bugster uses a Slack App to send messages to your workspace when tests runs are completed. You can choose between receive all test executions or just when errors occur."
+"og:url": "https://docs.bugster.dev/integrations/slack"
+---
+
+<Note>
+  Slack integration is optional but recommended for receiving Bugster tests runs
+  notifications. You must be a workspace admin or have permission to install
+  apps.
+</Note>
+
+Bugster uses a Slack App to send messages to your workspace when tests runs are completed. You can choose between receive all test executions or just when errors occur.
+
+## **Installing the Slack App**
+
+Install the Bugster Slack App through your [**dashboard**](https://app.bugster.dev/).
+
+<Steps>
+  <Step title="Connect Slack">
+    In the Bugster webapp, go to **Integrations → Slack** and click **Connect
+    Slack**.
+    <Frame>
+      <img
+        src="/images/slack/slack-settings.png"
+        alt="Slack notifications settings"
+      />
+    </Frame>
+  </Step>
+  <Step title="Choose workspace">
+    Select the Slack workspace where you want Bugster to post messages.
+  </Step>
+  <Step title="Authorize">
+    Click **Install Bugster** to complete the OAuth flow. You'll be redirected
+    back to Bugster dashboard with "Connected" status.
+  </Step>
+</Steps>
+
+<Info>
+  Currently, the Slack app can only be connected to one Slack channel per
+  organization. If you'd like to connect Slack notifications to specific
+  projects, please reach out to our team with your feedback.
+</Info>

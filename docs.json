@@ -1,13 +1,13 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "mint",
   "name": "Bugster",
   "logo": "logo/Bugster-Logo.png",
   "description": "Bugster is an AI tester that simulates a real user in a real browser, providing insights directly in your PR. It's designed for developers at VC-backed startups who want to ship with confidence without writing or maintaining flaky test suites.",
   "colors": {
-    "primary": "#058BFF",
-    "light": "#058BFF",
-    "dark": "#058BFF"
+    "primary": "#383838",
+    "light": "#383838",
+    "dark": "#383838"
   },
     "contextual": {
       "options": [
@@ -35,6 +35,7 @@
     }
   },
   "background":{
+    "decoration": "windows",
       "color": {
         "light": "#FFFFFF",
         "dark": "#383838"
@@ -66,10 +67,12 @@
                       {
               "group": "GUIDES",
               "pages": [
+                "guides/your-qa-roadmap",
                 "guides/test-management/manage-tests",
                 "guides/local-development",
                 "guides/destructive-testing",
                 "guides/test-management/credentials-and-roles",
+                "guides/test-management/session-persistence",
                 "guides/test-management/file-upload",
                 "guides/configuration/customize-config-yaml",
                 "guides/test-management/update-test-suite",
@@ -101,8 +104,8 @@
               "integrations/railway",
               "integrations/github-actions",
               "integrations/custom",
-              "integrations/cloud-build"
-
+              "integrations/cloud-build",
+              "integrations/slack"
             ]
           }
         ]
