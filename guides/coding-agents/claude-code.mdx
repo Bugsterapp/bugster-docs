@@ -10,11 +10,15 @@ icon: "alien-8bit"
 
 Transform Claude Code into a Bugster expert that can generate and maintain comprehensive test specifications directly in your editor.
 
-## Two Claude Code Use Cases for Bugster
+## Three Claude Code Use Cases for Bugster
 
-Bugster provides two specialized Claude Code rules to enhance your development workflow:
+Bugster provides specialized Claude Code integrations to enhance your development workflow:
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
+<Card title="Browser Testing Skill" icon="browser" href="#browser-testing-skill">
+**Plugin installation** - Enable Claude Code to interface with a browser for interactive testing and debugging.
+</Card>
+
 <Card title="Test Generation" icon="file-lines" href="#test-generation-rule">
 **Manual activation** - Generate comprehensive test specifications following Bugster's YAML structure and best practices.
 </Card>
@@ -24,10 +28,87 @@ Bugster provides two specialized Claude Code rules to enhance your development w
 </Card>
 </CardGroup>
 
-| Rule | When to Use | Activation | Purpose |
+| Integration | When to Use | Activation | Purpose |
 | :--- | :--- | :--- | :--- |
+| **Browser Testing Skill** | Interactive browser testing | Plugin installation | Interface with browser for live testing |
 | **Test Generation** | Building test suites | Manual (`@BUGSTER_GENERATE`) | Create comprehensive test specifications |
 | **Test Update** | Maintaining tests | Manual (`@BUGSTER_UPDATE`) | Update existing tests after code changes |
+
+## Browser Testing Skill
+
+Enable Claude Code to seamlessly interface with a browser using Bugster's AI browser testing framework. This skill allows Claude Code to perform interactive browser testing directly from the editor.
+
+### Installation
+
+<Steps>
+<Step title="Add marketplace">
+Run the following command in Claude Code:
+
+```bash
+/plugin marketplace add Bugsterapp/agent-test
+```
+</Step>
+
+<Step title="Install the plugin">
+Then install the browser testing plugin:
+
+```bash
+/plugin install browser-testing@browser-testing-tools
+```
+</Step>
+
+<Step title="Restart Claude Code">
+Restart Claude Code for the changes to take effect.
+</Step>
+</Steps>
+
+### Manual Installation
+
+If you prefer using the interactive interface:
+
+<Steps>
+<Step title="Open plugin menu">
+Type `/plugin` in Claude Code
+</Step>
+
+<Step title="Add marketplace">
+Select option **3. Add marketplace**
+</Step>
+
+<Step title="Enter marketplace source">
+Enter the marketplace source:
+
+```text
+https://github.com/Bugsterapp/agent-test.git
+```
+</Step>
+
+<Step title="Select and install">
+- Press enter to select the `browser-testing` plugin
+- Hit enter again to select **Install now**
+</Step>
+
+<Step title="Restart">
+Restart Claude Code for changes to take effect
+</Step>
+</Steps>
+
+### What It Does
+
+The Browser Testing Skill enables Claude Code to:
+
+- Launch and control browser instances directly from the editor
+- Perform interactive testing and debugging
+- Execute browser automation tasks
+- Test web applications in real-time
+
+<Tip>
+Use this skill when you need Claude Code to interact with your web application during development, testing, or debugging sessions.
+</Tip>
+
+<Info>
+View the official plugin: [Bugster Browser Testing Skill](https://github.com/Bugsterapp/agent-test)
+</Info>
 
 ## Test Generation Rule
 
@@ -125,7 +206,7 @@ Reference the rule in your Claude Code chat to activate it:
 Use this rule after refactoring components or updating user flows to keep your test suite current without starting from scratch.
 </Tip>
 
-## Combining Both Rules
+## Combining Test Generation and Update Rules
 
 For optimal workflow, use both rules together:
 
