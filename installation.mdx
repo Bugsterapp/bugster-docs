@@ -82,8 +82,10 @@ Bugster CLI generates and runs AI-powered end-to-end tests for web applications.
 ## Installation
 
 <Tabs>
-    <Tab title="macOS (brew)">
-    ### Direct installation
+  <Tab title="Homebrew">
+    ### Installation
+
+    Install Bugster CLI using Homebrew on macOS or Linux:
 
     ```bash
     brew install Bugsterapp/homebrew-tap/bugster
@@ -97,8 +99,31 @@ Bugster CLI generates and runs AI-powered end-to-end tests for web applications.
     brew upgrade bugster
     ```
   </Tab>
-  <Tab title="macOS / Linux">
+  <Tab title="npm">
+    ### Installation
+
+    Install Bugster CLI globally using npm:
+
+    ```bash
+    npm install -g @bugster/bugster-cli
+    ```
+
+    <Info>
+    **Note**: You need Node.js 18+ installed. Verify your Node.js version with `node --version`.
+    </Info>
+
+    ### Updating
+
+    To update Bugster to the latest version:
+
+    ```bash
+    npm update -g @bugster/bugster-cli
+    ```
+  </Tab>
+  <Tab title="curl">
     ### Automated Installation
+
+    Install Bugster CLI using the automated installer script on macOS or Linux:
     
     ```bash
     curl -sSL https://bugster.dev/install.sh | bash 
@@ -113,12 +138,15 @@ Bugster CLI generates and runs AI-powered end-to-end tests for web applications.
     source ~/.bashrc  # bash
     ```
   </Tab>
-  <Tab title="Windows">
-    ### Recommended Method (PowerShell)
+  <Tab title="PowerShell">
+    ### Recommended Method
+
     The recommended way to install Bugster CLI on Windows is by using the PowerShell installer. Open a PowerShell terminal and run the following command:
+
     ```powershell
     irm https://bugster.dev/install.ps1 | iex 
     ```
+
     This command downloads and executes the official installer script, which will:
     1.  Determine the correct version for your system.
     2.  Download the binary from the latest GitHub Release.
