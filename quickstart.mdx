@@ -1,116 +1,135 @@
 ---
 title: "Quickstart"
-description: "Get started with Bugster CLI in minutes"
+description: "Get started with Bugster in 4 simple steps"
 icon: "rocket"
 "og:type": "article"
-"og:title": "Bugster Quickstart - Get Testing in 5 Minutes"
-"og:description": "Complete guide to install Bugster CLI, generate AI-powered tests, and validate your JavaScript application with automated browser testing."
+"og:title": "Bugster Quickstart - Get Testing in Minutes"
+"og:description": "Complete guide to install Bugster CLI and run your first AI-powered test."
 "og:url": "https://docs.bugster.dev/quickstart"
 ---
 
-<Frame>
-<img src="/images/project_dashboard.png" alt="Bugster project dashboard showing testing statistics and next steps" />
-</Frame>
-
-This quickstart guide shows you how to set up Bugster CLI and create your first AI-powered tests in minutes.
-After you complete this guide, you will have automated tests running against your web application and integrated with your GitHub workflow.
-<Info>
-  **Prerequisites**: Before you begin, ensure you have:
-  - A JavaScript project (Next.js, React, Vue, Angular, Svelte, or any major framework)
-  - A Bugster account created at [bugster.dev](https://app.bugster.dev/auth/sign-up)
-</Info>
-
-## Getting Started
-Follow these steps to set up Bugster CLI and create your first AI-powered tests.
-
-<iframe
-  className="w-full aspect-video rounded-xl"
-  src="https://www.youtube.com/embed/MX2mTs5o7Sw"
-  title="Bugster Quickstart Guide"
-  frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowFullScreen
-></iframe>
 <Steps>
-  <Step title="Install Bugster CLI">
-  First, install the Bugster CLI on your system.
-<Card title="Install Bugster CLI" icon="download" href="/installation">
-  Visit our installation guide for detailed setup instructions
-</Card>
+  <Step title="Install CLI">
+    Install Bugster CLI on your system.
+
+    <Tabs>
+      <Tab title="macOS / Linux">
+        <iframe
+          className="w-full aspect-video rounded-xl mb-4"
+          src="https://www.youtube.com/embed/OEWVKjcFLzQ"
+          title="Bugster Quickstart Guide"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+
+        ```bash
+        curl -sSL https://bugster.dev/install.sh | bash
+        ```
+      </Tab>
+      <Tab title="Homebrew">
+        <iframe
+          className="w-full aspect-video rounded-xl mb-4"
+          src="https://www.youtube.com/embed/NAjYi-lMHx0"
+          title="Bugster Quickstart Guide - Homebrew"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+
+        ```bash
+        brew install Bugsterapp/homebrew-tap/bugster
+        ```
+      </Tab>
+      <Tab title="npm">
+        <iframe
+          className="w-full aspect-video rounded-xl mb-4"
+          src="https://www.youtube.com/embed/OEWVKjcFLzQ"
+          title="Bugster Quickstart Guide"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+
+        <Note>
+          Use the npm installation command below instead of curl. The rest of the steps are exactly the same.
+        </Note>
+
+        ```bash
+        npm install -g @bugster/bugster-cli
+        ```
+      </Tab>
+      <Tab title="Windows">
+        <iframe
+          className="w-full aspect-video rounded-xl mb-4"
+          src="https://www.youtube.com/embed/OEWVKjcFLzQ"
+          title="Bugster Quickstart Guide"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        ></iframe>
+
+        <Note>
+          Use the Windows PowerShell command below instead of curl. The rest of the steps are exactly the same.
+        </Note>
+
+        ```powershell
+        irm https://bugster.dev/install.ps1 | iex
+        ```
+      </Tab>
+    </Tabs>
+
+    <Card title="Installation Guide" icon="download" href="/installation">
+      Detailed installation instructions and troubleshooting
+    </Card>
   </Step>
 
-<Step title="Initialize Bugster and Generate Tests">
-Navigate to your project's root directory and run the quickstart command:
-```bash
-cd your-project
-bugster quickstart --api-key=YOUR_API_KEY
-```
+  <Step title="Navigate to your project">
+    Open your terminal and navigate to your project directory.
 
-Get your API KEY from the [Bugster Dashboard](https://app.bugster.dev).
+    ```bash
+    cd your-project
+    ```
 
-**What this command does:**
-- Sets up Bugster configuration for your project
-- Creates necessary files and folders
-- Analyzes your codebase and automatically generates test specifications
-- Stores tests in `.bugster/tests` directory
 
-**Configuration Prompts:**
+  </Step>
 
-During setup, you'll be prompted for:
-- **Application URL**: The localhost URL where your frontend application runs (defaults to `http://localhost:3000`)
+  <Step title="Run Bugster">
+    Execute Bugster in your project folder.
 
-<Tip>
-  The quickstart command combines initialization and test generation in a single step, making setup faster and simpler.
-</Tip>
+    ```bash
+    bugster
+    ```
 
-<Card title="Learn More About Advanced Configuration" icon="gear" href="guides/configuration/customize-config-yaml">
-  For authentication credentials, bypass protection, and other advanced options
-</Card>
+    This opens the Bugster interactive testing shell.
 
-</Step>
-<Step title="Run Your Tests">
-Execute the generated tests against your application:
 
-```bash
-bugster run
-```
-This command executes your test specifications in a browser, validating the instructions in the test specification.
+  </Step>
 
-<Tip>
-  Make sure your application is running on the configured base URL before running tests.
-</Tip>
+  <Step title="Write what you want to test">
+    Type your test request in natural language. For example:
 
-<Card title="Advanced Test Execution" icon="compass" href="/commands/run">
-  Learn about test execution options and configurations
-</Card>
+    ```bash
+    test the user login flow
+    ```
 
-</Step>
-<Step title="Commit Configuration to Repository">
-Add the Bugster configuration to your repository:
+    Or try:
+    - `test the checkout process`
+    - `test that my application is running and I can access the home page`
 
-```bash
-git add .bugster/
-git commit -m "Add Bugster CLI configuration"
-git push origin main
-```
-
-</Step>
+  </Step>
 </Steps>
 
-
 ## Next Steps
-Congratulations! You now have Bugster set up and running. Here's what to explore next:
-<CardGroup cols={2}>
+
+<CardGroup cols={3}>
   <Card title="Generate More Tests" icon="sparkles" href="/guides/test-management/manage-tests">
-    Want to create more tests for your app? Learn advanced test generation options and customization.
+    Learn how to create and manage multiple tests for your application.
   </Card>
-  <Card title="Local Development Workflow" icon="code" href="/guides/local-development">
-    Integrate Bugster into your daily development workflow for faster feedback and better UX validation.
+  <Card title="Destructive Agent" icon="bomb" href="/commands/destructive-agent">
+    Use AI agents to find bugs and edge cases in your application.
   </Card>
-  <Card title="Find & Fix Bugs" icon="bomb" href="/guides/destructive-testing">
-    Use AI agents to break your application and find potential bugs in your recent code changes.
-  </Card>
-  <Card title="Cursor Integration" icon="cube" href="/guides/coding-agents/cursor">
-    Configure Cursor as your Bugster test generation assistant with automated validation.
+  <Card title="Interactive Mode" icon="terminal" href="/commands/interactive-mode">
+    Master the Bugster interactive CLI for advanced testing workflows.
   </Card>
 </CardGroup>
