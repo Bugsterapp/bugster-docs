@@ -1,0 +1,84 @@
+---
+title: "OTP authentication"
+description: "Configure one-time password (OTP) authentication for Bugster to test apps with email-based login codes."
+icon: "shield-keyhole"
+---
+
+Bugster authenticates to your app like a real user to run tests. Besides [username/password](/guides/test-management/credentials-and-roles), Bugster supports **OTP (One-Time Password)**—temporary codes sent via email during login.
+
+<Info>
+Bugster provides a managed email address with access to incoming OTPs. You create an account in your app using this email.
+</Info>
+
+## Setup
+
+<Steps>
+<Step title="Get your Bugster OTP email">
+  Contact Bugster support or check your dashboard to obtain your dedicated OTP email address.
+</Step>
+
+<Step title="Create an account in your app">
+  Register a new user in your application using the Bugster OTP email.
+</Step>
+
+<Step title="Add OTP credential to config.yaml">
+
+```yaml
+credentials:
+  - id: otp-user
+    email: ${BUGSTER_OTP_EMAIL}
+    auth_type: otp
+```
+
+</Step>
+
+<Step title="Set the environment variable">
+
+```bash
+# .bugster/.env
+BUGSTER_OTP_EMAIL=your.bugster.email@...
+```
+
+</Step>
+
+<Step title="(Optional) Add to CI/CD">
+  If using CI/CD, go to **Projects → Settings → Environment Variables** and add:
+  
+  ```
+  BUGSTER_OTP_EMAIL=your.bugster.email@...
+  ```
+</Step>
+</Steps>
+
+## Use OTP in tests
+
+Add these fields to any test requiring OTP authentication:
+
+```yaml
+name: Dashboard access
+page: /dashboard
+credential_id: otp-user
+requires_login: true
+task: Verify dashboard loads after OTP login
+steps:
+  - Navigate to dashboard
+  - Verify content is displayed
+expected_result: Dashboard renders successfully
+```
+
+<Note>
+All tests with the same `credential_id` and `requires_login: true` share one authenticated session. Bugster logs in once, then reuses the session for subsequent tests. See [Session Persistence](/guides/test-management/session-persistence) for details.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+<Card title="Credentials & roles" icon="key" href="/guides/test-management/credentials-and-roles">
+  Configure username/password authentication
+</Card>
+
+<Card title="Session persistence" icon="user-lock" href="/guides/test-management/session-persistence">
+  Share login sessions across tests
+</Card>
+</CardGroup>
+

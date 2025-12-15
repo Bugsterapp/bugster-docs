@@ -73,6 +73,7 @@
                 "guides/destructive-testing",
                 "guides/test-management/credentials-and-roles",
                 "guides/test-management/session-persistence",
+                "guides/test-management/otp-authentication",
                 "guides/test-management/file-upload",
                 "guides/configuration/customize-config-yaml",
                 "guides/test-management/update-test-suite",
