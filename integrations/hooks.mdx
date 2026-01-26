@@ -1,0 +1,260 @@
+---
+title: "Hooks"
+description: "Run setup and cleanup code before and after your tests"
+icon: "webhook"
+"og:type": "article"
+"og:title": "Bugster Test Hooks - Setup and Cleanup Automation"
+"og:description": "Use hooks to run TypeScript/JavaScript functions before and after tests. Create test data, clean up resources, set up authentication, and pass dynamic values to test steps."
+"og:url": "https://docs.bugster.dev/integrations/hooks"
+---
+
+Hooks allow you to run setup and cleanup code before and after your tests. They are TypeScript/JavaScript functions that execute in your project's context, enabling you to:
+
+- Create test data before tests run
+- Clean up data after tests complete
+- Set up authentication or environment state
+- Pass dynamic values to your test steps
+
+## Hook Structure
+
+Add hooks to your test YAML file:
+
+```yaml test.yaml
+name: My Test
+task: Verify feature works correctly
+expected_result: Feature should work
+
+hooks:
+  before:
+    - helper: createTestUser
+      args: ["John", "Doe"]
+      as: userId
+
+    - helper: createOrder
+      args: ["{{userId}}", "Premium Plan"]
+      as: orderId
+
+  after:
+    - helper: deleteOrder
+      args: ["{{orderId}}"]
+
+    - helper: deleteUser
+      args: ["{{userId}}"]
+```
+
+## Hook Definition Fields
+
+<ParamField body="helper" type="string" required>
+Name of the exported function to call.
+</ParamField>
+
+<ParamField body="file_path" type="string" default=".bugster/hooks.ts">
+Path to TypeScript file containing the helper function.
+</ParamField>
+
+<ParamField body="args" type="array">
+Array of arguments to pass to the function.
+</ParamField>
+
+<ParamField body="as" type="string">
+Variable name to store the result for later use.
+</ParamField>
+
+## Creating Helper Functions
+
+### Default Location
+
+Create a `.bugster/hooks.ts` file in your project:
+
+```typescript .bugster/hooks.ts
+export async function createTestUser(firstName: string, lastName: string): Promise<string> {
+  // Create user via API or database
+  const response = await fetch('https://api.example.com/users', {
+    method: 'POST',
+    body: JSON.stringify({ firstName, lastName })
+  });
+  const user = await response.json();
+  return user.id;  // This becomes available as {{userId}}
+}
+
+export async function deleteUser(userId: string): Promise<void> {
+  await fetch(`https://api.example.com/users/${userId}`, {
+    method: 'DELETE'
+  });
+}
+```
+
+### Custom File Locations
+
+You can specify helpers from any TypeScript file in your project:
+
+```yaml
+hooks:
+  before:
+    - helper: getSchoolIdByName
+      file_path: apps/e2e/helpers/commons.ts
+      args: ["Instituto Internacional Carlos"]
+      as: schoolId
+
+    - helper: createStudentWithParams
+      file_path: apps/e2e/helpers/students.ts
+      args: ["{{firstName}}", "{{lastName}}", "{{schoolId}}"]
+      as: studentId
+```
+
+## Template Variables
+
+Use `{{variableName}}` to reference values from previous hooks:
+
+### Simple Access
+
+```yaml
+- helper: createOrder
+  args: ["{{userId}}", 100]
+  as: orderId
+```
+
+### Nested Object Access
+
+```yaml
+- helper: getBankAccount
+  args: ["School Name"]
+  as: bankAccount
+
+- helper: createPayment
+  args: ["{{bankAccount.id}}", "{{bankAccount.currency}}"]
+```
+
+### Array Access
+
+```yaml
+- helper: getActiveCycles
+  as: cycles
+
+- helper: selectCycle
+  args: ["{{cycles[0].id}}"]
+```
+
+## Passing Hook Data to Tests
+
+Hook results are passed to the test as `hook_context`. Reference them in your test steps using `{{data.variableName}}`:
+
+```yaml
+name: Create and verify student
+hooks:
+  before:
+    - helper: generateRandomName
+      as: studentName
+task: Create a student named {{data.studentName}} and verify they appear in the list
+expected_result: Student {{data.studentName}} should be visible in the students table
+```
+
+## Execution Behavior
+
+### Before Hooks
+
+<Info>
+Before hooks run sequentially before test execution. If any before hook fails, the test fails with the hook error. Results are stored in context for subsequent hooks.
+</Info>
+
+### After Hooks
+
+<Info>
+After hooks run after test completion, regardless of test result. Failures are logged but don't affect the test result. Use after hooks for cleanup operations.
+</Info>
+
+## Complete Example
+
+```yaml test.yaml
+name: School assigns optional concept with attributes to student
+page: /estudiantes
+
+hooks:
+  before:
+    # Get school data
+    - helper: getSchoolIdByName
+      file_path: apps/e2e/helpers/commons.ts
+      args: ["Instituto Internacional Carlos"]
+      as: schoolId
+
+    # Get related entities (using previous result)
+    - helper: getFiscalEntityBySchoolId
+      file_path: apps/e2e/helpers/commons.ts
+      args: ["{{schoolId}}"]
+      as: fiscalEntity
+
+    - helper: getBankAccountBySchoolName
+      file_path: apps/e2e/helpers/commons.ts
+      args: ["Instituto Internacional Carlos"]
+      as: bankAccount
+
+    # Create test data
+    - helper: createOtherConceptByApi
+      file_path: apps/e2e/helpers/concepts.ts
+      args: ["{{conceptName}}", "{{fiscalEntity}}", "{{bankAccount.id}}", "{{schoolId}}"]
+      as: conceptId
+
+    - helper: createStudentWithParams
+      file_path: apps/e2e/helpers/students.ts
+      args: ["{{firstName}}", "{{lastName}}", "{{schoolId}}"]
+      as: studentId
+
+  after:
+    # Clean up in reverse order
+    - helper: destroyOptionalAssignmentByApi
+      file_path: apps/e2e/helpers/concepts.ts
+      args: ["{{studentId}}", "{{assignmentId}}"]
+
+    - helper: deleteConceptByApi
+      file_path: apps/e2e/helpers/concepts.ts
+      args: ["{{conceptId}}", "{{schoolId}}"]
+
+task: Verify school can assign optional concept with attributes to existing student
+steps:
+  - Login as automata@getcome.com with password barriletecosmico
+  - Select school Instituto Internacional Carlos
+  - Navigate to Estudiantes section
+  - Search for the created student by name
+  - Click on student row to open details
+  - Click on Conceptos tab
+  - Click Asignar concepto button
+  - Select the created concept
+  - Click Asignar button
+expected_result: Concept appears in optional concepts list
+```
+
+## Requirements
+
+<Warning>
+Node.js must be installed for hooks to run. TypeScript helpers require `tsx` which is installed automatically via npx.
+</Warning>
+
+For path aliases in tsconfig.json, install `tsconfig-paths`:
+
+```bash
+npm install -D tsconfig-paths
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+<Accordion title="Hooks file not found">
+Create `.bugster/hooks.ts` in your project root or specify the correct `file_path` for each hook.
+</Accordion>
+
+<Accordion title="Cannot find module">
+If you're using path aliases in your tsconfig.json, install `tsconfig-paths`:
+
+```bash
+npm install -D tsconfig-paths
+```
+</Accordion>
+
+<Accordion title="Hook returned empty output">
+Ensure your helper function returns a value. Check that you're returning the correct data type.
+</Accordion>
+
+<Accordion title="Hook failed with error">
+Check your helper function for errors. Verify that any external APIs or databases are accessible.
+</Accordion>
+</AccordionGroup>
