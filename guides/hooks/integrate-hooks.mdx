@@ -1,5 +1,5 @@
 ---
-title: "Hooks"
+title: "Integrate Hooks"
 description: "Run setup and cleanup code before and after your tests"
 icon: "webhook"
 "og:type": "article"
@@ -94,15 +94,15 @@ You can specify helpers from any TypeScript file in your project:
 ```yaml
 hooks:
   before:
-    - helper: getSchoolIdByName
-      file_path: apps/e2e/helpers/commons.ts
-      args: ["Instituto Internacional Carlos"]
-      as: schoolId
+    - helper: getStoreBySlug
+      file_path: apps/e2e/helpers/stores.ts
+      args: ["acme-electronics"]
+      as: storeId
 
-    - helper: createStudentWithParams
-      file_path: apps/e2e/helpers/students.ts
-      args: ["{{firstName}}", "{{lastName}}", "{{schoolId}}"]
-      as: studentId
+    - helper: createProductWithParams
+      file_path: apps/e2e/helpers/products.ts
+      args: ["{{productName}}", "{{price}}", "{{storeId}}"]
+      as: productId
 ```
 
 ## Template Variables
@@ -120,22 +120,22 @@ Use `{{variableName}}` to reference values from previous hooks:
 ### Nested Object Access
 
 ```yaml
-- helper: getBankAccount
-  args: ["School Name"]
-  as: bankAccount
+- helper: getShippingAddress
+  args: ["{{customerId}}"]
+  as: address
 
-- helper: createPayment
-  args: ["{{bankAccount.id}}", "{{bankAccount.currency}}"]
+- helper: createShipment
+  args: ["{{address.zipCode}}", "{{address.country}}"]
 ```
 
 ### Array Access
 
 ```yaml
-- helper: getActiveCycles
-  as: cycles
+- helper: getAvailableCoupons
+  as: coupons
 
-- helper: selectCycle
-  args: ["{{cycles[0].id}}"]
+- helper: applyCoupon
+  args: ["{{coupons[0].code}}"]
 ```
 
 ## Passing Hook Data to Tests
@@ -143,13 +143,13 @@ Use `{{variableName}}` to reference values from previous hooks:
 Hook results are passed to the test as `hook_context`. Reference them in your test steps using `{{data.variableName}}`:
 
 ```yaml
-name: Create and verify student
+name: Create and verify product
 hooks:
   before:
-    - helper: generateRandomName
-      as: studentName
-task: Create a student named {{data.studentName}} and verify they appear in the list
-expected_result: Student {{data.studentName}} should be visible in the students table
+    - helper: generateProductName
+      as: productName
+task: Create a product named {{data.productName}} and verify it appears in the catalog
+expected_result: Product {{data.productName}} should be visible in the products table
 ```
 
 ## Execution Behavior
@@ -173,67 +173,61 @@ expected_result: Student {{data.studentName}} should be visible in the students 
 ## Complete Example
 
 ```yaml test.yaml
-name: School assigns optional concept with attributes to student
-page: /estudiantes
+name: Customer applies discount coupon to cart
+page: /checkout
 
 hooks:
   before:
-    # Get school data
-    - helper: getSchoolIdByName
-      file_path: apps/e2e/helpers/commons.ts
-      args: ["Instituto Internacional Carlos"]
-      as: schoolId
+    # Get store data
+    - helper: getStoreBySlug
+      file_path: apps/e2e/helpers/stores.ts
+      args: ["acme-electronics"]
+      as: storeId
 
     # Get related entities (using previous result)
-    - helper: getFiscalEntityBySchoolId
-      file_path: apps/e2e/helpers/commons.ts
-      args: ["{{schoolId}}"]
-      as: fiscalEntity
+    - helper: getDefaultCategoryByStoreId
+      file_path: apps/e2e/helpers/categories.ts
+      args: ["{{storeId}}"]
+      as: category
 
-    - helper: getBankAccountBySchoolName
-      file_path: apps/e2e/helpers/commons.ts
-      args: ["Instituto Internacional Carlos"]
-      as: bankAccount
+    - helper: getPaymentMethodByStoreName
+      file_path: apps/e2e/helpers/payments.ts
+      args: ["acme-electronics"]
+      as: paymentMethod
 
     # Create test data
-    - helper: createOtherConceptByApi
-      file_path: apps/e2e/helpers/concepts.ts
-      args:
-        [
-          "{{conceptName}}",
-          "{{fiscalEntity}}",
-          "{{bankAccount.id}}",
-          "{{schoolId}}",
-        ]
-      as: conceptId
+    - helper: createProductByApi
+      file_path: apps/e2e/helpers/products.ts
+      args: ["{{productName}}", "{{category}}", "{{paymentMethod.id}}", "{{storeId}}"]
+      as: productId
 
-    - helper: createStudentWithParams
-      file_path: apps/e2e/helpers/students.ts
-      args: ["{{firstName}}", "{{lastName}}", "{{schoolId}}"]
-      as: studentId
+    - helper: createCustomerWithParams
+      file_path: apps/e2e/helpers/customers.ts
+      args: ["{{email}}", "{{firstName}}", "{{storeId}}"]
+      as: customerId
 
   after:
     # Clean up in reverse order
-    - helper: destroyOptionalAssignmentByApi
-      file_path: apps/e2e/helpers/concepts.ts
-      args: ["{{studentId}}", "{{assignmentId}}"]
+    - helper: removeCartItemsByApi
+      file_path: apps/e2e/helpers/cart.ts
+      args: ["{{customerId}}", "{{cartId}}"]
 
-    - helper: deleteConceptByApi
-      file_path: apps/e2e/helpers/concepts.ts
-      args: ["{{conceptId}}", "{{schoolId}}"]
+    - helper: deleteProductByApi
+      file_path: apps/e2e/helpers/products.ts
+      args: ["{{productId}}", "{{storeId}}"]
 
-task: Verify school can assign optional concept with attributes to existing student
+task: Verify customer can apply discount coupon to cart with existing product
 steps:
   - Login as test.user@example.com with password SecurePass123!
-  - Select school Instituto Internacional Carlos
-  - Navigate to Estudiantes section
-  - Search for the created student by name
-  - Click on student row to open details
-  - Click on Conceptos tab
-  - Click Asignar concepto button
-  - Select the created concept
-  - Click Asignar button
-expected_result: Concept appears in optional concepts list
+  - Select store Acme Electronics
+  - Navigate to Products section
+  - Search for the created product by name
+  - Click on product card to open details
+  - Click Add to Cart button
+  - Navigate to Checkout
+  - Enter coupon code in discount field
+  - Click Apply button
+expected_result: Discount appears in cart summary with updated total
 ```
 
 ## Requirements
