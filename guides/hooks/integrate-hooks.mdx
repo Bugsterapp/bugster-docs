@@ -3,7 +3,7 @@ title: "Integrate Hooks"
 description: "Run setup and cleanup code before and after your tests"
 icon: "webhook"
 "og:type": "article"
-"og:title": "Bugster Test Hooks - Setup and Cleanup Automation"
+"og:title": "Bugster Hooks - Setup and Cleanup Automation"
 "og:description": "Use hooks to run TypeScript/JavaScript functions before and after tests. Create test data, clean up resources, set up authentication, and pass dynamic values to test steps."
 "og:url": "https://docs.bugster.dev/guides/hooks/integrate-hooks"
 ---
@@ -198,7 +198,13 @@ hooks:
     # Create test data
     - helper: createProductByApi
       file_path: apps/e2e/helpers/products.ts
-      args: ["{{productName}}", "{{category}}", "{{paymentMethod.id}}", "{{storeId}}"]
+      args:
+        [
+          "{{productName}}",
+          "{{category}}",
+          "{{paymentMethod.id}}",
+          "{{storeId}}",
+        ]
       as: productId
 
     - helper: createCustomerWithParams
