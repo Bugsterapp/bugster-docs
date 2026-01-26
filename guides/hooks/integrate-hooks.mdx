@@ -5,7 +5,7 @@ icon: "webhook"
 "og:type": "article"
 "og:title": "Bugster Test Hooks - Setup and Cleanup Automation"
 "og:description": "Use hooks to run TypeScript/JavaScript functions before and after tests. Create test data, clean up resources, set up authentication, and pass dynamic values to test steps."
-"og:url": "https://docs.bugster.dev/integrations/hooks"
+"og:url": "https://docs.bugster.dev/guides/hooks/integrate-hooks"
 ---
 
 Hooks allow you to run setup and cleanup code before and after your tests. They are TypeScript/JavaScript functions that execute in your project's context, enabling you to:
@@ -45,19 +45,19 @@ hooks:
 ## Hook Definition Fields
 
 <ParamField body="helper" type="string" required>
-Name of the exported function to call.
+  Name of the exported function to call.
 </ParamField>
 
 <ParamField body="file_path" type="string" default=".bugster/hooks.ts">
-Path to TypeScript file containing the helper function.
+  Path to TypeScript file containing the helper function.
 </ParamField>
 
 <ParamField body="args" type="array">
-Array of arguments to pass to the function.
+  Array of arguments to pass to the function.
 </ParamField>
 
 <ParamField body="as" type="string">
-Variable name to store the result for later use.
+  Variable name to store the result for later use.
 </ParamField>
 
 ## Creating Helper Functions
@@ -67,19 +67,22 @@ Variable name to store the result for later use.
 Create a `.bugster/hooks.ts` file in your project:
 
 ```typescript .bugster/hooks.ts
-export async function createTestUser(firstName: string, lastName: string): Promise<string> {
+export async function createTestUser(
+  firstName: string,
+  lastName: string,
+): Promise<string> {
   // Create user via API or database
-  const response = await fetch('https://api.example.com/users', {
-    method: 'POST',
-    body: JSON.stringify({ firstName, lastName })
+  const response = await fetch("https://api.example.com/users", {
+    method: "POST",
+    body: JSON.stringify({ firstName, lastName }),
   });
   const user = await response.json();
-  return user.id;  // This becomes available as {{userId}}
+  return user.id; // This becomes available as {{userId}}
 }
 
 export async function deleteUser(userId: string): Promise<void> {
   await fetch(`https://api.example.com/users/${userId}`, {
-    method: 'DELETE'
+    method: "DELETE",
   });
 }
 ```
@@ -154,13 +157,17 @@ expected_result: Student {{data.studentName}} should be visible in the students 
 ### Before Hooks
 
 <Info>
-Before hooks run sequentially before test execution. If any before hook fails, the test fails with the hook error. Results are stored in context for subsequent hooks.
+  Before hooks run sequentially before test execution. If any before hook fails,
+  the test fails with the hook error. Results are stored in context for
+  subsequent hooks.
 </Info>
 
 ### After Hooks
 
 <Info>
-After hooks run after test completion, regardless of test result. Failures are logged but don't affect the test result. Use after hooks for cleanup operations.
+  After hooks run after test completion, regardless of test result. Failures are
+  logged but don't affect the test result. Use after hooks for cleanup
+  operations.
 </Info>
 
 ## Complete Example
@@ -191,7 +198,13 @@ hooks:
     # Create test data
     - helper: createOtherConceptByApi
       file_path: apps/e2e/helpers/concepts.ts
-      args: ["{{conceptName}}", "{{fiscalEntity}}", "{{bankAccount.id}}", "{{schoolId}}"]
+      args:
+        [
+          "{{conceptName}}",
+          "{{fiscalEntity}}",
+          "{{bankAccount.id}}",
+          "{{schoolId}}",
+        ]
       as: conceptId
 
     - helper: createStudentWithParams
@@ -226,7 +239,8 @@ expected_result: Concept appears in optional concepts list
 ## Requirements
 
 <Warning>
-Node.js must be installed for hooks to run. TypeScript helpers require `tsx` which is installed automatically via npx.
+  Node.js must be installed for hooks to run. TypeScript helpers require `tsx`
+  which is installed automatically via npx.
 </Warning>
 
 For path aliases in tsconfig.json, install `tsconfig-paths`:
@@ -248,10 +262,12 @@ If you're using path aliases in your tsconfig.json, install `tsconfig-paths`:
 ```bash
 npm install -D tsconfig-paths
 ```
+
 </Accordion>
 
 <Accordion title="Hook returned empty output">
-Ensure your helper function returns a value. Check that you're returning the correct data type.
+  Ensure your helper function returns a value. Check that you're returning the
+  correct data type.
 </Accordion>
 
 <Accordion title="Hook failed with error">

@@ -9,38 +9,32 @@
     "light": "#383838",
     "dark": "#383838"
   },
-    "contextual": {
-      "options": [
-        "copy",
-        "view",
-        "chatgpt",
-        "claude",
-        "perplexity"
-      ]
-    },
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude", "perplexity"]
+  },
   "fonts": {
     "family": "figtree",
-      "source": "https://cdn.jsdelivr.net/fontsource/fonts/figtree:vf@latest/latin-wght-normal.woff2",
-      "format": "woff2",
-    "heading":{
+    "source": "https://cdn.jsdelivr.net/fontsource/fonts/figtree:vf@latest/latin-wght-normal.woff2",
+    "format": "woff2",
+    "heading": {
       "family": "Geist Mono Variable",
       "weight": 600,
       "source": "https://cdn.jsdelivr.net/fontsource/fonts/geist-mono:vf@latest/latin-wght-normal.woff2",
       "format": "woff2"
     },
-    "body":{
+    "body": {
       "family": "figtree",
       "source": "https://cdn.jsdelivr.net/fontsource/fonts/figtree:vf@latest/latin-wght-normal.woff2",
       "format": "woff2"
     }
   },
-  "background":{
+  "background": {
     "decoration": "windows",
-      "color": {
-        "light": "#FFFFFF",
-        "dark": "#383838"
-      }
-    },
+    "color": {
+      "light": "#FFFFFF",
+      "dark": "#383838"
+    }
+  },
   "appearance": {
     "default": "light",
     "strict": true
@@ -64,24 +58,25 @@
               "framework-compatibility"
             ]
           },
-                      {
-              "group": "GUIDES",
-              "pages": [
-                "guides/your-qa-roadmap",
-                "guides/test-management/manage-tests",
-                "guides/local-development",
-                "guides/destructive-testing",
-                "guides/test-management/credentials-and-roles",
-                "guides/test-management/session-persistence",
-                "guides/test-management/otp-authentication",
-                "guides/test-management/file-upload",
-                "guides/configuration/customize-config-yaml",
-                "guides/test-management/update-test-suite",
-                "guides/cicd/cicd-integration",
-                "guides/coding-agents/cursor",
-                "guides/coding-agents/claude-code"
-              ]
-            },
+          {
+            "group": "GUIDES",
+            "pages": [
+              "guides/your-qa-roadmap",
+              "guides/test-management/manage-tests",
+              "guides/local-development",
+              "guides/destructive-testing",
+              "guides/test-management/credentials-and-roles",
+              "guides/test-management/session-persistence",
+              "guides/test-management/otp-authentication",
+              "guides/test-management/file-upload",
+              "guides/configuration/customize-config-yaml",
+              "guides/test-management/update-test-suite",
+              "guides/cicd/cicd-integration",
+              "guides/coding-agents/cursor",
+              "guides/coding-agents/claude-code",
+              "guides/hooks/integrate-hooks"
+            ]
+          },
           {
             "group": "USING THE CLI",
             "pages": [
@@ -112,14 +107,12 @@
         ]
       },
       {
-      "tab": "CHANGELOG", 
-      "icon": "rocket",
+        "tab": "CHANGELOG",
+        "icon": "rocket",
         "groups": [
           {
             "group": "CHANGELOG",
-            "pages": [
-                "changelog"
-            ]
+            "pages": ["changelog"]
           }
         ]
       }
