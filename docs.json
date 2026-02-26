@@ -74,7 +74,8 @@
               "guides/cicd/cicd-integration",
               "guides/coding-agents/cursor",
               "guides/coding-agents/claude-code",
-              "guides/hooks/integrate-hooks"
+              "guides/hooks/integrate-hooks",
+              "guides/workflow/platform-workflow"
             ]
           },
           {
